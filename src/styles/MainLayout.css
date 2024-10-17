@@ -1,0 +1,18 @@
+/** @format */
+
+.main-layout {
+  display: flex;
+  align-items: flex-start; /* Căn trên để hai component đều nằm ở đầu */
+  gap: 0px; /* Khoảng cách giữa Sidebar và ProductAdBanner */
+  padding-right: 120px;
+  padding: 20px; /* Tạo khoảng cách giữa container và các cạnh */
+}
+
+.sidebar {
+  flex-basis: 20%; /* Chiếm 20% chiều rộng của container */
+}
+
+.product-ad-banner {
+  flex-basis: 75%; /* Chiếm 75% chiều rộng của container */
+  max-width: 943px; /* Đặt chiều rộng tối đa để không vượt quá thiết kế */
+}

@@ -1,0 +1,37 @@
+/** @format */
+
+.sidebar {
+  width: 225px;
+  padding: 0;
+  background-color: #f8f9fa;
+  margin-left: 100px; /* Cách lề trái */
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* Đẩy mũi tên ra ngoài cùng bên phải */
+  padding: 12px 0;
+  border-bottom: 1px solid #e5e7eb;
+  cursor: pointer;
+}
+
+.item-content {
+  display: flex;
+  align-items: center; /* Căn chỉnh icon và text theo hàng ngang */
+}
+
+.icon {
+  margin-right: 10px; /* Khoảng cách giữa icon và text */
+  font-size: 16px; /* Kích thước icon phù hợp */
+}
+
+.item-text {
+  font-size: 14px;
+  color: #000;
+}
+
+.icon-arrow {
+  font-size: 16px; /* Kích thước mũi tên phù hợp */
+  color: #000; /* Màu mũi tên */
+}
