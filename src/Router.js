@@ -21,7 +21,7 @@ const RouterCustom = () => {
       {/* <Body /> */}
       <Routes>
         {/* <Route path='/' element={<Home />} /> */}
-        {/* <Route path='/' element={<Sidebar />} /> */}
+        {/* <Route path='/' element={<Sidebar />} */}
       </Routes>
       <div className='main-layout'>
         <Sidebar />
@@ -30,7 +30,7 @@ const RouterCustom = () => {
       <FeaturesSection />
       <MiniAdBanner />
       <NewProduct />
-      <FeaturedProduct/>
+      <FeaturedProduct />
       <Footer />
     </>
   );
