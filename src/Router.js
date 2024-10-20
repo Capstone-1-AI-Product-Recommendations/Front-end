@@ -14,24 +14,26 @@ import FeaturesSection from "./Components/Body/FeaturesSection";
 import MiniAdBanner from "./Components/Body/MiniAdBanner";
 import NewProduct from "./Components/Body/NewProduct";
 import FeaturedProduct from "./Components/Body/FeaturedProduct";
+import Landing from "./Pages/homePage/HomePage";
 const RouterCustom = () => {
   return (
     <>
-      <Header />
-      {/* <Body /> */}
+      {/* <Header /> */}
       <Routes>
         {/* <Route path='/' element={<Home />} /> */}
         {/* <Route path='/' element={<Sidebar />} */}
       </Routes>
-      <div className='main-layout'>
+      {/* <div className='main-layout'>
         <Sidebar />
         <ProductAdBanner />
-      </div>
-      <FeaturesSection />
+      </div> */}
+      {/* <FeaturesSection />
       <MiniAdBanner />
       <NewProduct />
       <FeaturedProduct />
-      <Footer />
+      <Footer /> */}
+          
+    <Landing/>
     </>
   );
 };
