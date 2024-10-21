@@ -27,11 +27,12 @@
   position: absolute;
   top: 10px;
   left: 10px;
-  background-color: #ff5a5f;
+  background-color: red;
   color: white;
   padding: 5px 10px;
-  border-radius: 5px;
+  border-radius: 15px;
   font-weight: bold;
+  margin-right: 10px;
 }
 
 .image-container {
@@ -40,6 +41,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  position: relative;
 }
 
 .product-image {
@@ -49,8 +51,49 @@
   transition: transform 0.3s ease;
 }
 
+.image-indicator {
+  position: absolute;
+  bottom: 10px;
+  display: flex;
+  gap: 5px;
+}
+
+.indicator-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #ddd;
+  margin-left: 10px;
+}
+
+.indicator-dot.active {
+  background-color: #673ab7;
+}
+
 .product-badge {
   font-size: 0.8em;
+}
+.badge {
+  margin-left: 20px;
+}
+
+.image-indicator {
+  display: flex;
+  justify-content: center;
+  /* margin-top: 0.5rem; 8px assuming 1rem = 16px */
+  margin-left: 10px;
+}
+
+.indicator-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin: 0 2px;
+  background-color: white; /* Default background color */
+}
+
+.indicator-dot.active {
+  background-color: #673ab7; /* Active state background color */
 }
 
 .product-title {
@@ -61,31 +104,37 @@
 
 .price-new {
   font-size: 1.5em;
-  color: #e53935;
+  color: red !important;
   font-weight: bold;
 }
 
 .price-old {
-  font-size: 1em;
+  font-size: 0.8em;
   text-decoration: line-through;
 }
 
-.add-to-cart {
+.add-to-cart-product {
   border-radius: 50px;
   font-weight: bold;
   display: flex;
-  align-items: center;
+  /* font-size: 10px; */
+  align-items: flex-start;
   justify-content: center;
   background-color: #673ab7;
   color: white;
-  border: none;
   transition: background-color 0.3s, color 0.3s;
+  padding: 5px;
+  margin: 0px;
+  font-size: 10px;
 }
 
-.add-to-cart:hover {
+.add-to-cart-product:hover {
+  transition: transform 0.2s ease-in-out;
+  transform: translateY(-3px);
   background-color: white;
   color: #673ab7;
   border: 1px solid #673ab7;
+  font-weight: bold;
 }
 
 .rating .star {
@@ -105,4 +154,23 @@
 .note {
   font-size: 0.8em;
   color: #6c757d;
+}
+
+.heart-icon {
+  font-size: 1.5em;
+  color: black;
+  cursor: pointer;
+  margin-left: 120px;
+  margin-top: 10px;
+}
+
+.heart-icon:hover {
+  color: #e53935;
+}
+
+.header-icons-container {
+  display: flex;
+  justify-content: flex-start;
+  /* align-items: center; Đảm bảo các thành phần thẳng hàng */
+  margin-bottom: 10px; /* Khoảng cách với phần nội dung phía dưới, nếu cần */
 }

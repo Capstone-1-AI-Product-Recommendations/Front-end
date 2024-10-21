@@ -2,10 +2,11 @@
 
 import React, { useState, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-import "../../styles/FeaturedProduct.css"; // Import custom CSS for additional styling
+import "../../styles/FeaturedProduct.css";
 import ProductImg1 from "../../img/AdBanner.png";
 import ProductImg2 from "../../img/altProductImg1.png";
 import ProductImg3 from "../../img/altProductImg2.png";
+import { FaHeart } from "react-icons/fa";
 
 const products = [
   {
@@ -13,154 +14,212 @@ const products = [
     discount: "56%",
     badge: "ORGANIC",
     title: "Marketside Fresh Organic Bananas, Bunch",
-    price: "$0.89",
-    originalPrice: "$1.99",
+    price: "đ 150.000",
+    originalPrice: "đ 200.000",
     images: [ProductImg1, ProductImg2, ProductImg3],
     rating: 4,
     reviews: 2,
   },
   {
-    id: 2,
+    id: 1,
     discount: "56%",
     badge: "ORGANIC",
     title: "Marketside Fresh Organic Bananas, Bunch",
-    price: "$0.89",
-    originalPrice: "$1.99",
+    price: "đ 150.000",
+    originalPrice: "đ 200.000",
     images: [ProductImg1, ProductImg2, ProductImg3],
     rating: 4,
     reviews: 2,
   },
   {
-    id: 3,
+    id: 1,
     discount: "56%",
     badge: "ORGANIC",
     title: "Marketside Fresh Organic Bananas, Bunch",
-    price: "$0.89",
-    originalPrice: "$1.99",
+    price: "đ 150.000",
+    originalPrice: "đ 200.000",
     images: [ProductImg1, ProductImg2, ProductImg3],
     rating: 4,
     reviews: 2,
   },
   {
-    id: 3,
+    id: 1,
     discount: "56%",
     badge: "ORGANIC",
     title: "Marketside Fresh Organic Bananas, Bunch",
-    price: "$0.89",
-    originalPrice: "$1.99",
+    price: "đ 150.000",
+    originalPrice: "đ 200.000",
     images: [ProductImg1, ProductImg2, ProductImg3],
     rating: 4,
     reviews: 2,
   },
   {
-    id: 3,
+    id: 1,
     discount: "56%",
     badge: "ORGANIC",
     title: "Marketside Fresh Organic Bananas, Bunch",
-    price: "$0.89",
-    originalPrice: "$1.99",
+    price: "đ 150.000",
+    originalPrice: "đ 200.000",
     images: [ProductImg1, ProductImg2, ProductImg3],
     rating: 4,
     reviews: 2,
   },
   {
-    id: 3,
+    id: 1,
     discount: "56%",
     badge: "ORGANIC",
     title: "Marketside Fresh Organic Bananas, Bunch",
-    price: "$0.89",
-    originalPrice: "$1.99",
+    price: "đ 150.000",
+    originalPrice: "đ 200.000",
     images: [ProductImg1, ProductImg2, ProductImg3],
     rating: 4,
     reviews: 2,
   },
-  // Thêm các sản phẩm khác tương tự
+  {
+    id: 1,
+    discount: "56%",
+    badge: "ORGANIC",
+    title: "Marketside Fresh Organic Bananas, Bunch",
+    price: "đ 150.000",
+    originalPrice: "đ 200.000",
+    images: [ProductImg1, ProductImg2, ProductImg3],
+    rating: 4,
+    reviews: 2,
+  },
+  {
+    id: 1,
+    discount: "56%",
+    badge: "ORGANIC",
+    title: "Marketside Fresh Organic Bananas, Bunch",
+    price: "đ 150.000",
+    originalPrice: "đ 200.000",
+    images: [ProductImg1, ProductImg2, ProductImg3],
+    rating: 4,
+    reviews: 2,
+  },
+  // Khai báo các sản phẩm khác tương tự...
 ];
 
 const FeaturedProduct = () => {
   const [hoveredProduct, setHoveredProduct] = useState(null);
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [currentImageIndex, setCurrentImageIndex] = useState({});
 
   useEffect(() => {
     let interval;
-    if (hoveredProduct !== null && products[hoveredProduct].images) {
+    if (hoveredProduct !== null) {
       interval = setInterval(() => {
-        setCurrentImageIndex((prevIndex) =>
-          prevIndex >= products[hoveredProduct].images.length - 1
-            ? 0
-            : prevIndex + 1
-        );
-      }, 2000);
-    } else {
-      setCurrentImageIndex(0);
+        setCurrentImageIndex((prev) => ({
+          ...prev,
+          [hoveredProduct]:
+            (prev[hoveredProduct] || 0) + 1 >= 3
+              ? 0
+              : (prev[hoveredProduct] || 0) + 1,
+        }));
+      }, 1000);
     }
-    return () => clearInterval(interval);
+    return () => {
+      if (interval) clearInterval(interval);
+    };
   }, [hoveredProduct]);
+
+  const handleMouseEnter = (index) => {
+    setHoveredProduct(index);
+    setCurrentImageIndex((prev) => ({ ...prev, [index]: 0 }));
+  };
+
+  const handleMouseLeave = (index) => {
+    setHoveredProduct(null);
+    setCurrentImageIndex((prev) => ({ ...prev, [index]: 0 }));
+  };
 
   return (
     <div className='container mt-4'>
-      <div className='d-flex justify-content-between align-items-center mb-4'>
+      <div className='d-flex justify-content-between align-items-center mb-1'>
         <h4 className='mb-0'>
-          Sản phẩm nổi bật{" "}
+          Sản phẩm nổi bật
           <span className='text-muted'>
+            {" "}
             - Đừng bỏ lỡ các ưu đãi hiện tại cho đến cuối tháng 3.
           </span>
         </h4>
         <a href='#' className='btn view-all-btn'>
-          View All →
+          Xem tất cả →
         </a>
       </div>
       <div className='row'>
         {products.map((product, index) => (
-          <div key={product.id} className='col-md-3 mb-2'>
-            <div className='card product-card h-100'>
-              <div className='card-body'>
-                <span className='discount-badge'>{product.discount}</span>
-                <div className='image-container'>
-                  <img
-                    src={
-                      hoveredProduct === index &&
-                      product.images &&
-                      product.images.length > 0
-                        ? product.images[currentImageIndex]
-                        : product.images[0]
-                    }
-                    alt={product.title}
-                    className='img-fluid product-image mb-3'
-                    onMouseEnter={() => setHoveredProduct(index)}
-                    onMouseLeave={() => setHoveredProduct(null)}
-                  />
-                </div>
-                <span className='badge bg-success text-uppercase product-badge mb-2'>
-                  {product.badge}
-                </span>
-                <h6 className='product-title mb-2'>{product.title}</h6>
-                <div className='rating mb-2'>
-                  {Array.from({ length: 5 }, (_, idx) => (
-                    <span
-                      key={idx}
-                      className={idx < product.rating ? "star filled" : "star"}
-                    >
-                      ★
+          <div key={product.id} className='col-lg-3 col-md-6 col-sm-12 mb-3'>
+            <div
+              className='card product-card h-100 border-0'
+              onMouseEnter={() => handleMouseEnter(index)}
+              onMouseLeave={() => handleMouseLeave(index)}
+            >
+              <div className='row g-0'>
+                <div className='col-6 position-relative'>
+                  <div className='header-icons-container '>
+                    <div className='discount-badge'>{product.discount}</div>
+                    <div className='heart-icon'>
+                      <FaHeart />
+                    </div>
+                  </div>
+                  <div className='image-container mb-2'>
+                    <img
+                      src={product.images[currentImageIndex[index] || 0]}
+                      alt={product.title}
+                      className='img-fluid product-image rounded'
+                    />
+                    <div className='image-indicator d-flex justify-content-center mt-2'>
+                      {[0, 1, 2].map((i) => (
+                        <div
+                          key={i}
+                          className={`indicator-dot ${
+                            i === (currentImageIndex[index] || 0)
+                              ? "active"
+                              : ""
+                          }`}
+                        />
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className='d-flex justify-content-between align-items-center mt-2'>
+                    <span className='badge bg-success text-uppercase product-badge'>
+                      {product.badge}
                     </span>
-                  ))}
-                  <span className='reviews'> ({product.reviews})</span>
+                  </div>
                 </div>
-                <p className='price mb-0'>
-                  <strong className='price-new text-danger'>
-                    {product.price}
-                  </strong>
-                  <span className='text-muted ms-2'>
-                    <del className='price-old'>{product.originalPrice}</del>
-                  </span>
-                </p>
-                <button className='btn add-to-cart w-100 mt-3'>
-                  Add to cart
-                </button>
-                <p className='note text-muted mt-2'>
-                  Remains until the end of the offer
-                </p>
+                <div className='col-6 d-flex flex-column justify-content-center'>
+                  <h6 className='product-title mb-2'>{product.title}</h6>
+                  <p className='price mb-0'>
+                    <strong className='price-new text-danger'>
+                      {product.price}
+                    </strong>
+                    <small className='text-muted ms-2'>
+                      <del>{product.originalPrice}</del>
+                    </small>
+                  </p>
+                  <div className='rating mb-2 mt-2'>
+                    {Array.from({ length: 5 }, (_, idx) => (
+                      <span
+                        key={idx}
+                        className={
+                          idx < product.rating ? "star filled" : "star"
+                        }
+                      >
+                        ★
+                      </span>
+                    ))}
+                    <span className='reviews'> ({product.reviews})</span>
+                  </div>
+                  <button className='btn add-to-cart-product w-100 mt-3'>
+                    Thêm vào giỏ hàng
+                    <span className='ms-2'>+</span>
+                  </button>
+                </div>
               </div>
+              <p className='note text-muted text-center mt-2'>
+                Remains until the end of the offer
+              </p>
             </div>
           </div>
         ))}

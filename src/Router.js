@@ -15,25 +15,13 @@ import MiniAdBanner from "./Components/Body/MiniAdBanner";
 import NewProduct from "./Components/Body/NewProduct";
 import FeaturedProduct from "./Components/Body/FeaturedProduct";
 import Landing from "./Pages/homePage/HomePage";
+import SignupLogin from "./Pages/Login/Login";
+import LoginScreen from "./Pages/Login/Login";
 const RouterCustom = () => {
   return (
     <>
-      {/* <Header /> */}
-      <Routes>
-        {/* <Route path='/' element={<Home />} /> */}
-        {/* <Route path='/' element={<Sidebar />} */}
-      </Routes>
-      {/* <div className='main-layout'>
-        <Sidebar />
-        <ProductAdBanner />
-      </div> */}
-      {/* <FeaturesSection />
-      <MiniAdBanner />
-      <NewProduct />
-      <FeaturedProduct />
-      <Footer /> */}
-          
-    <Landing/>
+      {/* <Landing /> */}
+      <LoginScreen />
     </>
   );
 };

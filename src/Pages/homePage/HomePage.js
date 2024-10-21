@@ -9,6 +9,7 @@ import NewProduct from "../../Components/Body/NewProduct";
 import FeaturedProduct from "../../Components/Body/FeaturedProduct";
 import Footer from "../../Components/Footer/Footer";
 import Sidebar from "../../Components/Body/Sidebar";
+import BestSell from "../../Components/Body/BestSell";
 
 const Landing = () => {
   return (
@@ -22,6 +23,7 @@ const Landing = () => {
       <MiniAdBanner />
       <NewProduct />
       <FeaturedProduct />
+      <BestSell />
       <Footer />
     </>
   );
