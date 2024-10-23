@@ -5,7 +5,7 @@ import "./Header.css";
 import logo from "../../assets/logo.png"; // Đảm bảo bạn có một logo để sử dụng
 import { FaUser, FaBell, FaShoppingCart } from "react-icons/fa";
 import { useNavigate } from "react-router-dom"; // Import hook useNavigate
-import { FaCaretDown } from 'react-icons/fa';
+import { FaCaretDown } from "react-icons/fa";
 
 const Header = () => {
   const navigate = useNavigate();
