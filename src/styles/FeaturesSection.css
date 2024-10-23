@@ -1,0 +1,35 @@
+/** @format */
+
+.features-section {
+  width: calc(
+    100% - 240px
+  ); /* Trừ đi tổng khoảng cách lề hai bên là 240px (120px + 120px) */
+  background-color: rgb(251, 251, 251); /* Màu nền xám nhạt */
+  padding: 20px 0; /* Khoảng cách trên và dưới */
+  margin: 0 120px; /* Đặt khoảng cách lề trên và dưới là 0, trái và phải là 120px */
+  box-sizing: border-box; /* Đảm bảo kích thước bao gồm cả padding và border nếu có */
+}
+
+.feature-item {
+  display: flex;
+  align-items: center; /* Căn giữa các mục theo chiều dọc */
+  padding: 10px; /* Thêm khoảng cách xung quanh mỗi mục để tạo khoảng trống */
+}
+
+.feature-icon {
+  max-width: 70px; /* Thiết lập chiều rộng tối đa cho biểu tượng */
+  height: auto; /* Duy trì tỉ lệ khung hình của biểu tượng */
+  margin-right: 15px; /* Khoảng cách giữa biểu tượng và văn bản */
+}
+
+.feature-title {
+  font-size: 16px; /* Điều chỉnh kích thước chữ cho dễ nhìn hơn */
+  color: #333; /* Màu chữ tối hơn để tạo độ tương phản tốt hơn */
+  margin-bottom: 5px; /* Khoảng cách giữa tiêu đề và mô tả */
+}
+
+.feature-description {
+  font-size: 14px; /* Kích thước chữ cho phần mô tả */
+  color: #666; /* Màu xám cho phần mô tả */
+  margin: 0; /* Loại bỏ khoảng cách mặc định để tạo khoảng trống tốt hơn */
+}

@@ -1,0 +1,62 @@
+/** @format */
+
+.card {
+  background-color: #f3ede1; /* Màu nền dạng creamy */
+  border: none;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.card-body {
+  padding: 20px;
+  background-color: transparent;
+}
+
+.card-title {
+  font-weight: bold;
+  color: #333; /* Màu chữ tối để dễ đọc */
+}
+
+.btn-custom {
+  background-color: white; /* Màu nền của button khi chưa hover */
+  color: black !important; /* Màu chữ của button khi chưa hover */
+  border-radius: 25px; /* Viền bo tròn cho button */
+  border: px solid black; /* Thay đổi viền để phù hợp với màu chữ */
+  padding: 10px 20px; /* Khoảng đệm cho button */
+  font-size: 16px; /* Cỡ chữ lớn hơn để dễ nhìn */
+  display: inline-block; /* Căn chỉnh đúng vị trí */
+  text-align: center; /* Canh giữa cho nội dung button */
+  text-decoration: none; /* Loại bỏ gạch chân của liên kết */
+  cursor: pointer; /* Con trỏ chuyển thành dấu nhấn để thể hiện có thể nhấn */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Hiệu ứng đổ bóng */
+  transition: background-color 0.3s, color 0.3s, box-shadow 0.3s; /* Tạo hiệu ứng chuyển mượt */
+  font-weight: bold;
+}
+
+.btn-custom:hover,
+.btn-custom:active {
+  background-color: #634c9f; /* Màu nền khi hover hoặc nhấn */
+  color: white !important; /* Màu chữ khi hover hoặc nhấn */
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); /* Thêm đổ bóng khi hover hoặc nhấn */
+}
+
+.img-fluid {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
+.text-center {
+  color: black; /* Màu cam đỏ cho tiêu đề */
+}
+.text-tag {
+  color: #ea580c;
+  font-size: 20px;
+}
+
+.img-fluid {
+  width: 120%; /* Tăng kích thước ảnh lên 20% so với kích thước ban đầu */
+  height: auto; /* Đảm bảo chiều cao tự điều chỉnh để không bị biến dạng */
+  object-fit: cover; /* Đảm bảo ảnh không bị méo khi thay đổi kích thước */
+  margin-left: -10%; /* Đặt lại ảnh để cân đối với chiều rộng mới */
+}

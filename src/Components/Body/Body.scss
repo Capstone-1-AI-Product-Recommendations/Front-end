@@ -1,0 +1,27 @@
+.navbar-custom {
+    background-color: white;
+    border-bottom: 1px solid white;
+  }
+  .navbar-nav .nav-link {
+    color: #030712;
+    font-weight: 600;
+  }
+  .navbar-nav .nav-link.active {
+    color: #634C9F;
+  }
+  .search-bar {
+    background-color: #F3F4F6;
+    border-radius: 8px;
+  }
+  .search-bar input {
+    border: none;
+    box-shadow: none;
+  }
+  .icon-bg {
+    background-color: #634C9F;
+    border-radius: 50%;
+  }
+  .badge-danger-custom {
+    background-color: #DC2626;
+  }
+  
