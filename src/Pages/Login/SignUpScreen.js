@@ -1,45 +1,125 @@
 /** @format */
+
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import "./SignUpScreen.css"; // Import CSS từ file riêng
-import { FaEye, FaFacebookF, FaGoogle } from "react-icons/fa";
-import iconGoogle from "../../img/google-icon.png";
-import iconFacebook from "../../img/facebook-icon.png";
+import "./SignUpScreen.css";
+import { Eye } from "lucide-react";
+import googleIcon from "../../img/google-icon.png";
+import facebookIcon from "../../img/facebook-icon.png";
 const SignUpScreen = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const [formData, setFormData] = useState({
+    username: "",
+    email: "",
+    phoneNumber: "",
+    password: "",
+  });
 
-  const togglePasswordVisibility = () => {
-    setShowPassword(!showPassword);
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log("Form submitted:", formData);
+  };
+
   return (
     <div className='signup-container'>
-      <h2 className='signup-title'>Tạo tài khoản mới</h2>
-      <p className='signup-subtitle'>
-        Kết nối với bạn bè của bạn ngay hôm nay!
-      </p>
-      <form className='signup-form'>
-        <input type='text' placeholder='Nhập tên đăng nhập' />
-        <input type='email' placeholder='Nhập email' />
-        <input type='tel' placeholder='Nhập số điện thoại' />
-        <input type='password' placeholder='Nhập mật khẩu' />
+      <div className='signup-form'>
+        <h1 className='title'>
+          Tạo tài khoản
+        </h1>
+        <p className='subtitle'>Kết nối với bạn bè ngay hôm nay!</p>
 
-        <button type='submit'>Đăng ký</button>
+        <form onSubmit={handleSubmit}>
+          <div className='form-group'>
+            <input
+              type='text'
+              id='username'
+              name='username'
+              placeholder='Nhập tên người dùng'
+              value={formData.username}
+              onChange={handleInputChange}
+            />
+          </div>
 
-        <div className='signup-or'>Hoặc đăng ký bằng</div>
+          <div className='form-group'>
+            <input
+              type='email'
+              id='email'
+              name='email'
+              placeholder='Nhập email của bạn'
+              value={formData.email}
+              onChange={handleInputChange}
+            />
+          </div>
 
-        <button className='facebook-button '>
-          <img src={iconFacebook} alt='Description' />
-          <span>Đăng ký bằng Facebook</span>
-        </button>
-        <button className='google-button'>
-          <img src={iconGoogle} alt='Description' />{" "}
-          <span> Đăng ký bằng Google</span>
-        </button>
+          <div className='form-group'>
+            <input
+              type='tel'
+              id='phoneNumber'
+              name='phoneNumber'
+              placeholder='Nhập số điện thoại'
+              value={formData.phoneNumber}
+              onChange={handleInputChange}
+            />
+          </div>
 
-        <div className='login-link'>
-          Đã có tài khoản? <Link to='/login'>Đăng nhập</Link>
+          <div className='form-group'>
+            <div className='password-input'>
+              <input
+                type={showPassword ? "text" : "password"}
+                id='password'
+                name='password'
+                placeholder='Nhập mật khẩu'
+                value={formData.password}
+                onChange={handleInputChange}
+              />
+              <button
+                type='button'
+                className='toggle-password'
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                <Eye size={20} />
+              </button>
+            </div>
+          </div>
+
+          <button type='submit' className='signup-button'>
+            Đăng ký
+          </button>
+        </form>
+
+        <div className='divider'>
+          <span>Hoặc đăng ký với</span>
         </div>
-      </form>
+
+        <button className='social-signup facebook'>
+        <img
+            src= {facebookIcon}
+            alt='Facabook'
+            className='facebook-icon'
+          />
+          Đăng ký với Facebook
+        </button>
+
+        <button className='social-signup google'>
+          <img
+            src= {googleIcon}
+            alt='Google'
+            className='google-icon'
+          />
+          Đăng ký với Google
+        </button>
+
+        <p className='login-prompt'>
+          Đã có tài khoản? <a href='#'>Đăng nhập</a>
+        </p>
+      </div>
     </div>
   );
 };
