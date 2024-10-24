@@ -10,13 +10,13 @@ import OrderSummary from "./OrderSummary";
 const Checkout = () => {
   return (
     <>
-      <Header /> {/* Header component added correctly */}
+      <Header />
       <div
         style={{
           display: "flex",
-          gap: "20px",
-          padding: "24px",
-          marginLeft: "220px",
+          gap: "100px",
+          padding: "20px",
+          marginLeft: "200px",
           marginRight: "220px",
         }}
       >

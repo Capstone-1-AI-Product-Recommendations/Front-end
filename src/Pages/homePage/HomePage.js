@@ -14,6 +14,7 @@ import BestSell from "../../Components/Body/BestSell";
 const Landing = () => {
   return (
     <>
+      <div className="container-all">
       <Header />
       <div className='main-layout'>
         <Sidebar />
@@ -25,6 +26,7 @@ const Landing = () => {
       <FeaturedProduct />
       <BestSell />
       <Footer />
+    </div>
     </>
   );
 };

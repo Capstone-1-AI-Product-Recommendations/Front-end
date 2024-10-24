@@ -1,0 +1,122 @@
+/** @format */
+
+.payment-qr-container {
+  width: 360px;
+  margin: 0 auto;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 16px;
+  background-color: white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  font-family: Arial, sans-serif;
+}
+
+.payment-qr-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.payment-qr-title {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.payment-qr-close {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.payment-qr-app-text {
+  margin-top: 12px;
+  font-size: 14px;
+  color: #555;
+}
+
+.vietqr-logo {
+  width: 120px;
+  margin: 12px 0;
+}
+
+.qr-code-container {
+  position: relative;
+  display: inline-block;
+}
+
+.qr-code {
+  width: 150px;
+  height: 150px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+}
+
+.qr-heart-icon {
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 24px;
+  color: red;
+}
+
+.payment-logos {
+  margin: 16px 0;
+}
+
+.partner-logo {
+  width: 60px;
+  margin: 0 5px;
+}
+
+.payment-details {
+  margin: 16px 0;
+  text-align: left;
+}
+
+.payment-detail-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 4px 0;
+}
+
+.detail-label {
+  color: #555;
+}
+
+.detail-value {
+  font-weight: bold;
+}
+
+.payment-footer {
+  margin-top: 12px;
+  font-size: 12px;
+  color: #777;
+}
+
+.sapo-text {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sapo-logo {
+  width: 50px;
+  margin-left: 5px;
+}
+
+.print-button {
+  margin-top: 10px;
+  padding: 8px 16px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.print-button:hover {
+  background-color: #0056b3;
+}

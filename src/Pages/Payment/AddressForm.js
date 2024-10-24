@@ -132,6 +132,9 @@ const AddressForm = () => {
         </div>
 
         <div className='form-buttons'>
+          <button type='button' className='btn-add'>
+            Thêm vị trí <span className='ms-1'>+</span>
+          </button>
           <button type='button' className='btn-back'>
             Trở lại
           </button>

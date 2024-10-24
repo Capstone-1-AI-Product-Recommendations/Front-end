@@ -15,17 +15,20 @@ import MiniAdBanner from "./Components/Body/MiniAdBanner";
 import NewProduct from "./Components/Body/NewProduct";
 import FeaturedProduct from "./Components/Body/FeaturedProduct";
 import Landing from "./Pages/homePage/HomePage";
-import SignUp from "./Pages/Login/LoginScreen";
 import SignUpScreen from "./Pages/Login/SignUpScreen";
 import Checkout from "./Pages/Payment/Checkout";
+import LoginScreen from "./Pages/Login/LoginScreen";
+import VendorForm from "./Pages/masterLayout/VendorForm/VendorForm";
+import DashboardLayout from "./Pages/masterLayout/VendorForm/DashboardLayout";
 const RouterCustom = () => {
   return (
     <>
       {/* <Landing /> */}
       {/* <LoginScreen /> */}
-      {/* <SignUp /> */}
       {/* <SignUpScreen /> */}
-      <Checkout/>
+      {/* <Checkout /> */}
+      {/* <VendorForm /> */}
+      <DashboardLayout />
     </>
   );
 };
