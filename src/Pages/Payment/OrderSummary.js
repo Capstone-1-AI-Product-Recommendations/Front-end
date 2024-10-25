@@ -1,11 +1,13 @@
-/** @format */
 import React, { useState } from "react";
-import "./OrderSummary.css"; // Ensure the CSS file is correctly imported
+import { useNavigate } from "react-router-dom";  // Import đúng useNavigate
+import "./OrderSummary.css"; 
 
 const OrderSummary = () => {
   const [paymentMethod, setPaymentMethod] = useState("directBank");
   const [shippingMethod, setShippingMethod] = useState("flat");
   const [acceptTerms, setAcceptTerms] = useState(false);
+
+  const navigate = useNavigate();  // Sử dụng hook useNavigate để điều hướng
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -14,6 +16,9 @@ const OrderSummary = () => {
       shippingMethod,
       acceptTerms,
     });
+
+    // Điều hướng sang trang PaymentQRCode khi nhấn "Đặt hàng"
+    navigate("/payment");
   };
 
   return (

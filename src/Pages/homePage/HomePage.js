@@ -10,25 +10,26 @@ import FeaturedProduct from "../../Components/Body/FeaturedProduct";
 import Footer from "../../Components/Footer/Footer";
 import Sidebar from "../../Components/Body/Sidebar";
 import BestSell from "../../Components/Body/BestSell";
+import "../../styles/MainLayout.css";
 
-const Landing = () => {
+const HomePage = () => {
   return (
     <>
-      <div className="container-all">
-      <Header />
-      <div className='main-layout'>
-        <Sidebar />
-        <ProductAdBanner />
+      <div className='container-all'>
+        {/* <Header /> */}
+        <div className='main-layout'>
+          <Sidebar />
+          <ProductAdBanner />
+        </div>
+        <FeaturesSection />
+        <MiniAdBanner />
+        <NewProduct />
+        <FeaturedProduct />
+        <BestSell />
+        {/* <Footer /> */}
       </div>
-      <FeaturesSection />
-      <MiniAdBanner />
-      <NewProduct />
-      <FeaturedProduct />
-      <BestSell />
-      <Footer />
-    </div>
     </>
   );
 };
 
-export default Landing;
+export default HomePage;

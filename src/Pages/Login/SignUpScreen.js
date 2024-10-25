@@ -1,123 +1,117 @@
 /** @format */
+// Login.js
 
-import React, { useState } from "react";
-import "./SignUpScreen.css";
-import { Eye } from "lucide-react";
-import googleIcon from "../../img/google-icon.png";
-import facebookIcon from "../../img/facebook-icon.png";
+
+// Signup.js
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import './Auth.css';
+
 const SignUpScreen = () => {
-  const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    username: "",
-    email: "",
-    phoneNumber: "",
-    password: "",
+    username: '',
+    email: '',
+    phone: '',
+    password: ''
   });
 
-  const handleInputChange = (e) => {
+  const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({
+    setFormData(prev => ({
       ...prev,
-      [name]: value,
+      [name]: value
     }));
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Form submitted:", formData);
+    // Xử lý đăng ký ở đây
+    console.log('Signup data:', formData);
+  };
+
+  const handleFacebookSignup = () => {
+    // Xử lý đăng ký bằng Facebook
+    console.log('Facebook signup');
+  };
+
+  const handleGoogleSignup = () => {
+    // Xử lý đăng ký bằng Google
+    console.log('Google signup');
   };
 
   return (
-    <div className='signup-container'>
-      <div className='signup-form'>
-        <h1 className='title'>
-          Tạo tài khoản
-        </h1>
-        <p className='subtitle'>Kết nối với bạn bè ngay hôm nay!</p>
+    <div className="auth-container">
+      <div className="auth-form">
+        <h1>Tạo tài khoản</h1>
+        <p className="subtitle">Kết nối với bạn bè ngay hôm nay!</p>
 
         <form onSubmit={handleSubmit}>
-          <div className='form-group'>
+          <div className="form-group">
+            <label htmlFor="username">Tên người dùng</label>
             <input
-              type='text'
-              id='username'
-              name='username'
-              placeholder='Nhập tên người dùng'
+              type="text"
+              id="username"
+              name="username"
+              placeholder="Nhập tên người dùng"
               value={formData.username}
-              onChange={handleInputChange}
+              onChange={handleChange}
             />
           </div>
 
-          <div className='form-group'>
+          <div className="form-group">
+            <label htmlFor="email">Email</label>
             <input
-              type='email'
-              id='email'
-              name='email'
-              placeholder='Nhập email của bạn'
+              type="email"
+              id="email"
+              name="email"
+              placeholder="Nhập email của bạn"
               value={formData.email}
-              onChange={handleInputChange}
+              onChange={handleChange}
             />
           </div>
 
-          <div className='form-group'>
+          <div className="form-group">
+            <label htmlFor="phone">Số điện thoại</label>
             <input
-              type='tel'
-              id='phoneNumber'
-              name='phoneNumber'
-              placeholder='Nhập số điện thoại'
-              value={formData.phoneNumber}
-              onChange={handleInputChange}
+              type="tel"
+              id="phone"
+              name="phone"
+              placeholder="Nhập số điện thoại của bạn"
+              value={formData.phone}
+              onChange={handleChange}
             />
           </div>
 
-          <div className='form-group'>
-            <div className='password-input'>
-              <input
-                type={showPassword ? "text" : "password"}
-                id='password'
-                name='password'
-                placeholder='Nhập mật khẩu'
-                value={formData.password}
-                onChange={handleInputChange}
-              />
-              <button
-                type='button'
-                className='toggle-password'
-                onClick={() => setShowPassword(!showPassword)}
-              >
-                <Eye size={20} />
-              </button>
-            </div>
+          <div className="form-group">
+            <label htmlFor="password">Mật khẩu</label>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              placeholder="Nhập mật khẩu của bạn"
+              value={formData.password}
+              onChange={handleChange}
+            />
           </div>
 
-          <button type='submit' className='signup-button'>
-            Đăng ký
-          </button>
+          <button type="submit" className="primary-button">Đăng ký</button>
         </form>
 
-        <div className='divider'>
-          <span>Hoặc đăng ký với</span>
-        </div>
+        <div className="divider">Hoặc</div>
 
-        <button className='social-signup facebook'>
-        <img
-            src= {facebookIcon}
-            alt='Facabook'
-            className='facebook-icon'
-          />
+        <button className="social-button facebook" onClick={handleFacebookSignup}>
+          <i className="fab fa-facebook"></i>
           Đăng ký với Facebook
         </button>
 
-        <button className='social-signup google'>
-          <img
-            src= {googleIcon}
-            alt='Google'
-            className='google-icon'
-          />
+        <button className="social-button google" onClick={handleGoogleSignup}>
+          <i className="fab fa-google"></i>
           Đăng ký với Google
         </button>
 
-        <p className='login-prompt'>
-          Đã có tài khoản? <a href='#'>Đăng nhập</a>
+        <p className="switch-auth">
+          Đã có tài khoản? <Link to="/login">Đăng nhập</Link>
         </p>
       </div>
     </div>
