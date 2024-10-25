@@ -1,119 +1,99 @@
-/** @format */
-
-import React, { useState } from "react";
-import "./LoginScreen.css";
-import { Eye } from "lucide-react";
-import googleIcon from "../../img/google-icon.png";
-import facebookIcon from "../../img/facebook-icon.png";
-// Xóa dòng import LoginScreen vì không cần thiết và gây lỗi
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import './Auth.css';
 
 const LoginScreen = () => {
-  const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-    rememberMe: false,
+    email: '',
+    password: '',
+    rememberMe: false
   });
 
-  const handleInputChange = (e) => {
+  const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setFormData((prev) => ({
+    setFormData(prev => ({
       ...prev,
-      [name]: type === "checkbox" ? checked : value,
+      [name]: type === 'checkbox' ? checked : value
     }));
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Handle login logic here
-    console.log("Form submitted:", formData);
+    // Xử lý đăng nhập ở đây
+    console.log('Login data:', formData);
+  };
+
+  const handleFacebookLogin = () => {
+    // Xử lý đăng nhập bằng Facebook
+    console.log('Facebook login');
+  };
+
+  const handleGoogleLogin = () => {
+    // Xử lý đăng nhập bằng Google
+    console.log('Google login');
   };
 
   return (
-    <div className='login-container'>
-      <div className='login-form'>
-        <h1 className='welcome-text'>
-          Hi, Welcome Back! <span className='wave-emoji'>👋</span>
-        </h1>
-
+    <div className="auth-container">
+      <div className="auth-form">
+        <h1>Xin chào, mừng trở lại! 👋</h1>
+        
         <form onSubmit={handleSubmit}>
-          <div className='form-group'>
-            <label htmlFor='email'>Email</label>
+          <div className="form-group">
+            <label htmlFor="email">Email</label>
             <input
-              type='email'
-              id='email'
-              name='email'
-              placeholder='example@gmail.com'
+              type="email"
+              id="email"
+              name="email"
+              placeholder="example@gmail.com"
               value={formData.email}
-              onChange={handleInputChange}
+              onChange={handleChange}
             />
           </div>
 
-          <div className='form-group'>
-            <label htmlFor='password'>Mật khẩu</label>
-            <div className='password-input'>
-              <input
-                type={showPassword ? "text" : "password"}
-                id='password'
-                name='password'
-                placeholder='Enter Your Password'
-                value={formData.password}
-                onChange={handleInputChange}
-              />
-              <button
-                type='button'
-                className='toggle-password'
-                onClick={() => setShowPassword(!showPassword)}
-              >
-                <Eye size={20} />
-              </button>
-            </div>
+          <div className="form-group">
+            <label htmlFor="password">Mật khẩu</label>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              placeholder="Nhập mật khẩu của bạn"
+              value={formData.password}
+              onChange={handleChange}
+            />
           </div>
 
-          <div className='form-options'>
-            <label className='remember-me'>
+          <div className="form-options">
+            <label className="remember-me">
               <input
-                type='checkbox'
-                name='rememberMe'
+                type="checkbox"
+                name="rememberMe"
                 checked={formData.rememberMe}
-                onChange={handleInputChange}
+                onChange={handleChange}
               />
               Ghi nhớ đăng nhập
             </label>
-            <a href='#' className='forgot-password'>
-              Quên mật khẩu?
-            </a>
+            <a href="#" className="forgot-password">Quên mật khẩu?</a>
           </div>
 
-          <button type='submit' className='login-button'>
-            Đăng nhập
-          </button>
+          <button type="submit" className="primary-button">Đăng nhập</button>
         </form>
 
-        <div className='divider'>
-          <span>Hoặc với</span>
-        </div>
+        <div className="divider">Hoặc</div>
 
-        <button className='social-login facebook'>
-        <img
-            src={ facebookIcon}
-            alt='Facebook'
-            className='facebook-icon' 
-          />
+        <button className="social-button facebook" onClick={handleFacebookLogin}>
+          <i className="fab fa-facebook"></i>
           Đăng nhập với Facebook
         </button>
 
-        <button className='social-login google'>
-          <img
-            src={ googleIcon}
-            alt='Google'
-            className='google-icon' 
-          />
+        <button className="social-button google" onClick={handleGoogleLogin}>
+          <i className="fab fa-google"></i>
           Đăng nhập với Google
         </button>
 
-        <p className='signup-prompt'>
-          Bạn chưa có tài khoản? <a href='#'>Đăng ký </a>
+        <p className="switch-auth">
+          Chưa có tài khoản? <Link to="/signup">Đăng ký</Link>
         </p>
       </div>
     </div>

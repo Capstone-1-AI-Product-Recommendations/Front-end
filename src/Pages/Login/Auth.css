@@ -1,0 +1,165 @@
+/* Auth.css */
+.auth-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #f5f5f5;
+    padding: 20px;
+  }
+  
+  .auth-form {
+    background: white;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px;
+  }
+  
+  .auth-form h1 {
+    margin-bottom: 20px;
+    font-size: 24px;
+    font-weight: 600;
+    color: #333;
+  }
+  
+  .subtitle {
+    color: #666;
+    margin-bottom: 24px;
+  }
+  
+  .form-group {
+    margin-bottom: 20px;
+  }
+  
+  .form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: #333;
+  }
+  
+  .form-group input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 14px;
+    transition: border-color 0.3s ease;
+  }
+  
+  .form-group input:focus {
+    outline: none;
+    border-color: #1a73e8;
+  }
+  
+  .form-options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .remember-me {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #666;
+  }
+  
+  .forgot-password {
+    color: #1a73e8;
+    text-decoration: none;
+    font-size: 14px;
+  }
+  
+  .primary-button {
+    width: 100%;
+    padding: 12px;
+    background-color: #1a73e8;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .primary-button:hover {
+    background-color: #1557b0;
+  }
+  
+  .divider {
+    text-align: center;
+    margin: 20px 0;
+    position: relative;
+    color: #666;
+  }
+  
+  .divider::before,
+  .divider::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: 45%;
+    height: 1px;
+    background-color: #ddd;
+  }
+  
+  .divider::before {
+    left: 0;
+  }
+  
+  .divider::after {
+    right: 0;
+  }
+  
+  .social-button {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .social-button i {
+    font-size: 18px;
+  }
+  
+  .social-button.facebook {
+    color: #1877f2;
+  }
+  
+  .social-button.google {
+    color: #ea4335;
+  }
+  
+  .social-button:hover {
+    background-color: #f5f5f5;
+  }
+  
+  .switch-auth {
+    text-align: center;
+    margin-top: 20px;
+    color: #666;
+  }
+  
+  .switch-auth a {
+    color: #1a73e8;
+    text-decoration: none;
+    font-weight: 500;
+  }
+  
+  .switch-auth a:hover {
+    text-decoration: underline;
+  }

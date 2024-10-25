@@ -1,12 +1,16 @@
 /** @format */
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
+import { useNavigate } from "react-router-dom";
+
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../../styles/NewProduct.css"; // Import custom CSS for additional styling
 import NewProductImg from "../../img/newProduct.png";
 import AltProductImg1 from "../../img/altProductImg1.png";
 import AltProductImg2 from "../../img/altProductImg2.png";
+import AltProductImg3 from "../../img/newProduct.png";
 
+import { CartContext } from "./CartContext";
 const products = [
   {
     id: 1,
@@ -16,7 +20,7 @@ const products = [
     price: "₫ 120.400",
     originalPrice: "₫ 160.780",
     imageUrl: NewProductImg,
-    altImages: [AltProductImg1, AltProductImg2],
+    altImages: [AltProductImg1, AltProductImg2, AltProductImg3],
     rating: 4,
   },
   {
@@ -27,7 +31,7 @@ const products = [
     price: "₫ 120.400",
     originalPrice: "₫ 160.780",
     imageUrl: NewProductImg,
-    altImages: [AltProductImg1, AltProductImg2],
+    altImages: [AltProductImg1, AltProductImg2, AltProductImg3],
     rating: 5,
   },
   {
@@ -38,7 +42,7 @@ const products = [
     price: "₫ 120.400",
     originalPrice: "₫ 160.780",
     imageUrl: NewProductImg,
-    altImages: [AltProductImg1, AltProductImg2],
+    altImages: [AltProductImg1, AltProductImg2, AltProductImg3],
     rating: 2,
   },
   {
@@ -146,24 +150,59 @@ const products = [
 const NewProduct = () => {
   const [hoveredProduct, setHoveredProduct] = useState(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [isHoverTimerActive, setIsHoverTimerActive] = useState(false);
+  const navigate = useNavigate(); // Điều hướng
+  const { addToCart } = useContext(CartContext); // Lấy hàm addToCart từ context
 
+  // Xử lý logic thay đổi ảnh khi hover
   useEffect(() => {
     let interval;
-
-    if (hoveredProduct !== null && products[hoveredProduct].altImages) {
+    if (
+      hoveredProduct !== null &&
+      products[hoveredProduct].altImages &&
+      isHoverTimerActive
+    ) {
       interval = setInterval(() => {
         setCurrentImageIndex((prevIndex) =>
           prevIndex >= products[hoveredProduct].altImages.length - 1
             ? 0
             : prevIndex + 1
         );
-      }, 1000);
+      }, 1000); // Thay đổi ảnh mỗi giây
     } else {
-      setCurrentImageIndex(0); // Reset về ảnh ban đầu khi không còn hover
+      setCurrentImageIndex(0); // Reset về ảnh gốc nếu không hover
     }
 
     return () => clearInterval(interval);
-  }, [hoveredProduct]);
+  }, [hoveredProduct, isHoverTimerActive]);
+
+  // Xử lý sự kiện click vào sản phẩm để điều hướng
+  const handleProductClick = (productId) => {
+    navigate(`/product/${productId}`);
+  };
+  const handleCartClick = () => {
+    navigate("/ADSmartCart");
+  };
+
+  // Xử lý sự kiện thêm sản phẩm vào giỏ hàng
+  const handleAddToCart = (e, product) => {
+    e.stopPropagation(); // Ngăn chặn sự kiện click lan ra ngoài khi thêm vào giỏ hàng
+    addToCart(product); // Thêm sản phẩm vào giỏ hàng
+  };
+
+  // Xử lý khi hover vào sản phẩm
+  const handleMouseEnter = (index) => {
+    setHoveredProduct(index);
+    setTimeout(() => {
+      setIsHoverTimerActive(true); // Kích hoạt timer sau một thời gian ngắn
+    }, 200);
+  };
+
+  // Xử lý khi rời khỏi hover
+  const handleMouseLeave = () => {
+    setHoveredProduct(null);
+    setIsHoverTimerActive(false); // Tắt timer khi rời khỏi hover
+  };
 
   return (
     <div className='container mt-4'>
@@ -183,8 +222,10 @@ const NewProduct = () => {
           <div key={product.id} className='col-md-2 mb-3'>
             <div className='card product-card h-100'>
               <div className='card-body'>
-                <span className='discount-badge'>{product.discount}</span>
-                <div className='image-container'>
+                <span className='discount-badge' onClick={handleCartClick}>
+                  {product.discount}
+                </span>
+                <div className='image-container' onClick={handleCartClick}>
                   <img
                     src={
                       hoveredProduct === index &&
