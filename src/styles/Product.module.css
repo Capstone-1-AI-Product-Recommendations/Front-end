@@ -1,0 +1,55 @@
+.productItem {
+    background-color: #f9f9f9; /* Nền nhẹ cho sản phẩm */
+    border-radius: 5px; /* Bo góc cho sản phẩm */
+    padding: 10px; /* Padding cho sản phẩm */
+    text-align: center; /* Căn giữa nội dung */
+    transition: transform 0.3s, box-shadow 0.3s; /* Hiệu ứng khi hover */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Đổ bóng nhẹ */
+}
+
+.productItem:hover {
+    transform: translateY(-5px); /* Nâng sản phẩm khi hover */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Đổ bóng mạnh hơn khi hover */
+}
+
+.productItem img {
+    max-width: 100%; /* Chiều rộng tối đa của ảnh */
+    height: auto; /* Tự động điều chỉnh chiều cao */
+    border-radius: 4px; /* Bo tròn góc ảnh */
+}
+
+.productItem h3 {
+    font-size: 16px; /* Kích thước tiêu đề sản phẩm */
+    margin: 10px 0; /* Khoảng cách trên và dưới cho tiêu đề */
+}
+
+.price {
+    margin: 10px 0; /* Khoảng cách cho phần giá */
+}
+
+.currentPrice {
+    font-size: 18px; /* Kích thước chữ cho giá hiện tại */
+    color: #2E7D32; /* Màu xanh cho giá hiện tại */
+    font-weight: bold; /* Tô đậm chữ giá hiện tại */
+}
+
+.oldPrice {
+    text-decoration: line-through; /* Gạch chân giá cũ */
+    color: #999; /* Màu xám cho giá cũ */
+    margin-left: 10px; /* Khoảng cách bên trái */
+}
+
+.productItem button {
+    padding: 10px 15px; /* Padding cho nút */
+    background-color: #634C9F; /* Nền nút màu tím */
+    color: white; /* Màu chữ sáng */
+    border: none; /* Bỏ viền cho nút */
+    border-radius: 4px; /* Bo góc cho nút */
+    cursor: pointer; /* Hiển thị con trỏ tay khi hover */
+    margin-top: 10px; /* Khoảng cách trên cho nút */
+    transition: background-color 0.3s; /* Hiệu ứng chuyển màu mượt mà */
+}
+
+.productItem button:hover {
+    background-color: #7A67B3; /* Nền nút khi hover */
+}

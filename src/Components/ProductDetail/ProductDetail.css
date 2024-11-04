@@ -1,0 +1,60 @@
+.productDetail {
+    max-width: 800px; /* Chiều rộng tối đa cho chi tiết sản phẩm */
+    margin: 20px auto; /* Căn giữa */
+    padding: 20px; /* Padding cho nội dung */
+    background-color: #ffffff; /* Nền trắng cho phần chi tiết */
+    border-radius: 8px; /* Bo góc nhẹ */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Đổ bóng nhẹ */
+}
+
+.productName {
+    font-size: 24px; /* Kích thước chữ cho tên sản phẩm */
+    margin-bottom: 15px; /* Khoảng cách dưới cùng */
+    color: #634C9F; /* Màu cho tên sản phẩm */
+}
+
+.productImage {
+    max-width: 100%; /* Chiều rộng tối đa của ảnh */
+    height: auto; /* Tự động điều chỉnh chiều cao */
+    border-radius: 8px; /* Bo góc cho ảnh */
+    margin-bottom: 20px; /* Khoảng cách dưới ảnh */
+}
+
+.productInfo {
+    margin-top: 20px; /* Khoảng cách trên cho thông tin sản phẩm */
+}
+
+.productDescription {
+    font-size: 16px; /* Kích thước chữ cho mô tả sản phẩm */
+    margin-bottom: 10px; /* Khoảng cách dưới cùng */
+}
+
+.productPrice {
+    font-size: 18px; /* Kích thước chữ cho giá */
+    margin-bottom: 20px; /* Khoảng cách dưới cùng */
+}
+
+.currentPrice {
+    color: #2E7D32; /* Màu xanh cho giá hiện tại */
+    font-weight: bold; /* Tô đậm chữ giá hiện tại */
+}
+
+.oldPrice {
+    text-decoration: line-through; /* Gạch chân giá cũ */
+    color: #999; /* Màu xám cho giá cũ */
+    margin-left: 10px; /* Khoảng cách bên trái */
+}
+
+.addToCartButton {
+    padding: 10px 15px; /* Padding cho nút */
+    background-color: #634C9F; /* Nền nút màu tím */
+    color: white; /* Màu chữ sáng */
+    border: none; /* Bỏ viền cho nút */
+    border-radius: 4px; /* Bo góc cho nút */
+    cursor: pointer; /* Hiển thị con trỏ tay khi hover */
+    transition: background-color 0.3s; /* Hiệu ứng chuyển màu mượt mà */
+}
+
+.addToCartButton:hover {
+    background-color: #7A67B3; /* Nền nút khi hover */
+}

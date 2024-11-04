@@ -33,7 +33,6 @@ const RouterCustom = () => {
       <Route path='/vendor' element={<VendorForm />} />{" "}
       <Route path='/dashboard' element={<DashboardLayout />} />{" "}
       <Route path='/checkout' element={<Checkout />} />{" "}
-
     </Routes>
   );
 };

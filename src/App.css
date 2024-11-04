@@ -1,17 +1,20 @@
-/* src/App.css */
+/**
+ * src/App.css
+ *
+ * @format
+ */
 
-html, body {
-    height: 100%; /* Đảm bảo chiều cao 100% cho html và body */
-    margin: 0; /* Xóa margin */
-  }
-  
-  .app {
-    display: flex;
-    flex-direction: column; /* Căn dọc cho các thành phần */
-    min-height: 100vh; /* Chiều cao tối thiểu 100% viewport */
-  }
-  
-  .mainContent {
-    flex: 1; /* Cung cấp không gian cho nội dung giữa */
-  }
-  
+ html, body {
+  height: 100%; /* Đảm bảo chiều cao 100% cho html và body */
+  margin: 0; /* Xóa margin */
+}
+
+.app {
+  display: flex;
+  flex-direction: column; /* Căn dọc cho các thành phần */
+  min-height: 100vh; /* Chiều cao tối thiểu 100% viewport */
+}
+
+.mainContent {
+  flex: 1; /* Cung cấp không gian cho nội dung giữa */
+}
