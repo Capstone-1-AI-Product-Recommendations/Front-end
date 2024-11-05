@@ -1,7 +1,7 @@
+// src/Components/Cart/Cart.js
 /** @format */
-
 import React, { useContext } from "react";
-import { CartContext } from "./CartContext";
+import { CartContext } from "./CartContext"; // Điều chỉnh đường dẫn đến CartContext nếu cần
 
 const Cart = () => {
   const { cartItems, removeFromCart } = useContext(CartContext);

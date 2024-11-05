@@ -2,169 +2,30 @@
 
 import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-
+import { CartContext } from "../Cart/CartContext";
 import "bootstrap/dist/css/bootstrap.min.css";
-import "../../styles/NewProduct.css"; // Import custom CSS for additional styling
-import NewProductImg from "../../img/newProduct.png";
-import AltProductImg1 from "../../img/altProductImg1.png";
-import AltProductImg2 from "../../img/altProductImg2.png";
-import AltProductImg3 from "../../img/newProduct.png";
-
-import { CartContext } from "./CartContext";
-const products = [
-  {
-    id: 1,
-    discount: "21%",
-    badge: "COLD SALE",
-    title: "Cantaloupe Melon Fresh Organic Cut",
-    price: "₫ 120.400",
-    originalPrice: "₫ 160.780",
-    imageUrl: NewProductImg,
-    altImages: [AltProductImg1, AltProductImg2, AltProductImg3],
-    rating: 4,
-  },
-  {
-    id: 2,
-    discount: "59%",
-    badge: "ORGANIC",
-    title: "Cantaloupe Melon Fresh Organic Cut",
-    price: "₫ 120.400",
-    originalPrice: "₫ 160.780",
-    imageUrl: NewProductImg,
-    altImages: [AltProductImg1, AltProductImg2, AltProductImg3],
-    rating: 5,
-  },
-  {
-    id: 3,
-    discount: "21%",
-    badge: "COLD SALE",
-    title: "Cantaloupe Melon Fresh Organic Cut",
-    price: "₫ 120.400",
-    originalPrice: "₫ 160.780",
-    imageUrl: NewProductImg,
-    altImages: [AltProductImg1, AltProductImg2, AltProductImg3],
-    rating: 2,
-  },
-  {
-    id: 4,
-    discount: "59%",
-    badge: "ORGANIC",
-    title: "Cantaloupe Melon Fresh Organic Cut",
-    price: "₫ 120.400",
-    originalPrice: "₫ 160.780",
-    imageUrl: NewProductImg,
-    altImages: [AltProductImg1, AltProductImg2],
-    rating: 3,
-  },
-  {
-    id: 1,
-    discount: "21%",
-    badge: "COLD SALE",
-    title: "Cantaloupe Melon Fresh Organic Cut",
-    price: "₫ 120.400",
-    originalPrice: "₫ 160.780",
-    imageUrl: NewProductImg,
-    altImages: [AltProductImg1, AltProductImg2],
-    rating: 4,
-  },
-  {
-    id: 2,
-    discount: "59%",
-    badge: "ORGANIC",
-    title: "Cantaloupe Melon Fresh Organic Cut",
-    price: "₫ 120.400",
-    originalPrice: "₫ 160.780",
-    imageUrl: NewProductImg,
-    altImages: [AltProductImg1, AltProductImg2],
-    rating: 5,
-  },
-  {
-    id: 3,
-    discount: "21%",
-    badge: "COLD SALE",
-    title: "Cantaloupe Melon Fresh Organic Cut",
-    price: "₫ 120.400",
-    originalPrice: "₫ 160.780",
-    imageUrl: NewProductImg,
-    altImages: [AltProductImg1, AltProductImg2],
-    rating: 2,
-  },
-  {
-    id: 4,
-    discount: "59%",
-    badge: "ORGANIC",
-    title: "Cantaloupe Melon Fresh Organic Cut",
-    price: "₫ 120.400",
-    originalPrice: "₫ 160.780",
-    imageUrl: NewProductImg,
-    altImages: [AltProductImg1, AltProductImg2],
-    rating: 3,
-  },
-  {
-    id: 4,
-    discount: "59%",
-    badge: "ORGANIC",
-    title: "Cantaloupe Melon Fresh Organic Cut",
-    price: "₫ 120.400",
-    originalPrice: "₫ 160.780",
-    imageUrl: NewProductImg,
-    altImages: [AltProductImg1, AltProductImg2],
-    rating: 3,
-  },
-  {
-    id: 4,
-    discount: "59%",
-    badge: "ORGANIC",
-    title: "Cantaloupe Melon Fresh Organic Cut",
-    price: "₫ 120.400",
-    originalPrice: "₫ 160.780",
-    imageUrl: NewProductImg,
-    altImages: [AltProductImg1, AltProductImg2],
-    rating: 3,
-  },
-  {
-    id: 4,
-    discount: "59%",
-    badge: "ORGANIC",
-    title: "Cantaloupe Melon Fresh Organic Cut",
-    price: "₫ 120.400",
-    originalPrice: "₫ 160.780",
-    imageUrl: NewProductImg,
-    altImages: [AltProductImg1, AltProductImg2],
-    rating: 3,
-  },
-  {
-    id: 4,
-    discount: "59%",
-    badge: "ORGANIC",
-    title: "Cantaloupe Melon Fresh Organic Cut",
-    price: "₫ 120.400",
-    originalPrice: "₫ 160.780",
-    imageUrl: NewProductImg,
-    altImages: [AltProductImg1, AltProductImg2],
-    rating: 3,
-  },
-  // Thêm các sản phẩm khác nếu cần thiết
-];
+import "../../styles/NewProduct.css";
+import productData from "../../data/product"; // Import dữ liệu sản phẩm từ file riêng
 
 const NewProduct = () => {
   const [hoveredProduct, setHoveredProduct] = useState(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isHoverTimerActive, setIsHoverTimerActive] = useState(false);
-  const navigate = useNavigate(); // Điều hướng
-  const { addToCart } = useContext(CartContext); // Lấy hàm addToCart từ context
+  const navigate = useNavigate();
+
+  const { addToCart } = useContext(CartContext);
 
   // Xử lý logic thay đổi ảnh khi hover
   useEffect(() => {
     let interval;
     if (
       hoveredProduct !== null &&
-      products[hoveredProduct].altImages &&
+      productData[hoveredProduct].altImages &&
       isHoverTimerActive
     ) {
       interval = setInterval(() => {
         setCurrentImageIndex((prevIndex) =>
-          prevIndex >= products[hoveredProduct].altImages.length - 1
+          prevIndex >= productData[hoveredProduct].altImages.length - 1
             ? 0
             : prevIndex + 1
         );
@@ -179,9 +40,6 @@ const NewProduct = () => {
   // Xử lý sự kiện click vào sản phẩm để điều hướng
   const handleProductClick = (productId) => {
     navigate(`/product/${productId}`);
-  };
-  const handleCartClick = () => {
-    navigate("/ADSmartCart");
   };
 
   // Xử lý sự kiện thêm sản phẩm vào giỏ hàng
@@ -218,14 +76,18 @@ const NewProduct = () => {
         </a>
       </div>
       <div className='row'>
-        {products.map((product, index) => (
-          <div key={product.id} className='col-md-2 mb-3'>
+        {productData.map((product, index) => (
+          <div
+            key={product.id}
+            className='col-md-2 mb-3'
+            onClick={() => handleProductClick(product.id)}
+            onMouseEnter={() => handleMouseEnter(index)}
+            onMouseLeave={handleMouseLeave}
+          >
             <div className='card product-card h-100'>
               <div className='card-body'>
-                <span className='discount-badge' onClick={handleCartClick}>
-                  {product.discount}
-                </span>
-                <div className='image-container' onClick={handleCartClick}>
+                <span className='discount-badge'>{product.discount}</span>
+                <div className='image-container'>
                   <img
                     src={
                       hoveredProduct === index &&
@@ -236,8 +98,6 @@ const NewProduct = () => {
                     }
                     alt={product.title}
                     className='img-fluid product-image mb-3'
-                    onMouseEnter={() => setHoveredProduct(index)}
-                    onMouseLeave={() => setHoveredProduct(null)}
                   />
                 </div>
                 <span className='badge bg-success text-uppercase product-badge mb-2'>
@@ -245,12 +105,10 @@ const NewProduct = () => {
                 </span>
                 <h6 className='product-title mb-2'>{product.title}</h6>
                 <div className='rating mt-2'>
-                  {Array.from({ length: 5 }, (_, index) => (
+                  {Array.from({ length: 5 }, (_, i) => (
                     <span
-                      key={index}
-                      className={
-                        index < product.rating ? "star filled" : "star"
-                      }
+                      key={i}
+                      className={i < product.rating ? "star filled" : "star"}
                     >
                       ★
                     </span>
@@ -262,7 +120,10 @@ const NewProduct = () => {
                     <del>{product.originalPrice}</del>
                   </span>
                 </p>
-                <button className='btn btn-custom-cart btn-sm mt-1 add-to-cart'>
+                <button
+                  className='btn btn-custom-cart btn-sm mt-1 add-to-cart'
+                  onClick={(e) => handleAddToCart(e, product)}
+                >
                   Thêm vào giỏ hàng
                   <span className='ms-4'>+</span>
                 </button>

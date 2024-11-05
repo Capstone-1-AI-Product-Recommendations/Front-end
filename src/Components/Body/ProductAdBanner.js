@@ -2,7 +2,7 @@
 
 import React from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-import "../../styles/ProductAdBanner.css"; // Đảm bảo đúng đường dẫn đến file CSS
+import "../../styles/ProductAdBanner.css";
 import productAdBannerImg from "../../img/productAdBanner.png"; // Import hình ảnh sản phẩm
 
 const ProductAdBanner = () => {

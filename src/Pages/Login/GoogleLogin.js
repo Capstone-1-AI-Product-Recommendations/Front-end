@@ -3,16 +3,13 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./GoogleLogin.css";
-import googleIcon from "../../img/google-icon.png";
+import googleIcon from "../../img/google-icon.png"; // Adjust the path as needed
 import { FaCaretDown } from "react-icons/fa";
 
 const GoogleLogin = () => {
-    const navigate = useNavigate();
-    const handleSignup = () => {
-        navigate("/");
-
-
-    
+  const navigate = useNavigate();
+  const handleSignup = () => {
+    navigate("/");
   };
   return (
     <div className='google-login-container'>

@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-import "../../styles/BestSell.css"; // Import custom CSS for additional styling
+import "../../styles/BestSell.css";
 import NewProductImg from "../../img/newProduct.png";
 import AltProductImg1 from "../../img/altProductImg1.png";
 import AltProductImg2 from "../../img/altProductImg2.png";
