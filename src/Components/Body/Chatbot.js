@@ -23,21 +23,30 @@ const Chatbot = () => {
   // Điều chỉnh chiều cao của textarea khi người dùng nhập nội dung
   useEffect(() => {
     const adjustTextareaHeight = () => {
-      inputRef.current.style.height = "auto";
-      inputRef.current.style.height = `${inputRef.current.scrollHeight}px`;
+      if (inputRef.current) {
+        inputRef.current.style.height = "auto";
+        inputRef.current.style.height = `${inputRef.current.scrollHeight}px`;
 
-      // Giới hạn chiều cao tối đa
-      if (inputRef.current.scrollHeight > 120) {
-        inputRef.current.style.height = "120px";
-        inputRef.current.style.overflowY = "auto";
-      } else {
-        inputRef.current.style.overflowY = "hidden";
+        // Giới hạn chiều cao tối đa
+        if (inputRef.current.scrollHeight > 120) {
+          inputRef.current.style.height = "120px";
+          inputRef.current.style.overflowY = "auto";
+        } else {
+          inputRef.current.style.overflowY = "hidden";
+        }
       }
     };
 
-    inputRef.current.addEventListener("input", adjustTextareaHeight);
-    return () =>
-      inputRef.current.removeEventListener("input", adjustTextareaHeight);
+    if (inputRef.current) {
+      inputRef.current.addEventListener("input", adjustTextareaHeight);
+    }
+
+    // Cleanup event listener khi component unmount
+    return () => {
+      if (inputRef.current) {
+        inputRef.current.removeEventListener("input", adjustTextareaHeight);
+      }
+    };
   }, []);
 
   // Cơ sở dữ liệu sản phẩm mở rộng
