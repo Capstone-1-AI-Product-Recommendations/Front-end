@@ -1,7 +1,7 @@
 // src/Components/Cart/Cart.js
 /** @format */
 import React, { useContext } from "react";
-import { CartContext } from "./CartContext"; // Điều chỉnh đường dẫn đến CartContext nếu cần
+import { CartContext } from "./CartContext";
 
 const Cart = () => {
   const { cartItems, removeFromCart } = useContext(CartContext);
@@ -14,8 +14,9 @@ const Cart = () => {
       ) : (
         cartItems.map((item) => (
           <div key={item.id}>
-            <h3>{item.name}</h3>
-            <p>Giá: ${item.price}</p>
+            <h3>{item.title}</h3>
+            <p>Giá: {item.price.toLocaleString()}₫</p>
+            <p>Giá gốc: {item.originalPrice.toLocaleString()}₫</p>
             <button onClick={() => removeFromCart(item.id)}>Xóa</button>
           </div>
         ))

@@ -11,6 +11,7 @@ import Footer from "../../Components/Footer/Footer";
 import Sidebar from "../../Components/Body/Sidebar";
 import BestSell from "../../Components/Body/BestSell";
 import "../../styles/MainLayout.css";
+import Chatbot from "../../Components/Body/Chatbot";
 
 const HomePage = () => {
   return (
@@ -26,6 +27,7 @@ const HomePage = () => {
         <NewProduct />
         <FeaturedProduct />
         <BestSell />
+        <Chatbot />
         {/* <Footer /> */}
       </div>
     </>
