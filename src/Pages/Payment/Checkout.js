@@ -1,7 +1,7 @@
 /** @format */
 
 import React from "react";
-import "./Checkout.css"; // Make sure the CSS is properly linked
+import "./Checkout.css";
 import AddressForm from "./AddressForm";
 import OrderSummary from "./OrderSummary";
 
