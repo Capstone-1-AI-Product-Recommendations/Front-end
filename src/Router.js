@@ -1,25 +1,22 @@
 /** @format */
-
-// src/Router.js
-/** @format */
 import React from "react";
 import { Routes, Route } from "react-router-dom";
 import HomePage from "./Pages/homePage/HomePage";
 import Cart from "./Components/Cart/Cart";
-import LoginScreen from "./Pages/Login/LoginScreen";
-import SignUpScreen from "./Pages/Login/SignUpScreen";
-import GoogleLogin from "./Pages/Login/GoogleLogin";
-import Product from "./Components/Product/Product";
+import LoginScreen from "./Components/Login/LoginScreen";
+import SignUpScreen from "./Components/Login/SignUpScreen";
+import GoogleLogin from "./Components/Login/GoogleLogin";
+// import Product from "./Components/Product/Product";
 import ProductList from "./Components/Product/ProductList";
-import OrderSummary from "./Pages/Payment/OrderSummary";
-import PaymentQRCode from "./Pages/Payment/PaymentQRCode";
-import OrderConfirmation from "./Pages/Payment/OderConfirmation";
-import Checkout from "./Pages/Payment/Checkout";
-import AdminDashboard from "./Pages/masterLayout/AdminDashboard/AdminDashboard";
-import ADSmartCart from "./Pages/ADShop/ADSmartCart";
-import VendorForm from "./Pages/masterLayout/VendorForm/VendorForm";
-import DashboardLayout from "./Pages/masterLayout/VendorForm/DashboardLayout";
 import ProductDetail from "./Components/ProductDetail/ProductDetail";
+import OrderSummary from "./Components/Payment/OrderSummary";
+import PaymentQRCode from "./Components/Payment/PaymentQRCode";
+import OrderConfirmation from "./Components/Payment/OderConfirmation";
+import Checkout from "./Components/Payment/Checkout";
+import AdminDashboard from "./Components/AdminDashboard/AdminDashboard";
+import ADSmartCart from "./Components/ADShop/ADSmartCart";
+import VendorForm from "./Components/VendorForm/VendorForm";
+import DashboardLayout from "./Components/VendorForm/DashboardLayout";
 
 const RouterCustom = () => {
   return (
@@ -29,7 +26,7 @@ const RouterCustom = () => {
       <Route path='/login' element={<LoginScreen />} />
       <Route path='/signup' element={<SignUpScreen />} />
       <Route path='/google-login' element={<GoogleLogin />} />
-      <Route path='/product' element={<Product />} />
+      {/* <Route path='/product' element={<Product />} /> */}
       <Route path='/list' element={<ProductList />} />
       <Route path='/product-detail' element={<ProductDetail />} />
       <Route path='/order-summary' element={<OrderSummary />} />

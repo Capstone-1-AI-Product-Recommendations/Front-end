@@ -7,7 +7,7 @@ import { BsCart2 } from "react-icons/bs";
 import { IoMdNotificationsOutline } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
 import product from "../../img/newProduct.png";
-import CartDropdown from "../../Pages/ADShop/CartDropdown";
+import CartDropdown from "../ADShop/CartDropdown";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -46,20 +46,10 @@ const Header = () => {
 
   const [showCartDropdown, setShowCartDropdown] = useState(false);
 
-  const [showLoginModal, setShowLoginModal] = useState(false);
-  // Hàm điều khiển mở/đóng modal đăng nhập
-  const handleOpenLoginModal = () => {
-    setShowLoginModal(true);
-  };
-
-  const handleCloseLoginModal = () => {
-    setShowLoginModal(false);
-  };
-
+  // Định nghĩa hàm handleCartClick để điều hướng đến trang giỏ hàng
   const handleCartClick = () => {
     navigate("/ADSmartCart");
   };
-
   const handleVendorClick = () => {
     navigate("/vendor");
   };
@@ -67,7 +57,9 @@ const Header = () => {
   const handleHomeClick = () => {
     navigate("/");
   };
-
+  const handleAccountClick = () => {
+    navigate("/login");
+  };
   const handleCartIconHover = () => {
     setShowCartDropdown(true);
   };
@@ -107,9 +99,9 @@ const Header = () => {
             <button>🔍</button>
           </div>
           <div className='account-section'>
-            <div className='user-account' onClick={handleOpenLoginModal}>
+            <div className='user-account'>
               <FaUser className='icon' />
-              <div className='account-text'>
+              <div className='account-text' onClick={handleAccountClick}>
                 <span>Đăng nhập</span>
                 <span>Tài khoản</span>
               </div>
@@ -125,6 +117,7 @@ const Header = () => {
             >
               <BsCart2 className='icon' onClick={handleCartClick} />
               <span className='badge'>{cartItems.length}</span>{" "}
+              {/* Hiển thị số lượng giỏ hàng */}
               {showCartDropdown && <CartDropdown />}
             </div>
           </div>
@@ -150,26 +143,8 @@ const Header = () => {
           </a>
         </nav>
       </header>
-      {showLoginModal && <LoginModal onClose={handleCloseLoginModal} />}
     </div>
   );
 };
-
-// Component LoginModal hiển thị modal đăng nhập
-const LoginModal = ({ onClose }) => (
-  <div className='modal-overlay'>
-    <div className='modal-content'>
-      <button className='close-button' onClick={onClose}>
-        ✕
-      </button>
-      <h2>Đăng nhập</h2>
-      <form>
-        <input type='text' placeholder='Tên đăng nhập' />
-        <input type='password' placeholder='Mật khẩu' />
-        <button type='submit'>Đăng nhập</button>
-      </form>
-    </div>
-  </div>
-);
 
 export default Header;
