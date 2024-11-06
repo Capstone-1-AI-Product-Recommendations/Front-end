@@ -124,7 +124,7 @@ const Header = () => {
         </div>
         <nav className='nav-menu'>
           <a className='nav-link active' onClick={handleHomeClick}>
-            Trang chủ <FaCaretDown />
+            Trang chủ
           </a>
           <a className='nav-link' href='/store'>
             Cửa hàng <FaCaretDown />

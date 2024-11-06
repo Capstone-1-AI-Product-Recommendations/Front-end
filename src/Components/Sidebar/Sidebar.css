@@ -5,14 +5,15 @@
   padding: 0;
   background-color: #f8f9fa;
   margin-left: 100px; /* Cách lề trái */
+  border: 1px solid #e5e7eb;
 }
 
 .item {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 8px 0; /* Giảm padding để các item sát nhau hơn */
-  border-bottom: 1px solid #e5e7eb;
+  /* padding: 8px 0; Giảm padding để các item sát nhau hơn */
+  /* border: 1px solid #e5e7eb; */
   cursor: pointer;
 }
 

@@ -17,6 +17,7 @@ import AdminDashboard from "./Components/AdminDashboard/AdminDashboard";
 import ADSmartCart from "./Components/ADShop/ADSmartCart";
 import VendorForm from "./Components/VendorForm/VendorForm";
 import DashboardLayout from "./Components/VendorForm/DashboardLayout";
+import Contact from "./Components/Contact/Contact";
 
 const RouterCustom = () => {
   return (
@@ -38,6 +39,7 @@ const RouterCustom = () => {
       <Route path='/dashboard' element={<DashboardLayout />} />
       <Route path='/checkout' element={<Checkout />} />
       <Route path='/admin' element={<AdminDashboard />} />
+      <Route path='/contact' element={<Contact />} />
     </Routes>
   );
 };
