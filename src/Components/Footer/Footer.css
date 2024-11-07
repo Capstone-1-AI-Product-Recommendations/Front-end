@@ -1,34 +1,31 @@
-/**
- * Footer.css
- *
- * @format
- */
+/** @format */
 
 .footer {
-  background-color: #f8f8f8;
+  background-color: #ffffff;
   padding: 40px 0 20px;
   font-family: Arial, sans-serif;
   color: #333;
+  width: 100%;
 }
 
 .footer-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    display: grid;
-    grid-template-columns: repeat(4, 1fr); /* Giữ nguyên cấu trúc 4 cột */
-    gap: 30px;
-    padding: 0 20px;
-  }
+  max-width: 100%;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 4fr 2fr 2fr 2fr 2fr; /* Cột phân chia đều */
+  gap: 30px;
+  padding: 0 120px;
+}
 
 .footer-section {
-  margin-bottom: 10px;
+  margin-bottom: 20px;
 }
 
 .footer-section h3 {
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 600;
-  margin-bottom: 15px;
   color: #222;
+  white-space: nowrap; /* Đảm bảo tiêu đề luôn nằm trên một dòng */
 }
 
 .footer-section ul {
@@ -38,46 +35,24 @@
 }
 
 .footer-section ul li {
-  margin-bottom: 10px;
+  margin-bottom: 8px;
 }
 
 .footer-section ul li a {
   color: #666;
   text-decoration: none;
-  font-size: 14px;
-  transition: color 0.2s ease;
+  font-size: 13px;
+  line-height: 1.5;
 }
 
 .footer-section ul li a:hover {
   color: #ee4d2d;
 }
 
-/* Support Section */
-.support-section p {
-  font-size: 14px;
-  line-height: 1.5;
-  color: #666;
-  margin-bottom: 15px;
-}
-
 .contact-info {
   margin-top: 15px;
 }
 
-.contact-item {
-  display: flex;
-  align-items: center;
-  margin-bottom: 10px;
-}
-
-.contact-icon {
-  width: 20px;
-  height: 20px;
-  margin-right: 10px;
-  object-fit: contain;
-}
-
-/* Payment Methods & Shipping Partners */
 .payment-methods,
 .shipping-partners {
   display: grid;
@@ -86,72 +61,26 @@
   margin-bottom: 20px;
 }
 
-.payment-item,
-.shipping-item {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
 .payment-icon,
-.shipping-icon {
+.shipping-icon,
+.app-download-button {
   width: 40px;
   height: 40px;
   object-fit: contain;
 }
 
-/* App Downloads */
 .app-downloads {
   display: flex;
-  flex-direction: column;
+  flex-direction: row; /* Đặt theo chiều ngang */
   gap: 10px;
 }
 
-.app-download-button {
-  display: block;
-  text-decoration: none;
-}
-
-.app-download-button img {
-  width: 140px;
-  height: auto;
-  border-radius: 4px;
-}
-
-/* Footer Bottom */
 .footer-bottom {
-  margin-top: 30px;
+  width: 100%;
   padding-top: 20px;
-  border-top: 1px solid #ddd;
-}
-
-.copyright {
+  border-top: 1px solid #ddd; /* Dòng kẻ ngang tràn toàn màn hình */
   text-align: center;
-  font-size: 12px;
-  color: #666;
-  margin-bottom: 15px;
-}
-
-.social-links {
-  display: flex;
-  justify-content: center;
-  gap: 15px;
-  margin-bottom: 15px;
-}
-
-.social-link {
-  text-decoration: none;
-}
-
-.social-icon {
-  width: 32px;
-  height: 32px;
-  object-fit: contain;
-  transition: opacity 0.2s ease;
-}
-
-.social-icon:hover {
-  opacity: 0.8;
+  margin-top: 30px;
 }
 
 .footer-links {
@@ -166,42 +95,21 @@
   font-size: 12px;
 }
 
-.footer-links a:hover {
-  color: #ee4d2d;
-}
-
-/* Responsive Design */
 @media (max-width: 992px) {
   .footer-container {
     grid-template-columns: repeat(2, 1fr);
+    padding: 0 40px;
   }
 }
 
 @media (max-width: 576px) {
   .footer-container {
     grid-template-columns: 1fr;
-  }
-
-  .footer-section {
-    text-align: center;
-  }
-
-  .contact-item {
-    justify-content: center;
-  }
-
-  .payment-methods,
-  .shipping-partners {
-    grid-template-columns: repeat(3, 1fr);
-  }
-
-  .app-downloads {
-    align-items: center;
+    padding: 0 20px;
   }
 
   .footer-links {
     flex-direction: column;
-    align-items: center;
     gap: 10px;
   }
 }

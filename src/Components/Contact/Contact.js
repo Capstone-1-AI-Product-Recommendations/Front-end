@@ -1,86 +1,102 @@
-/** @format */
-
-import React, { useState } from "react";
-import "./Contact.css";
-import { FaPhone, FaEnvelope, FaMapMarkerAlt } from "react-icons/fa";
+import React, { useState } from 'react';
+import './Contact.css';
 
 const Contact = () => {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [message, setMessage] = useState("");
+  const [formData, setFormData] = useState({
+    fullName: '',
+    email: '',
+    phone: '',
+    message: ''
+  });
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Xử lý gửi form tại đây
-    console.log("Name:", name);
-    console.log("Email:", email);
-    console.log("Message:", message);
-    // Reset form
-    setName("");
-    setEmail("");
-    setMessage("");
+    // Xử lý logic gửi form ở đây
+    console.log('Form submitted:', formData);
   };
 
   return (
-    <div className='contact-container'>
-      <div className='contact-info'>
-        <h2>Liên hệ với chúng tôi</h2>
-        <div className='contact-item'>
-          <FaPhone className='contact-icon' />
-          <div>
-            <h4>Điện thoại</h4>
-            <p>0766645115</p>
+    <div className="contact-container">
+      <div className="contact-wrapper">
+        <div className="contact-sidebar">
+          <h2>Thông Tin Liên Hệ</h2>
+          <div className="contact-info">
+            <div className="info-item">
+              <i className="fas fa-map-marker-alt"></i>
+              <p>123 Đường Thương Mại, TP.HCM</p>
+            </div>
+            <div className="info-item">
+              <i className="fas fa-phone"></i>
+              <p>+84 123 456 789</p>
+            </div>
+            <div className="info-item">
+              <i className="fas fa-envelope"></i>
+              <p>support@yourstore.com</p>
+            </div>
+          </div>
+          <div className="business-hours">
+            <h3>Giờ làm việc</h3>
+            <p>Thứ 2 - Thứ 6: 8:00 - 20:00</p>
+            <p>Thứ 7 - Chủ nhật: 9:00 - 18:00</p>
           </div>
         </div>
-        <div className='contact-item'>
-          <FaEnvelope className='contact-icon' />
-          <div>
-            <h4>Email</h4>
-            <p>customerservice@ademart.com</p>
-          </div>
-        </div>
-        <div className='contact-item'>
-          <FaMapMarkerAlt className='contact-icon' />
-          <div>
-            <h4>Địa chỉ</h4>
-            <p>123 Đường ABC, Thành phố XYZ</p>
-          </div>
-        </div>
-      </div>
-      <div className='contact-form'>
-        <h2>Gửi tin nhắn</h2>
-        <form onSubmit={handleSubmit}>
-          <div className='form-group'>
-            <label htmlFor='name'>Tên</label>
+
+        <form className="contact-form" onSubmit={handleSubmit}>
+          <h2>Gửi Tin Nhắn Cho Chúng Tôi</h2>
+          <p>Hãy cho chúng tôi biết bạn cần gì. Đội ngũ hỗ trợ sẽ phản hồi sớm nhất!</p>
+          
+          <div className="form-group">
             <input
-              type='text'
-              id='name'
-              value={name}
-              onChange={(e) => setName(e.target.value)}
+              type="text"
+              name="fullName"
+              placeholder="Họ và tên"
+              value={formData.fullName}
+              onChange={handleChange}
               required
             />
           </div>
-          <div className='form-group'>
-            <label htmlFor='email'>Email</label>
+
+          <div className="form-group">
             <input
-              type='email'
-              id='email'
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              type="email"
+              name="email"
+              placeholder="Email"
+              value={formData.email}
+              onChange={handleChange}
               required
             />
           </div>
-          <div className='form-group'>
-            <label htmlFor='message'>Tin nhắn</label>
+
+          <div className="form-group">
+            <input
+              type="tel"
+              name="phone"
+              placeholder="Số điện thoại"
+              value={formData.phone}
+              onChange={handleChange}
+              required
+            />
+          </div>
+
+          <div className="form-group">
             <textarea
-              id='message'
-              value={message}
-              onChange={(e) => setMessage(e.target.value)}
+              name="message"
+              placeholder="Nội dung tin nhắn"
+              value={formData.message}
+              onChange={handleChange}
               required
             ></textarea>
           </div>
-          <button type='submit' className='submit-btn'>
-            Gửi
+
+          <button type="submit" className="submit-btn">
+            Gửi Tin Nhắn
           </button>
         </form>
       </div>
