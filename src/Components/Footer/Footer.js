@@ -27,7 +27,7 @@ export const Footer = () => {
     <footer className='footer'>
       <div className='footer-container row'>
         {/* Support Section */}
-        <div className='footer-section col-md-4'>
+        <div className='footer-section col-md-3'>
           <h3>Bạn có cần trợ giúp không?</h3>
           <p>
             Hỗ trợ 24/7 – Luôn sẵn sàng khi bạn cần, chăm sóc tận tình, giải
@@ -43,26 +43,26 @@ export const Footer = () => {
               <span> customerservice@ademart.com</span>
             </div>
           </div>
-                  {/* Application Download  Section */}
-        <div className='footer-section col-md-2'>
-          <h3>Tải xuống ứng dụng</h3>
-          <div className='app-downloads'>
-            <img
-              src={appStore}
-              alt='App Store'
-              className='app-download-button'
-            />
-            <img
-              src={googlePlay}
-              alt='Google Play'
-              className='app-download-button'
-            />
+          {/* Application Download  Section */}
+          <div className='footer-section col-md-3'>
+            <h3>Tải xuống ứng dụng</h3>
+            <div className='app-downloads'>
+              <img
+                src={appStore}
+                alt='App Store'
+                className='app-download-button'
+              />
+              <img
+                src={googlePlay}
+                alt='Google Play'
+                className='app-download-button'
+              />
+            </div>
           </div>
-        </div>
         </div>
 
         {/* About Us Section */}
-        <div className='footer-section col-md-2'>
+        <div className='footer-section col-md-3'>
           <h3>Về chúng tôi</h3>
           <ul>
             <li>
@@ -93,7 +93,7 @@ export const Footer = () => {
         </div>
 
         {/* Customer Service Section */}
-        <div className='footer-section col-md-2'>
+        <div className='footer-section col-md-3'>
           <h3>Chăm sóc khách hàng</h3>
           <ul>
             <li>
@@ -148,7 +148,6 @@ export const Footer = () => {
             <img src={shippingJnt} alt='J&T' className='shipping-icon' />
           </div>
         </div>
-
       </div>
     </footer>
   );

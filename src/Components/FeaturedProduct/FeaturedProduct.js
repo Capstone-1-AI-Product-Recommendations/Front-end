@@ -142,7 +142,7 @@ const FeaturedProduct = () => {
             - Đừng bỏ lỡ các ưu đãi hiện tại cho đến cuối tháng 3.
           </span>
         </h4>
-        <a href='#' className='btn view-all-btn'>
+        <a href='#' className='view-all-btn'>
           Xem tất cả →
         </a>
       </div>
@@ -211,7 +211,7 @@ const FeaturedProduct = () => {
                     ))}
                     <span className='reviews'> ({product.reviews})</span>
                   </div>
-                  <button className='btn add-to-cart-product w-100 mt-3'>
+                  <button className='add-to-cart-product w-100 mt-3'>
                     Thêm vào giỏ hàng
                     <span className='ms-2'>+</span>
                   </button>

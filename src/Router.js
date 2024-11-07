@@ -6,7 +6,7 @@ import Cart from "./Components/Cart/Cart";
 import LoginScreen from "./Components/Login/LoginScreen";
 import SignUpScreen from "./Components/Login/SignUpScreen";
 import GoogleLogin from "./Components/Login/GoogleLogin";
-// import Product from "./Components/Product/Product";
+import Product from "./Components/Product/Product";
 import ProductList from "./Components/Product/ProductList";
 import ProductDetail from "./Components/ProductDetail/ProductDetail";
 import OrderSummary from "./Components/Payment/OrderSummary";
@@ -24,10 +24,9 @@ const RouterCustom = () => {
     <Routes>
       <Route path='/' element={<HomePage />} />
       <Route path='/cart' element={<Cart />} />
-      <Route path='/login' element={<LoginScreen />} />
       <Route path='/signup' element={<SignUpScreen />} />
       <Route path='/google-login' element={<GoogleLogin />} />
-      {/* <Route path='/product' element={<Product />} /> */}
+      <Route path='/product' element={<Product/>} />
       <Route path='/list' element={<ProductList />} />
       <Route path='/product-detail' element={<ProductDetail />} />
       <Route path='/order-summary' element={<OrderSummary />} />

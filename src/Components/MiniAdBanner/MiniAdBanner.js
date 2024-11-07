@@ -47,7 +47,7 @@ const MiniAdBanner = () => {
                     <h6 className='text-tag mb-2'>{product.tag}</h6>
                     <h5 className='card-title'>{product.title}</h5>
                     <p className='card-text'>{product.description}</p>
-                    <a href='#' className='btn btn-custom'>
+                    <a href='#' className='btn-custom'>
                       {product.buttonLabel}
                     </a>
                   </div>

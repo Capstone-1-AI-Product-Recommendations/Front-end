@@ -18,9 +18,7 @@ const ProductAdBanner = () => {
           với các sản phẩm tạp hóa. Đừng bỏ lỡ những cơ hội này...
         </p>
         <div className='price-button-wrapper'>
-          <button className='buy-now-btn btn btn-primary me-3 '>
-            Mua ngay
-          </button>
+          <button className='buy-now-btn me-3 '>Mua ngay</button>
           <div className='price-content'>
             <span className='price'>$28.99</span>
             <span className='original-price'>$56.67</span>
