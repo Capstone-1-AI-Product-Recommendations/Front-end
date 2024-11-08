@@ -42,10 +42,11 @@ const NewProduct = () => {
     navigate(`/product/${productId}`);
   };
 
-  // Xử lý sự kiện thêm sản phẩm vào giỏ hàng
+  // Xử lý sự kiện thêm sản phẩm vào giỏ hàng và điều hướng tới trang cart
   const handleAddToCart = (e, product) => {
     e.stopPropagation(); // Ngăn chặn sự kiện click lan ra ngoài khi thêm vào giỏ hàng
     addToCart(product); // Thêm sản phẩm vào giỏ hàng
+    navigate("/cart"); // Điều hướng tới trang giỏ hàng
   };
 
   // Xử lý khi hover vào sản phẩm
@@ -63,31 +64,34 @@ const NewProduct = () => {
   };
 
   return (
-    <div className='container mt-4'>
-      <div className='d-flex justify-content-between align-items-center mb-1'>
-        <h4 className='mb-0'>
+    <div className="container mt-4">
+      <div className="d-flex justify-content-between align-items-center mb-1">
+        <h4 className="mb-0">
           Hàng mới về{" "}
-          <span className='text-muted'>
+          <span className="text-muted">
             - Đừng bỏ lỡ cơ hội giảm giá đặc biệt chỉ có trong tuần này.
           </span>
         </h4>
-        <a href='#' className='btn view-all-btn'>
+        <button
+          className="btn view-all-btn"
+          onClick={(e) => e.preventDefault()}
+        >
           Xem tất cả →
-        </a>
+        </button>
       </div>
-      <div className='row'>
+      <div className="row">
         {productData.map((product, index) => (
           <div
             key={product.id}
-            className='col-md-2 mb-3'
+            className="col-md-2 mb-3"
             onClick={() => handleProductClick(product.id)}
             onMouseEnter={() => handleMouseEnter(index)}
             onMouseLeave={handleMouseLeave}
           >
-            <div className='card product-card h-100'>
-              <div className='card-body'>
-                <span className='discount-badge'>{product.discount}</span>
-                <div className='image-container'>
+            <div className="card product-card h-100">
+              <div className="card-body">
+                <span className="discount-badge">{product.discount}</span>
+                <div className="image-container">
                   <img
                     src={
                       hoveredProduct === index &&
@@ -97,14 +101,14 @@ const NewProduct = () => {
                         : product.imageUrl
                     }
                     alt={product.title}
-                    className='img-fluid product-image mb-3'
+                    className="img-fluid product-image mb-3"
                   />
                 </div>
-                <span className='badge bg-success text-uppercase product-badge mb-2'>
+                <span className="badge bg-success text-uppercase product-badge mb-2">
                   {product.badge}
                 </span>
-                <h6 className='product-title mb-2'>{product.title}</h6>
-                <div className='rating mt-2'>
+                <h6 className="product-title mb-2">{product.title}</h6>
+                <div className="rating mt-2">
                   {Array.from({ length: 5 }, (_, i) => (
                     <span
                       key={i}
@@ -114,18 +118,18 @@ const NewProduct = () => {
                     </span>
                   ))}
                 </div>
-                <p className='price mb-0 mt-2'>
-                  <strong className='price-new'>{product.price}</strong>
-                  <span className='text-muted ms-2 price-old'>
+                <p className="price mb-0 mt-2">
+                  <strong className="price-new">{product.price}</strong>
+                  <span className="text-muted ms-2 price-old">
                     <del>{product.originalPrice}</del>
                   </span>
                 </p>
                 <button
-                  className='btn btn-custom-cart btn-sm mt-1 add-to-cart'
+                  className="btn btn-custom-cart btn-sm mt-1 add-to-cart"
                   onClick={(e) => handleAddToCart(e, product)}
                 >
                   Thêm vào giỏ hàng
-                  <span className='ms-4'>+</span>
+                  <span className="ms-4">+</span>
                 </button>
               </div>
             </div>

@@ -174,3 +174,12 @@
   /* align-items: center; Đảm bảo các thành phần thẳng hàng */
   margin-bottom: 10px; /* Khoảng cách với phần nội dung phía dưới, nếu cần */
 }
+.link-button {
+  background: none;
+  color: blue;
+  text-decoration: underline;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  font: inherit;
+}

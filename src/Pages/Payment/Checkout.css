@@ -1,18 +1,30 @@
-/** @format */
+/* Checkout.css */
 
 .checkout-container {
-    display: flex;
-    align-items: flex-start; /* Căn trên để hai component đều nằm ở đầu */
-    gap: 0px; /* Khoảng cách giữa Sidebar và ProductAdBanner */
-    padding-right: 120px;
-    padding: 20px; /* Tạo khoảng cách giữa container và các cạnh */
-  }
-
-.order-summary {
-  flex-basis: 20%; /* Chiếm 20% chiều rộng của container */
+  display: flex;
+  justify-content: center;
+  padding: 20px;
+  background-color: #f8f8f8;
 }
 
-.address-form {
-  flex-basis: 75%; /* Chiếm 75% chiều rộng của container */
-  max-width: 943px; /* Đặt chiều rộng tối đa để không vượt quá thiết kế */
+.checkout-content {
+  display: flex;
+  gap: 50px;
+  width: 100%;
+  max-width: 1200px;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.checkout-content > * {
+  flex: 1;
+}
+
+@media (max-width: 768px) {
+  .checkout-content {
+      flex-direction: column;
+      gap: 20px;
+  }
 }
