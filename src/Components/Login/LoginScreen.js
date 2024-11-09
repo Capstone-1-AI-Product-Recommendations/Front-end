@@ -1,12 +1,13 @@
-/** @format */
-
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { GoogleLogin } from "@react-oauth/google";
-import { jwtDecode } from "jwt-decode"; // Sử dụng jwtDecode từ jwt-decode
+import {jwtDecode} from "jwt-decode"; // Sử dụng jwtDecode từ jwt-decode
 import "./LoginScreen.css";
 
 const LoginScreen = ({ onClose, onLoginSuccess }) => {
+  // Log giá trị của onLoginSuccess để kiểm tra
+  console.log("onLoginSuccess in LoginScreen:", onLoginSuccess);
+
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: "",
@@ -30,8 +31,14 @@ const LoginScreen = ({ onClose, onLoginSuccess }) => {
       if (formData.rememberMe) {
         // Lưu thông tin đăng nhập (nếu cần)
       }
-      onLoginSuccess(); // Gọi hàm khi đăng nhập thành công
-      onClose();
+      if (onLoginSuccess) {
+        onLoginSuccess(); // Gọi hàm khi đăng nhập thành công
+      } else {
+        console.error("onLoginSuccess is undefined");
+      }
+      if (onClose) {
+        onClose();
+      }
       navigate("/");
     } else {
       setErrorMessage("Email hoặc mật khẩu không chính xác.");
@@ -43,8 +50,14 @@ const LoginScreen = ({ onClose, onLoginSuccess }) => {
     console.log("Google login success:", decoded);
 
     // Gọi hàm xử lý khi đăng nhập thành công
-    onLoginSuccess();
-    onClose();
+    if (onLoginSuccess) {
+      onLoginSuccess();
+    } else {
+      console.error("onLoginSuccess is undefined");
+    }
+    if (onClose) {
+      onClose();
+    }
     navigate("/");
   };
 

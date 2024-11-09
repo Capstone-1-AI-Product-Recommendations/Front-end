@@ -1,7 +1,5 @@
-/** @format */
-
 import React, { useState } from "react";
-import { CartProvider } from "./Components/Cart/CartContext"; // Đường dẫn tới CartContext
+import { CartProvider } from "./Components/Cart/CartContext";
 import Header from "./Components/Header/Header";
 import Footer from "./Components/Footer/Footer";
 import RouterCustom from "./Router";
@@ -17,18 +15,16 @@ function App() {
     setIsLoggedIn(true);
   };
 
-  const handleLogout = () => {
-    setIsLoggedIn(false);
+  const handleClose = () => {
+    console.log("Modal đóng lại");
   };
 
   const HeaderComponent = () => {
-    if (
-      ["/dashboard", "/manageCus", "/manageOwner"].includes(location.pathname)
-    ) {
+    if (["/dashboard", "/manageCus", "/manageOwner"].includes(location.pathname)) {
       return null;
     }
     return isLoggedIn ? (
-      <HeaderAfterLogin onLogout={handleLogout} />
+      <HeaderAfterLogin onLogout={() => setIsLoggedIn(false)} />
     ) : (
       <HeaderNoLogin onLoginSuccess={handleLoginSuccess} />
     );
@@ -37,7 +33,7 @@ function App() {
   return (
     <CartProvider>
       <HeaderComponent />
-      <RouterCustom />
+      <RouterCustom onLoginSuccess={handleLoginSuccess} onClose={handleClose} />
       <Footer />
     </CartProvider>
   );

@@ -1,4 +1,3 @@
-/** @format */
 import React from "react";
 import { Routes, Route } from "react-router-dom";
 import HomePage from "./Pages/homePage/HomePage";
@@ -19,28 +18,27 @@ import VendorForm from "./Components/VendorForm/VendorForm";
 import DashboardLayout from "./Components/VendorForm/DashboardLayout";
 import Contact from "./Components/Contact/Contact";
 
-const RouterCustom = () => {
+const RouterCustom = ({ onLoginSuccess, onClose }) => {
   return (
     <Routes>
-      <Route path='/' element={<HomePage />} />
-      <Route path='/cart' element={<Cart />} />
-      <Route path='/signup' element={<SignUpScreen />} />
-      <Route path='/login' element={<LoginScreen/>} />
-      
-      <Route path='/google-login' element={<GoogleLogin />} />
-      <Route path='/product' element={<Product/>} />
-      <Route path='/list' element={<ProductList />} />
-      <Route path='/product-detail' element={<ProductDetail />} />
-      <Route path='/order-summary' element={<OrderSummary />} />
-      <Route path='/QRCode' element={<PaymentQRCode />} />
-      <Route path='/confirmation' element={<OrderConfirmation />} />
-      <Route path='/payment' element={<PaymentQRCode />} />
-      <Route path='/ADSmartCart' element={<ADSmartCart />} />
-      <Route path='/vendor' element={<VendorForm />} />
-      <Route path='/dashboard' element={<DashboardLayout />} />
-      <Route path='/checkout' element={<Checkout />} />
-      <Route path='/admin' element={<AdminDashboard />} />
-      <Route path='/contact' element={<Contact />} />
+      <Route path="/" element={<HomePage />} />
+      <Route path="/cart" element={<Cart />} />
+      <Route path="/signup" element={<SignUpScreen />} />
+      <Route path="/login" element={<LoginScreen onLoginSuccess={onLoginSuccess} onClose={onClose} />} />
+      <Route path="/google-login" element={<GoogleLogin />} />
+      <Route path="/product" element={<Product />} />
+      <Route path="/list" element={<ProductList />} />
+      <Route path="/product-detail" element={<ProductDetail />} />
+      <Route path="/order-summary" element={<OrderSummary />} />
+      <Route path="/QRCode" element={<PaymentQRCode />} />
+      <Route path="/confirmation" element={<OrderConfirmation />} />
+      <Route path="/payment" element={<PaymentQRCode />} />
+      <Route path="/ADSmartCart" element={<ADSmartCart />} />
+      <Route path="/vendor" element={<VendorForm />} />
+      <Route path="/dashboard" element={<DashboardLayout />} />
+      <Route path="/checkout" element={<Checkout />} />
+      <Route path="/admin" element={<AdminDashboard />} />
+      <Route path="/contact" element={<Contact />} />
     </Routes>
   );
 };
