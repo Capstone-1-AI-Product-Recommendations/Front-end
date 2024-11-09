@@ -60,7 +60,7 @@ const NewProduct = () => {
     <div className='new-product-container'>
       <div className='d-flex justify-content-between align-items-center mb-1'>
         <h4 className='mb-0'>
-          Sản phẩm nổi bật
+          Hàng mới về 
           <span className='text-muted'>
             {" "}
             - Đừng bỏ lỡ cơ hội giảm giá đặc biệt chỉ có trong tuần này.

@@ -3,14 +3,12 @@ import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { CartContext } from ".././Cart/CartContext";
 import "./BestSell.css";
-
 import productData from "../../data/product";
 const BestSell = () => {
   const [hoveredProduct, setHoveredProduct] = useState(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isHoverTimerActive, setIsHoverTimerActive] = useState(false);
   const navigate = useNavigate();
-
   const { addToCart } = useContext(CartContext);
 
   useEffect(() => {

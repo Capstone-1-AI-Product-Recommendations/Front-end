@@ -25,6 +25,8 @@ const RouterCustom = () => {
       <Route path='/' element={<HomePage />} />
       <Route path='/cart' element={<Cart />} />
       <Route path='/signup' element={<SignUpScreen />} />
+      <Route path='/login' element={<LoginScreen/>} />
+      
       <Route path='/google-login' element={<GoogleLogin />} />
       <Route path='/product' element={<Product/>} />
       <Route path='/list' element={<ProductList />} />
