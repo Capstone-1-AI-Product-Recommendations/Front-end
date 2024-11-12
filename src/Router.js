@@ -1,22 +1,22 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
 import HomePage from "./Pages/homePage/HomePage";
-import Cart from "./Components/Cart/Cart";
-import LoginScreen from "./Components/Login/LoginScreen";
-import SignUpScreen from "./Components/Login/SignUpScreen";
-import GoogleLogin from "./Components/Login/GoogleLogin";
-import Product from "./Components/Product/Product";
-import ProductList from "./Components/Product/ProductList";
-import ProductDetail from "./Components/ProductDetail/ProductDetail";
-import OrderSummary from "./Components/Payment/OrderSummary";
-import PaymentQRCode from "./Components/Payment/PaymentQRCode";
-import OrderConfirmation from "./Components/Payment/OderConfirmation";
-import Checkout from "./Components/Payment/Checkout";
-import AdminDashboard from "./Components/AdminDashboard/AdminDashboard";
-import ADSmartCart from "./Components/ADShop/ADSmartCart";
-import VendorForm from "./Components/VendorForm/VendorForm";
-import DashboardLayout from "./Components/VendorForm/DashboardLayout";
-import Contact from "./Components/Contact/Contact";
+import Cart from "./Components/client/Cart/Cart";
+import LoginScreen from "./Components/client/Login/LoginScreen";
+import SignUpScreen from "./Components/client/Login/SignUpScreen";
+import GoogleLogin from "./Components/client/Login/GoogleLogin";
+import Product from "./Components/client/Product/Product";
+import ProductList from "./Components/client/Product/ProductList";
+import ProductDetail from "./Components/client/ProductDetail/ProductDetail";
+import OrderSummary from "./Components/client/Payment/OrderSummary";
+import PaymentQRCode from "./Components/client/Payment/PaymentQRCode";
+import OrderConfirmation from "./Components/client/Payment/OderConfirmation";
+import Checkout from "./Components/client/Payment/Checkout";
+import AdminDashboard from "./Components/admin/AdminDashboard/AdminDashboard";
+import ADSmartCart from "./Components/client/ADShop/ADSmartCart";
+import VendorForm from "./Components/client/VendorForm/VendorForm";
+import DashboardLayout from "./Components/client/VendorForm/DashboardLayout";
+import Contact from "./Components/client/Contact/Contact";
 
 const RouterCustom = ({ onLoginSuccess, onClose }) => {
   return (

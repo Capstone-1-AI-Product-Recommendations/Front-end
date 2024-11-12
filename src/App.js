@@ -1,11 +1,12 @@
 import React, { useState } from "react";
-import { CartProvider } from "./Components/Cart/CartContext";
-import Header from "./Components/Header/Header";
-import Footer from "./Components/Footer/Footer";
+import { CartProvider } from "./Components/client/Cart/CartContext";
+// import Header from "./Components/client/Header/Header";
+import Footer from "./Components/client/Footer/Footer";
 import RouterCustom from "./Router";
-import HeaderNoLogin from "./Components/Header/HeaderNoLogin";
-import HeaderAfterLogin from "./Components/Header/HeaderAfterLogin";
+import HeaderNoLogin from "./Components/client/Header/HeaderNoLogin";
+import HeaderAfterLogin from "./Components/client/Header/HeaderAfterLogin";
 import { useLocation } from "react-router-dom";
+import "./styles/style.css";
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
