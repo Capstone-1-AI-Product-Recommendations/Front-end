@@ -61,7 +61,7 @@ const HomePage = () => {
       <BestSellingProduct products={BestSellingProducts} /> {/* Truyền dữ liệu "Bán chạy nhất" */}
       <Chatbot />
     </div>
-  );
+  );  
 };
 
 export default HomePage;

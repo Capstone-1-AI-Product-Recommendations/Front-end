@@ -44,7 +44,7 @@ export const Footer = () => {
             </div>
           </div>
           {/* Application Download  Section */}
-          <div className='footer-section col-md-3'>
+          {/* <div className='footer-section col-md-3'>
             <h3>Tải xuống ứng dụng</h3>
             <div className='app-downloads'>
               <img
@@ -58,7 +58,7 @@ export const Footer = () => {
                 className='app-download-button'
               />
             </div>
-          </div>
+          </div> */}
         </div>
 
         {/* About Us Section */}
@@ -128,16 +128,16 @@ export const Footer = () => {
 
         {/* Payment and Shipping Section */}
         <div className='footer-section col-md-2'>
-          <h3>Thanh toán</h3>
-          <div className='payment-methods'>
+        <h3>Thanh toán</h3>
+          <div className='payment-method'>
             <img src={paymentMomo} alt='Momo' className='payment-icon' />
             <img src={paymentVnpay} alt='Vnpay' className='payment-icon' />
             <img src={paymentVisa} alt='Visa' className='payment-icon' />
             <img src={paymentZalopay} alt='Zalopay' className='payment-icon' />
           </div>
-
+          
           <h3>Đơn vị vận chuyển</h3>
-          <div className='shipping-partners'>
+          <div className='shipping-partner'>
             <img src={shippingGhn} alt='GHN' className='shipping-icon' />
             <img src={shippingGhtk} alt='GHTK' className='shipping-icon' />
             <img
@@ -147,6 +147,21 @@ export const Footer = () => {
             />
             <img src={shippingJnt} alt='J&T' className='shipping-icon' />
           </div>
+          <h3>Tải xuống ứng dụng</h3>
+            <div className='app-downloads'>
+              <img
+                src={appStore}
+                alt='App Store'
+                className='app-download-button'
+              />
+              <img
+                src={googlePlay}
+                alt='Google Play'
+                className='app-download-button'
+              />
+            </div>
+          
+          
         </div>
       </div>
     </footer>

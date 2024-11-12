@@ -30,7 +30,7 @@ const HeaderNoLogin = ({ onLoginSuccess }) => {
   };
 
   const handleVendorClick = () => {
-    navigate("/vendor");
+    navigate("/register-seller");
   };
 
   const handleCartIconHover = () => {

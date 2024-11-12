@@ -27,7 +27,7 @@ const HeaderNoLogin = ({ onLoginSuccess }) => {
   };
 
   const handleVendorClick = () => {
-    navigate("/vendor");
+    navigate("/register-seller");
     // Thêm logic điều hướng đến trang dành cho người bán nếu cần
   };
 

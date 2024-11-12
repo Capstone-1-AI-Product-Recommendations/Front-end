@@ -9,6 +9,8 @@
 }
 
 .footer-container {
+  margin-top: 20px bold black;
+
   max-width: 100%;
   margin: 0 auto;
   display: grid;
@@ -53,12 +55,15 @@
   margin-top: 15px;
 }
 
-.payment-methods,
-.shipping-partners {
+.payment-method,
+.shipping-partner {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 10px;
   margin-bottom: 20px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
 }
 
 .payment-icon,
@@ -113,3 +118,4 @@
     gap: 10px;
   }
 }
+
