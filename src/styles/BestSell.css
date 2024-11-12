@@ -99,7 +99,7 @@
 
 .price-new {
   color: red;
-  font-size: 1em; /* Giá mới to hơn */
+  font-size: 0.7em; /* Giá mới to hơn */
   font-weight: bold;
 }
 

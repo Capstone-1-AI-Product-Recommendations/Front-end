@@ -101,13 +101,6 @@
   font-weight: bold;
   line-height: 1.2;
 }
-
-.price-new {
-  font-size: 1.5em;
-  color: red !important;
-  font-weight: bold;
-}
-
 .price-old {
   font-size: 0.8em;
   text-decoration: line-through;
