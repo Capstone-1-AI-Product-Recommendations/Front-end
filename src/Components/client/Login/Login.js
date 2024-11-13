@@ -1,11 +1,11 @@
+/** @format */
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { GoogleLogin } from "@react-oauth/google";
-import  {jwtDecode}  from "jwt-decode"; // Sử dụng jwtDecode từ jwt-decode
-import "./LoginScreen.css";
-const LoginScreen = ({ onClose, onLoginSuccess }) => {
-  // Log giá trị của onLoginSuccess để kiểm tra
-  console.log("onLoginSuccess in LoginScreen:", onLoginSuccess);
+import {jwtDecode} from "jwt-decode"; // Use jwtDecode correctly
+import "./Login.css";
+
+const Login = ({ onClose, onLoginSuccess }) => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: "",
@@ -26,18 +26,8 @@ const LoginScreen = ({ onClose, onLoginSuccess }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (formData.email === "123@gmail.com" && formData.password === "123") {
-      if (formData.rememberMe) {
-        // Lưu thông tin đăng nhập (nếu cần)
-      }
-      if (onLoginSuccess) {
-        onLoginSuccess(); // Gọi hàm khi đăng nhập thành công
-      } else {
-        console.error("onLoginSuccess is undefined");
-      }
-
-      if (onClose) {
-        onClose();
-      }
+      if (onLoginSuccess) onLoginSuccess();
+      if (onClose) onClose();
       navigate("/");
     } else {
       setErrorMessage("Email hoặc mật khẩu không chính xác.");
@@ -45,29 +35,24 @@ const LoginScreen = ({ onClose, onLoginSuccess }) => {
   };
 
   const handleGoogleLoginSuccess = (response) => {
-    const decoded = jwtDecode(response.credential); // Sử dụng jwtDecode để giải mã JWT
+    const decoded = jwtDecode(response.credential);
     console.log("Google login success:", decoded);
-
-    // Gọi hàm xử lý khi đăng nhập thành công
-    if (onLoginSuccess) {
-      onLoginSuccess();
-    } else {
-      console.error("onLoginSuccess is undefined");
-    }
-    if (onClose) {
-      onClose();
-    }
+    if (onLoginSuccess) onLoginSuccess();
+    if (onClose) onClose();
     navigate("/");
   };
 
   const handleGoogleLoginFailure = (error) => {
-    console.log("Google login failed:", error);
+    console.error("Google login failed:", error);
     setErrorMessage("Đăng nhập bằng Google thất bại.");
   };
 
   return (
     <div className="auth-container">
       <div className="auth-form">
+        <button className="close-btn" onClick={onClose}>
+          ×
+        </button>
         <h1>Xin chào bạn mới</h1>
         {errorMessage && <div className="error-message">{errorMessage}</div>}
         <form onSubmit={handleSubmit}>
@@ -130,4 +115,4 @@ const LoginScreen = ({ onClose, onLoginSuccess }) => {
   );
 };
 
-export default LoginScreen;
+export default Login;

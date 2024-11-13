@@ -4,8 +4,8 @@ import { Routes, Route, Navigate } from "react-router-dom"; // Import Navigate
 // Các trang cơ bản
 import HomePage from "./Pages/homePage/HomePage";
 import Cart from "./Components/client/Cart/Cart";
-import LoginScreen from "./Components/client/Login/LoginScreen";
-import SignUpScreen from "./Components/client/Login/SignUpScreen";
+// import LoginScreen from "./Components/client/Login/Login";
+// import SignUpScreen from "./Components/Register/Register";
 import Product from "./Components/client/Product/Product";
 import ProductList from "./Components/client/Product/ProductList";
 import ProductDetail from "./Components/client/ProductDetail/ProductDetail";
@@ -26,6 +26,8 @@ import AddressForm from "./Components/client/Payment/AddressForm";
 
 //Trang dành cho admin
 import AdminDashboard from "./Components/admin/AdminDashboard/AdminDashboard";
+import Register from "./Components/Register/Register";
+import Login from "./Components/client/Login/Login";
 
 const RouterCustom = ({ onLoginSuccess, onClose }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -42,6 +44,9 @@ const RouterCustom = ({ onLoginSuccess, onClose }) => {
       {/* Routes chung cho tất cả người dùng */}
       <Route path="/" element={<HomePage />} />
       <Route path="/cart" element={<Cart />} />
+      <Route path="/register-seller" element={<RegisterSeller />} />
+      {/* <Route path="/shipping-setting" element={<ShippingSettings />} /> */}
+      
 
       {/* Nếu đã đăng nhập */}
       {isLoggedIn ? (
@@ -56,6 +61,7 @@ const RouterCustom = ({ onLoginSuccess, onClose }) => {
               <Route path="/QRCode" element={<PaymentQRCode />} />
               <Route path="/confirmation" element={<OrderConfirmation />} />
               <Route path="/checkout" element={<Checkout />} />
+              
             </>
           ) : (
             <Navigate to="/admin" replace />
@@ -79,11 +85,11 @@ const RouterCustom = ({ onLoginSuccess, onClose }) => {
       ) : (
         <>
           {/* Nếu chưa đăng nhập, chuyển đến trang đăng ký hoặc login */}
-          <Route path="/signup" element={<SignUpScreen />} />
+          <Route path="/signup" element={<Register />} />
           <Route
             path="/login"
             element={
-              <LoginScreen
+              <Login
                 onLoginSuccess={handleLoginSuccess}
                 onClose={onClose}
               />

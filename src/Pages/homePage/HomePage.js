@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import ProductAdBanner from "../../Components/client/ProductAdBanner/ProductAdBanner";
 import FeaturesSection from "../../Components/client/FeaturesSection/FeaturesSection";
 import MiniAdBanner from "../../Components/client/MiniAdBanner/MiniAdBanner";
@@ -8,9 +8,11 @@ import Sidebar from "../../Components/client/Sidebar/Sidebar";
 import BestSellingProduct from "../../Components/client/BestSellingProduct/BestSellingProduct";
 import Chatbot from "../../Components/client/Chatbot/Chatbot";
 import "../../styles/MainLayout.css";
-import { fetchNewProducts, fetchFeaturedProducts, fetchBestSellingProducts } from "../../services/apiHomePage"; 
+import { fetchNewProducts, fetchFeaturedProducts, fetchBestSellingProducts } from "../../services/apiHomePage";
+import { useNavigate } from "react-router-dom"; // Use Navigate hook
 
-const HomePage = () => {
+const HomePage = ({ userRole }) => {
+  const navigate = useNavigate();
   const [newProducts, setNewProducts] = useState([]);
   const [featuredProducts, setFeaturedProducts] = useState([]);
   const [BestSellingProducts, setBestSellingProducts] = useState([]);
@@ -48,9 +50,20 @@ const HomePage = () => {
     getBestSellingProducts();
   }, []);
 
+  // Hàm xử lý khi nhấn "Trở thành người bán"
+  const handleBecomeSeller = () => {
+    if (userRole === "user") {
+      navigate("/signup"); // Chuyển đến trang đăng ký nếu là user
+    } else if (userRole === "seller") {
+      navigate("/register-seller"); // Chuyển đến trang quản lý seller
+    } else if (userRole === "admin") {
+      navigate("/admin"); // Chuyển đến trang admin
+    }
+  };
+
   return (
-    <div className='container-all'>
-      <div className='main-layout'>
+    <div className="container-all">
+      <div className="main-layout">
         <Sidebar />
         <ProductAdBanner />
       </div>
@@ -61,7 +74,7 @@ const HomePage = () => {
       <BestSellingProduct products={BestSellingProducts} /> {/* Truyền dữ liệu "Bán chạy nhất" */}
       <Chatbot />
     </div>
-  );  
+  );
 };
 
 export default HomePage;

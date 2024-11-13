@@ -1,13 +1,13 @@
 /** @format */
-// Login.js
+// Register.js
 
-
-// Signup.js
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import './Auth.css';
+import './Register.css';
+import { GoogleLogin } from "@react-oauth/google";
+import {jwtDecode} from "jwt-decode";
 
-const SignUpScreen = () => {
+const Register = ({ onLoginSuccess, onClose }) => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     username: '',
@@ -27,22 +27,41 @@ const SignUpScreen = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     // Xử lý đăng ký ở đây
-    console.log('Signup data:', formData);
+    console.log('Dữ liệu đăng ký:', formData);
   };
 
-  const handleFacebookSignup = () => {
-    // Xử lý đăng ký bằng Facebook
-    console.log('Facebook signup');
+  const handleGoogleLoginSuccess = (response) => {
+    try {
+      const decoded = jwtDecode(response.credential); // Sử dụng jwtDecode để giải mã JWT
+      console.log("Đăng nhập Google thành công:", decoded);
+
+      // Gọi hàm xử lý khi đăng nhập thành công
+      if (onLoginSuccess) {
+        onLoginSuccess();
+      } else {
+        console.error("Hàm onLoginSuccess chưa được định nghĩa");
+      }
+
+      if (onClose) {
+        onClose();
+      }
+
+      navigate("/");
+    } catch (error) {
+      console.error("Lỗi khi giải mã JWT:", error);
+    }
   };
 
-  const handleGoogleSignup = () => {
-    // Xử lý đăng ký bằng Google
-    console.log('Google signup');
+  const handleGoogleLoginFailure = (error) => {
+    console.error("Đăng nhập Google thất bại:", error);
   };
 
   return (
     <div className="auth-container">
       <div className="auth-form">
+      <button className="close-btn" onClick={onClose}>
+          ×
+        </button>
         <h1>Tạo tài khoản</h1>
         <p className="subtitle">Kết nối với bạn bè ngay hôm nay!</p>
 
@@ -100,15 +119,10 @@ const SignUpScreen = () => {
 
         <div className="divider">Hoặc</div>
 
-        <button className="social-button facebook" onClick={handleFacebookSignup}>
-          <i className="fab fa-facebook"></i>
-          Đăng ký với Facebook
-        </button>
-
-        <button className="social-button google" onClick={handleGoogleSignup}>
-          <i className="fab fa-google"></i>
-          Đăng ký với Google
-        </button>
+        <GoogleLogin
+          onSuccess={handleGoogleLoginSuccess}
+          onError={handleGoogleLoginFailure}
+        />
 
         <p className="switch-auth">
           Đã có tài khoản? <Link to="/login">Đăng nhập</Link>
@@ -118,4 +132,4 @@ const SignUpScreen = () => {
   );
 };
 
-export default SignUpScreen;
+export default Register;
