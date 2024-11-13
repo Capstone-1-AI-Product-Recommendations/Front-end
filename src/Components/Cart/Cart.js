@@ -22,8 +22,13 @@ const Cart = () => {
   };
 
   const handleQuantityChange = (itemId, quantity) => {
-    if (quantity < 1) return;
-    updateQuantity(itemId, quantity);
+    if (quantity < 1) {
+      // If quantity is less than 1, remove the item from the cart
+      removeFromCart(itemId);
+    } else {
+      // Otherwise, update the quantity
+      updateQuantity(itemId, quantity);
+    }
   };
 
   const handleSelectItem = (itemId) => {
@@ -48,7 +53,11 @@ const Cart = () => {
       .reduce((total, item) => total + formatPrice(item.price) * item.quantity, 0);
   };
 
-  const handleProductClick = (product) => {
+  const handleProductClick = (product, event) => {
+    // Prevent navigation if we're clicking on something other than the row itself
+    if (event.target.closest("button") || event.target.closest("input")) {
+      return; // Ignore the click if it's on buttons or inputs (like the quantity buttons or checkbox)
+    }
     navigate(`/product/${product.id}`, { state: { product } });
   };
 
@@ -78,14 +87,17 @@ const Cart = () => {
             </thead>
             <tbody>
               {cartItems.map((item) => (
-                <tr key={item.id} onClick={() => handleProductClick(item)}>
+                <tr
+                  key={item.id}
+                  onClick={(event) => handleProductClick(item, event)} // Prevent navigation when clicking on quantity controls or buttons
+                >
                   <td>
                     <div className={styles.productInfo}>
                       <input
                         type="checkbox"
                         checked={selectedItems.includes(item.id)}
                         onChange={(e) => {
-                          e.stopPropagation(); // Ngăn sự kiện click vào cả hàng
+                          e.stopPropagation(); // Prevent row click navigation
                           handleSelectItem(item.id);
                         }}
                       />
@@ -95,7 +107,7 @@ const Cart = () => {
                         className={styles.productImage}
                         onClick={(e) => {
                           e.stopPropagation();
-                          handleProductClick(item);
+                          handleProductClick(item, e);
                         }}
                       />
                       <div>
@@ -110,17 +122,31 @@ const Cart = () => {
                   </td>
                   <td>
                     <div className={styles.quantityControl}>
-                      <button onClick={() => handleQuantityChange(item.id, item.quantity - 1)}>-</button>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation(); // Prevent row click navigation
+                          handleQuantityChange(item.id, item.quantity - 1); // Decrease quantity
+                        }}
+                      >
+                        -
+                      </button>
                       <span>{item.quantity}</span>
-                      <button onClick={() => handleQuantityChange(item.id, item.quantity + 1)}>+</button>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation(); // Prevent row click navigation
+                          handleQuantityChange(item.id, item.quantity + 1); // Increase quantity
+                        }}
+                      >
+                        +
+                      </button>
                     </div>
                   </td>
                   <td>{(formatPrice(item.price) * item.quantity).toLocaleString()} đ</td>
                   <td>
                     <button
                       onClick={(e) => {
-                        e.stopPropagation(); // Ngăn sự kiện click vào cả hàng
-                        removeFromCart(item.id);
+                        e.stopPropagation(); // Prevent row click navigation
+                        removeFromCart(item.id); // Manually remove item from cart
                       }}
                       className={styles.removeButton}
                     >
