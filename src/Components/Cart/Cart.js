@@ -3,6 +3,11 @@ import { useNavigate } from "react-router-dom";
 import { CartContext } from "../Cart/CartContext";
 import styles from '../../styles/Cart.module.css';
 
+// Hàm chuyển đổi giá từ chuỗi sang số
+const formatPrice = (priceString) => {
+  return Number(priceString.replace(/[^\d.-]/g, ""));
+};
+
 const Cart = () => {
   const { cartItems, removeFromCart, updateQuantity, removeAllItems } = useContext(CartContext);
   const [selectedItems, setSelectedItems] = useState([]);
@@ -40,7 +45,11 @@ const Cart = () => {
   const calculateTotal = () => {
     return cartItems
       .filter((item) => selectedItems.includes(item.id))
-      .reduce((total, item) => total + item.price * item.quantity, 0);
+      .reduce((total, item) => total + formatPrice(item.price) * item.quantity, 0);
+  };
+
+  const handleProductClick = (product) => {
+    navigate(`/product/${product.id}`, { state: { product } });
   };
 
   return (
@@ -69,15 +78,26 @@ const Cart = () => {
             </thead>
             <tbody>
               {cartItems.map((item) => (
-                <tr key={item.id}>
+                <tr key={item.id} onClick={() => handleProductClick(item)}>
                   <td>
                     <div className={styles.productInfo}>
                       <input
                         type="checkbox"
                         checked={selectedItems.includes(item.id)}
-                        onChange={() => handleSelectItem(item.id)}
+                        onChange={(e) => {
+                          e.stopPropagation(); // Ngăn sự kiện click vào cả hàng
+                          handleSelectItem(item.id);
+                        }}
                       />
-                      <img src={item.imageUrl} alt={item.name} className={styles.productImage} />
+                      <img
+                        src={item.imageUrl}
+                        alt={item.name}
+                        className={styles.productImage}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleProductClick(item);
+                        }}
+                      />
                       <div>
                         <p>{item.name}</p>
                         <p className={styles.productCategory}>Phân Loại Hàng: {item.category}</p>
@@ -86,7 +106,7 @@ const Cart = () => {
                   </td>
                   <td>
                     <p className={styles.priceOld}><del>{item.originalPrice}</del></p>
-                    <p className={styles.priceNew}>{item.price.toLocaleString()} đ</p>
+                    <p className={styles.priceNew}>{formatPrice(item.price).toLocaleString()} đ</p>
                   </td>
                   <td>
                     <div className={styles.quantityControl}>
@@ -95,9 +115,17 @@ const Cart = () => {
                       <button onClick={() => handleQuantityChange(item.id, item.quantity + 1)}>+</button>
                     </div>
                   </td>
-                  <td>{(item.price * item.quantity).toLocaleString()} đ</td>
+                  <td>{(formatPrice(item.price) * item.quantity).toLocaleString()} đ</td>
                   <td>
-                    <button onClick={() => removeFromCart(item.id)} className={styles.removeButton}>Xóa</button>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation(); // Ngăn sự kiện click vào cả hàng
+                        removeFromCart(item.id);
+                      }}
+                      className={styles.removeButton}
+                    >
+                      Xóa
+                    </button>
                   </td>
                 </tr>
               ))}

@@ -39,14 +39,15 @@ const NewProduct = () => {
 
   // Xử lý sự kiện click vào sản phẩm để điều hướng
   const handleProductClick = (productId) => {
+    window.scrollTo(0, 0);
     navigate(`/product/${productId}`);
   };
 
-  // Xử lý sự kiện thêm sản phẩm vào giỏ hàng và điều hướng tới trang cart
+  // Xử lý sự kiện thêm sản phẩm vào giỏ hàng và điều hướng tới trang chi tiết sản phẩm
   const handleAddToCart = (e, product) => {
     e.stopPropagation(); // Ngăn chặn sự kiện click lan ra ngoài khi thêm vào giỏ hàng
     addToCart(product); // Thêm sản phẩm vào giỏ hàng
-    navigate("/cart"); // Điều hướng tới trang giỏ hàng
+    navigate(`/product/${product.id}`, { state: { product } }); // Điều hướng tới trang chi tiết sản phẩm
   };
 
   // Xử lý khi hover vào sản phẩm
@@ -72,10 +73,7 @@ const NewProduct = () => {
             - Đừng bỏ lỡ cơ hội giảm giá đặc biệt chỉ có trong tuần này.
           </span>
         </h4>
-        <button
-          className="btn view-all-btn"
-          onClick={(e) => e.preventDefault()}
-        >
+        <button className="btn view-all-btn" onClick={(e) => e.preventDefault()}>
           Xem tất cả →
         </button>
       </div>
