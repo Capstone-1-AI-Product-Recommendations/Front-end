@@ -1,45 +1,48 @@
+/** @format */
 import React, { useState } from "react";
 import { BsCart2 } from "react-icons/bs";
 import { IoMdNotificationsOutline } from "react-icons/io";
 import logo from "../../../assets/logo.png";
 import { FaUser, FaCaretDown } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-import LoginScreen from "../Login/Login";
-import CartDropdown from "../Cart/CartDropdown"; // Import CartDropdown
+import Login from "../Login/Login";
+import CartDropdown from "../Cart/CartDropdown";
 import { NavLink } from "react-router-dom";
 import cartItems from "../../../data/cartItems";
-import "./HeaderNoLogin.css";
+import "./HeaderAfterLogin.css";
 
-const HeaderNoLogin = ({ onLoginSuccess }) => {
-  const [showLogin, setShowLogin] = useState(false);
-  const [showCartDropdown, setShowCartDropdown] = useState(false); // State để hiển thị CartDropdown
-  const [userRole, setUserRole] = useState(""); // State cho vai trò người dùng
-
+const HeaderAfterLogin = ({ onLogout, userRole }) => {
   const navigate = useNavigate();
+  const [showLogin, setShowLogin] = useState(false);
+  const [showCartDropdown, setShowCartDropdown] = useState(false);
 
+  // Hàm xử lý khi nhấn vào icon tài khoản
   const handleAccountClick = () => {
-    setShowLogin(true);
+    setShowLogin(true); // Mở modal đăng nhập
   };
 
+  // Hàm đóng modal đăng nhập
   const handleCloseLogin = () => {
-    setShowLogin(false);
+    setShowLogin(false); // Đóng modal đăng nhập
   };
 
-  const handleUserRole = (role) => {
-    setUserRole(role);
-  };
-
-  const handleHomeClick = () => {
-    navigate("/");
-  };
-
-  const handleBecomeSeller = () => {
+  // Hàm xử lý điều hướng dựa trên vai trò người dùng
+  const handleRoleNavigation = () => {
     if (userRole === "user") {
-      navigate("/register-seller"); // Chuyển đến trang đăng ký nếu là user
+      navigate("/register-seller");
     } else if (userRole === "seller") {
-      navigate("/"); // Chuyển đến trang quản lý seller
+      navigate("/manage-store");
     } else if (userRole === "admin") {
-      navigate("/admin"); // Chuyển đến trang admin
+      navigate("/admin");
+    }
+  };
+
+  const handleLogout = () => {
+    if (typeof onLogout === "function") {
+      onLogout();
+      navigate("/");
+    } else {
+      console.error("onLogout is not a function");
     }
   };
 
@@ -48,16 +51,28 @@ const HeaderNoLogin = ({ onLoginSuccess }) => {
       <div className="menu-container">
         <header className="header">
           <div className="top-bar">
-            <ul className="top-links">
-              <li onClick={handleHomeClick}>Về chúng tôi</li>
-              <li>Tài khoản của tôi</li>
-              <li>Danh sách mong muốn</li>
-              <li onClick={handleBecomeSeller}>Trở thành người bán</li>
-              <li>Hỗ trợ</li>
+            <ul className="top-menu">
+              <NavLink className="top-link" to="/about us">
+                Về chúng tôi
+              </NavLink>
+              <NavLink className="top-link" to="/my-account">
+                Tài khoản của tôi
+              </NavLink>
+              <NavLink className="top-link" to="/my-account">
+                Danh sách mong muốn
+              </NavLink>
+              <NavLink className="top-link" to="/register-seller">
+                Trở thành người bán
+              </NavLink>
+              <NavLink className="top-link" to="/contact">
+                Hỗ trợ
+              </NavLink>
             </ul>
           </div>
           <div className="main-header">
-            <div className="logo" onClick={handleHomeClick}>
+            <div className="logo" onClick={() => navigate("/")}>
+              {" "}
+              {/* Khi nhấn vào logo, chuyển đến trang chủ */}
               <img src={logo} alt="ADSmart Logo" />
               <span>ADSmart</span>
             </div>
@@ -72,7 +87,7 @@ const HeaderNoLogin = ({ onLoginSuccess }) => {
               <button>🔍</button>
             </div>
             <div className="account-section">
-              <div className="user-account" onClick={handleAccountClick}>
+              <div className="user-account" onClick={handleLogout}>
                 <FaUser className="icon" />
                 <div className="account-text">
                   <span>Đăng xuất</span>
@@ -114,11 +129,9 @@ const HeaderNoLogin = ({ onLoginSuccess }) => {
           </nav>
         </header>
       </div>
-      {showLogin && (
-        <LoginScreen onClose={handleCloseLogin} onLoginSuccess={onLoginSuccess} />
-      )}
+      {showLogin && <Login onClose={handleCloseLogin} />}
     </>
   );
 };
 
-export default HeaderNoLogin;
+export default HeaderAfterLogin;

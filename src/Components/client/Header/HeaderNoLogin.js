@@ -4,8 +4,8 @@ import { IoMdNotificationsOutline } from "react-icons/io";
 import logo from "../../../assets/logo.png";
 import { FaUser, FaCaretDown } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-import LoginScreen from "../Login/Login";
-import SignUpScreen from "../../Register/Register"; // Register modal
+import Login from "../Login/Login";
+import Register from "../../Register/Register";
 import { NavLink } from "react-router-dom";
 import "./HeaderNoLogin.css";
 
@@ -67,9 +67,10 @@ const HeaderNoLogin = ({ onLoginSuccess }) => {
               <button>🔍</button>
             </div>
             <div className="account-section">
-              <div className="user-account" onClick={handleLoginClick}>
+              <div className="user-account">
                 <FaUser className="icon" />
                 <div className="account-text">
+                  {/* Tách riêng sự kiện onClick cho từng span để tránh bị ảnh hưởng */}
                   <span onClick={handleLoginClick}>Đăng nhập</span>
                   <span onClick={handleRegisterClick}>Đăng ký</span>
                 </div>
@@ -105,9 +106,9 @@ const HeaderNoLogin = ({ onLoginSuccess }) => {
         </header>
       </div>
 
-      {/* Loại bỏ lớp bao bọc không cần thiết và chỉ hiển thị phần đăng nhập/đăng ký trực tiếp */}
+      {/* Chỉ hiển thị component đăng nhập/đăng ký tương ứng */}
       {showLogin && (
-        <LoginScreen
+        <Login
           show={showLogin}
           onClose={handleCloseModals}
           onRegisterClick={handleRegisterClick}
@@ -115,7 +116,7 @@ const HeaderNoLogin = ({ onLoginSuccess }) => {
         />
       )}
       {showRegister && (
-        <SignUpScreen
+        <Register
           show={showRegister}
           onClose={handleCloseModals}
         />

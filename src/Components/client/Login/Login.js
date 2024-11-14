@@ -1,11 +1,11 @@
 /** @format */
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { GoogleLogin } from "@react-oauth/google";
-import {jwtDecode} from "jwt-decode"; // Use jwtDecode correctly
+import { jwtDecode } from "jwt-decode"; // Use jwtDecode correctly
 import "./Login.css";
 
-const Login = ({ onClose, onLoginSuccess }) => {
+const Login = ({ onClose, onLoginSuccess, onRegisterClick }) => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: "",
@@ -25,10 +25,46 @@ const Login = ({ onClose, onLoginSuccess }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (formData.email === "123@gmail.com" && formData.password === "123") {
-      if (onLoginSuccess) onLoginSuccess();
-      if (onClose) onClose();
-      navigate("/");
+    // Định nghĩa các tài khoản giả lập cho từng vai trò
+    const admin = {
+      email: "admin@gmail.com",
+      password: "123456",
+    };
+
+    const seller = {
+      email: "seller@gmail.com",
+      password: "123456",
+    };
+
+    const user = {
+      email: "user@gmail.com",
+      password: "123456",
+    };
+
+    if (formData.email === admin.email && formData.password === admin.password) {
+      console.log("Logged in as admin");
+      onLoginSuccess("admin");
+      setErrorMessage("");
+      onClose();
+      navigate("/admin"); // Điều hướng tới trang admin
+    } else if (
+      formData.email === seller.email &&
+      formData.password === seller.password
+    ) {
+      console.log("Logged in as seller");
+      onLoginSuccess("seller");
+      setErrorMessage("");
+      onClose();
+      navigate("/"); // Điều hướng tới trang seller
+    } else if (
+      formData.email === user.email &&
+      formData.password === user.password
+    ) {
+      console.log("Logged in as user");
+      onLoginSuccess("user");
+      setErrorMessage("");
+      onClose();
+      navigate("/"); // Điều hướng tới trang user
     } else {
       setErrorMessage("Email hoặc mật khẩu không chính xác.");
     }
@@ -45,6 +81,13 @@ const Login = ({ onClose, onLoginSuccess }) => {
   const handleGoogleLoginFailure = (error) => {
     console.error("Google login failed:", error);
     setErrorMessage("Đăng nhập bằng Google thất bại.");
+  };
+
+  // Thêm hàm để mở modal đăng ký khi người dùng nhấn vào "Chưa có tài khoản?"
+  const handleShowRegister = () => {
+    if (onRegisterClick) {
+      onRegisterClick(); // Gọi hàm từ component cha để mở modal đăng ký
+    }
   };
 
   return (
@@ -90,9 +133,9 @@ const Login = ({ onClose, onLoginSuccess }) => {
               />
               Ghi nhớ đăng nhập
             </label>
-            <Link to="/forgot-password" className="forgot-password">
+            <a href="/forgot-password" className="forgot-password">
               Quên mật khẩu?
-            </Link>
+            </a>
           </div>
 
           <button type="submit" className="primary-button">
@@ -108,7 +151,10 @@ const Login = ({ onClose, onLoginSuccess }) => {
         />
 
         <p className="switch-auth">
-          Chưa có tài khoản? <Link to="/signup">Đăng ký</Link>
+          Chưa có tài khoản?{" "}
+          <span className="link-register" onClick={handleShowRegister}>
+            Đăng ký
+          </span>
         </p>
       </div>
     </div>

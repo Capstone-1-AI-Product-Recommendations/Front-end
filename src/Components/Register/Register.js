@@ -1,33 +1,33 @@
 /** @format */
 // Register.js
 
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import './Register.css';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import "./Register.css";
 import { GoogleLogin } from "@react-oauth/google";
-import {jwtDecode} from "jwt-decode";
+import { jwtDecode } from "jwt-decode";
 
-const Register = ({ onLoginSuccess, onClose }) => {
+const Register = ({ onLoginSuccess, onClose, onLoginClick }) => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    username: '',
-    email: '',
-    phone: '',
-    password: ''
+    username: "",
+    email: "",
+    phone: "",
+    password: "",
   });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     // Xử lý đăng ký ở đây
-    console.log('Dữ liệu đăng ký:', formData);
+    console.log("Dữ liệu đăng ký:", formData);
   };
 
   const handleGoogleLoginSuccess = (response) => {
@@ -38,8 +38,6 @@ const Register = ({ onLoginSuccess, onClose }) => {
       // Gọi hàm xử lý khi đăng nhập thành công
       if (onLoginSuccess) {
         onLoginSuccess();
-      } else {
-        console.error("Hàm onLoginSuccess chưa được định nghĩa");
       }
 
       if (onClose) {
@@ -56,10 +54,17 @@ const Register = ({ onLoginSuccess, onClose }) => {
     console.error("Đăng nhập Google thất bại:", error);
   };
 
+  // Hàm để mở modal đăng nhập
+  const handleShowLogin = () => {
+    if (onLoginClick) {
+      onLoginClick();
+    }
+  };
+
   return (
     <div className="auth-container">
       <div className="auth-form">
-      <button className="close-btn" onClick={onClose}>
+        <button className="close-btn" onClick={onClose}>
           ×
         </button>
         <h1>Tạo tài khoản</h1>
@@ -91,18 +96,6 @@ const Register = ({ onLoginSuccess, onClose }) => {
           </div>
 
           <div className="form-group">
-            <label htmlFor="phone">Số điện thoại</label>
-            <input
-              type="tel"
-              id="phone"
-              name="phone"
-              placeholder="Nhập số điện thoại của bạn"
-              value={formData.phone}
-              onChange={handleChange}
-            />
-          </div>
-
-          <div className="form-group">
             <label htmlFor="password">Mật khẩu</label>
             <input
               type="password"
@@ -114,7 +107,9 @@ const Register = ({ onLoginSuccess, onClose }) => {
             />
           </div>
 
-          <button type="submit" className="primary-button">Đăng ký</button>
+          <button type="submit" className="primary-button">
+            Đăng ký
+          </button>
         </form>
 
         <div className="divider">Hoặc</div>
@@ -125,7 +120,10 @@ const Register = ({ onLoginSuccess, onClose }) => {
         />
 
         <p className="switch-auth">
-          Đã có tài khoản? <Link to="/login">Đăng nhập</Link>
+          Đã có tài khoản?{" "}
+          <span className="link-login" onClick={handleShowLogin}>
+            Đăng nhập
+          </span>
         </p>
       </div>
     </div>
