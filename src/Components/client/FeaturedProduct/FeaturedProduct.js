@@ -3,9 +3,17 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "./FeaturedProduct.css";
 import { FaHeart } from "react-icons/fa";
 
+const PRODUCTS_PER_PAGE = 36;
+
 const FeaturedProduct = ({ products }) => {
   const [hoveredProduct, setHoveredProduct] = useState(null);
   const [currentImageIndex, setCurrentImageIndex] = useState({});
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const totalPages = Math.ceil(products.length / PRODUCTS_PER_PAGE);
+
+  // Get the current month name
+  const currentMonth = new Date().toLocaleString("default", { month: "long" });
 
   useEffect(() => {
     let interval;
@@ -30,29 +38,87 @@ const FeaturedProduct = ({ products }) => {
     setCurrentImageIndex((prev) => ({ ...prev, [index]: 0 }));
   };
 
-  const handleMouseLeave = (index) => {
+  const handleMouseLeave = () => {
     setHoveredProduct(null);
-    setCurrentImageIndex((prev) => ({ ...prev, [index]: 0 }));
   };
 
+  const changePage = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
+  const goToFirstPage = () => {
+    setCurrentPage(1);
+  };
+
+  const goToLastPage = () => {
+    setCurrentPage(totalPages);
+  };
+
+  const previousPage = () => {
+    if (currentPage > 1) setCurrentPage(currentPage - 1);
+  };
+
+  const nextPage = () => {
+    if (currentPage < totalPages) setCurrentPage(currentPage + 1);
+  };
+
+  const getPageNumbers = () => {
+    const pageNumbers = [];
+    const range = 2;
+
+    pageNumbers.push(1);
+
+    if (currentPage <= range + 3) {
+      for (let i = 2; i <= Math.min(5, totalPages); i++) {
+        pageNumbers.push(i);
+      }
+      if (totalPages > 5) pageNumbers.push("...");
+    } else if (currentPage > range + 3 && currentPage < totalPages - range - 2) {
+      pageNumbers.push("...");
+      for (let i = currentPage - range; i <= currentPage + range; i++) {
+        pageNumbers.push(i);
+      }
+      pageNumbers.push("...");
+    } else {
+      pageNumbers.push("...");
+      for (let i = totalPages - 4; i < totalPages; i++) {
+        pageNumbers.push(i);
+      }
+    }
+
+    if (totalPages > 1) {
+      pageNumbers.push(totalPages);
+    }
+
+    return pageNumbers;
+  };
+
+  const currentProducts = products.slice(
+    (currentPage - 1) * PRODUCTS_PER_PAGE,
+    currentPage * PRODUCTS_PER_PAGE
+  );
+
   return (
-    <div className="container mt-4">
+    <div className="featured-product-container">
       <div className="d-flex justify-content-between align-items-center mb-1">
         <h4 className="mb-0">
           Sản phẩm nổi bật
-          <span className="text-muted"> - Đừng bỏ lỡ các ưu đãi hiện tại cho đến cuối tháng 3.</span>
+          <span className="text-muted">
+            {" "} - Đừng bỏ lỡ các ưu đãi hiện tại cho đến khi kết thúc {currentMonth}.
+          </span>
         </h4>
         <a href="#" className="view-all-btn">
-          Xem tất cả →
+          Tất cả →
         </a>
       </div>
+
       <div className="row">
-        {products.map((product, index) => (
+        {currentProducts.map((product, index) => (
           <div key={product.id} className="col-lg-3 col-md-6 col-sm-12 mb-3">
             <div
               className="card product-card h-100 border-0"
               onMouseEnter={() => handleMouseEnter(index)}
-              onMouseLeave={() => handleMouseLeave(index)}
+              onMouseLeave={handleMouseLeave}
             >
               <div className="row g-0">
                 <div className="col-6 position-relative">
@@ -67,7 +133,7 @@ const FeaturedProduct = ({ products }) => {
                       src={
                         product.altImages && product.altImages[currentImageIndex[index] || 0]
                           ? product.altImages[currentImageIndex[index] || 0]
-                          : product.imageUrl // Sử dụng imageUrl nếu không có altImages
+                          : product.imageUrl
                       }
                       alt={product.title}
                       className="img-fluid product-image rounded"
@@ -100,7 +166,7 @@ const FeaturedProduct = ({ products }) => {
                     <span className="reviews"> ({product.reviews})</span>
                   </div>
                   <button className="add-to-cart-product w-100 mt-3">
-                    Thêm vào giỏ hàng
+                    Add to Cart
                     <span className="ms-2">+</span>
                   </button>
                 </div>
@@ -109,6 +175,53 @@ const FeaturedProduct = ({ products }) => {
             </div>
           </div>
         ))}
+      </div>
+
+      {/* Pagination */}
+      <div className="pagination">
+        <button
+          className="pagination-btn"
+          onClick={goToFirstPage}
+          disabled={currentPage === 1}
+        >
+          &laquo;
+        </button>
+        <button
+          className="pagination-btn"
+          onClick={previousPage}
+          disabled={currentPage === 1}
+        >
+          &lt;
+        </button>
+        {getPageNumbers().map((page, index) =>
+          page === "..." ? (
+            <span key={index} className="pagination-ellipsis">...</span>
+          ) : (
+            <button
+              key={page}
+              className={`pagination-btn ${
+                currentPage === page ? "active" : ""
+              }`}
+              onClick={() => changePage(page)}
+            >
+              {page}
+            </button>
+          )
+        )}
+        <button
+          className="pagination-btn"
+          onClick={nextPage}
+          disabled={currentPage === totalPages}
+        >
+          &gt;
+        </button>
+        <button
+          className="pagination-btn"
+          onClick={goToLastPage}
+          disabled={currentPage === totalPages}
+        >
+          &raquo;
+        </button>
       </div>
     </div>
   );

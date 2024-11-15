@@ -4,8 +4,6 @@ import { Routes, Route, Navigate } from "react-router-dom"; // Import Navigate
 // Các trang cơ bản
 import HomePage from "./Pages/homePage/HomePage";
 import Cart from "./Components/client/Cart/Cart";
-// import LoginScreen from "./Components/client/Login/Login";
-// import SignUpScreen from "./Components/Register/Register";
 import Product from "./Components/client/Product/Product";
 import ProductList from "./Components/client/Product/ProductList";
 import ProductDetail from "./Components/client/ProductDetail/ProductDetail";
@@ -19,39 +17,58 @@ import VendorForm from "./Components/client/VendorForm/VendorForm";
 import DashboardLayout from "./Components/client/VendorForm/DashboardLayout";
 import Contact from "./Components/client/Contact/Contact";
 
-// Trang dành cho seller 
-import RegisterSeller from "./Components/seller/RegisterSeller/RegisterSeller";
-import ShippingSettings from "./Components/seller/ShippingSetting/ShippingSettings";
-import AddressForm from "./Components/client/Payment/AddressForm";
+// Trang dành cho seller
+import RegisterSeller from "./Pages/RegisterSeller/RegisterSeller";
+import ShippingSetting from "./Components/seller/ShippingSetting/ShippingSetting";
+import TaxInformation from "./Components/seller/TaxInformation/TaxInformation";
+import IdentityInformation from "./Components/seller/IdentityInformation/IdentityInformation";
+import SuccessRegistration from "./Components/seller/SuccessRegistration/SuccessRegistration";
+import ProductForm from "./Components/seller/ProductForm/ProductForm";
+import ProductManagement from "./Components/seller/ProductManagement/ProductManagement";
+import RegisterSellerStep from "./Pages/RegisterSeller/RegisterSeller";
+
+
 
 //Trang dành cho admin
 import AdminDashboard from "./Components/admin/AdminDashboard/AdminDashboard";
 import Register from "./Components/Register/Register";
 import Login from "./Components/client/Login/Login";
+// import SellerPage from "./Pages/SellerPage/SellerPage";
 
-const RouterCustom = ({ onLoginSuccess, onClose }) => {
+
+const RouterCustom = ({ onClose }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userRole, setUserRole] = useState(""); // State cho vai trò người dùng
 
-  // Handle login success
+  // Hàm xử lý đăng nhập thành công
   const handleLoginSuccess = (role) => {
     setIsLoggedIn(true);
     setUserRole(role); // Thiết lập vai trò người dùng (user/admin/seller)
+    console.log("Đã đăng nhập với vai trò:", role); // Kiểm tra vai trò trong console
   };
 
   return (
     <Routes>
-      {/* Routes chung cho tất cả người dùng */}
+      {/* Các route chung cho tất cả người dùng */}
       <Route path="/" element={<HomePage />} />
+      {/* <Route path="/productMa" element={<SellerPage/>} /> */}
+      
       <Route path="/cart" element={<Cart />} />
       <Route path="/register-seller" element={<RegisterSeller />} />
-      {/* <Route path="/shipping-setting" element={<ShippingSettings />} /> */}
-      
+      <Route path="/shipping-setting" element={<ShippingSetting />} />
+      <Route path="/tax-information" element={<TaxInformation/>} />
+      <Route path="/identity-information" element={<IdentityInformation/>} />
+      <Route path="/check-registration" element={<SuccessRegistration/>} />
+      <Route path="/product-form" element={<ProductForm/>} />
+      <Route path="/product-management" element={<ProductManagement/>} />
+      <Route path="/registerseller" element={<RegisterSellerStep/>} />
+
+
+
 
       {/* Nếu đã đăng nhập */}
       {isLoggedIn ? (
         <>
-          {/* Nếu là user, điều hướng đến trang chủ */}
           {userRole === "user" ? (
             <>
               <Route path="/product" element={<Product />} />
@@ -61,48 +78,47 @@ const RouterCustom = ({ onLoginSuccess, onClose }) => {
               <Route path="/QRCode" element={<PaymentQRCode />} />
               <Route path="/confirmation" element={<OrderConfirmation />} />
               <Route path="/checkout" element={<Checkout />} />
-              
+              <Route path="/register-seller" element={<RegisterSeller />} />
+              <Route
+                path="/shipping-setting"
+                element={<ShippingSetting />}
+              />{" "}
+              {/* Thêm route này */}
             </>
           ) : (
             <Navigate to="/admin" replace />
           )}
 
-          {/* Nếu là admin, điều hướng đến trang admin */}
           {userRole === "admin" ? (
             <Route path="/admin" element={<AdminDashboard />} />
           ) : null}
 
-          {/* Nếu là seller, điều hướng đến trang seller */}
           {userRole === "seller" ? (
             <>
               <Route path="/register-seller" element={<RegisterSeller />} />
-              <Route path="/shipping-setting" element={<ShippingSettings />} />
-              <Route path="/address-form" element={<AddressForm />} />
+              <Route path="/shipping-setting" element={<ShippingSetting />} />
+              {/* <Route path="/tax-information" element={<TaxInformation />} /> */}
             </>
           ) : null}
-
         </>
       ) : (
         <>
-          {/* Nếu chưa đăng nhập, chuyển đến trang đăng ký hoặc login */}
+          {/* Các route cho người dùng chưa đăng nhập */}
           <Route path="/signup" element={<Register />} />
           <Route
             path="/login"
             element={
-              <Login
-                onLoginSuccess={handleLoginSuccess}
-                onClose={onClose}
-              />
+              <Login onLoginSuccess={handleLoginSuccess} onClose={onClose} />
             }
           />
         </>
       )}
 
-      {/* Các routes khác */}
+      {/* Các route khác */}
       <Route path="/ADSmartCart" element={<ADSmartCart />} />
       <Route path="/contact" element={<Contact />} />
 
-      {/* Điều hướng đến trang chủ cho những routes không xác định */}
+      {/* Điều hướng đến trang chủ cho các route không xác định */}
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );

@@ -1,0 +1,173 @@
+
+/* TaxInformation.css */
+.tax-information {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.info-banner {
+  background-color: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 4px;
+  padding: 16px;
+  margin-bottom: 24px;
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.info-icon {
+  color: #0d6efd;
+  font-style: normal;
+}
+
+.info-banner p {
+  margin: 0;
+  font-size: 14px;
+  color: #6c757d;
+  line-height: 1.5;
+}
+
+.tax-form {
+  background-color: #fff;
+  border-radius: 4px;
+  padding: 20px;
+}
+
+.form-section {
+  margin-bottom: 24px;
+}
+
+.required::after {
+  content: '*';
+  color: #dc3545;
+  margin-left: 4px;
+}
+
+label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+
+.business-type {
+  display: flex;
+  gap: 24px;
+}
+
+.radio-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.radio-option input[type="radio"] {
+  margin: 0;
+}
+
+.address-input input,
+.address-input textarea,
+.email-input input,
+.tax-code-input input {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  margin-bottom: 8px;
+}
+
+.address-input textarea {
+  min-height: 80px;
+  resize: vertical;
+}
+
+.email-input,
+.tax-code-input {
+  position: relative;
+  margin-bottom: 12px;
+}
+
+.email-limit,
+.tax-limit {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #6c757d;
+  font-size: 12px;
+}
+
+.add-email {
+  background: none;
+  border: none;
+  color: #0d6efd;
+  padding: 0;
+  cursor: pointer;
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+
+.email-note,
+.tax-note {
+  color: #6c757d;
+  font-size: 12px;
+  margin: 4px 0;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 32px;
+}
+
+.right-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.btn-back,
+.btn-save,
+.btn-next {
+  padding: 8px 16px;
+  border-radius: 4px;
+  border: 1px solid #dee2e6;
+  cursor: pointer;
+}
+
+.btn-back {
+  background-color: #fff;
+}
+
+.btn-save {
+  background-color: #fff;
+  border-color: #0d6efd;
+  color: #0d6efd;
+}
+
+.btn-next {
+  background-color: #ee4d2d;
+  border-color: #ee4d2d;
+  color: #fff;
+}
+
+.btn-next:hover {
+  background-color: #d73211;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .business-type {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .form-actions {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .right-actions {
+    justify-content: space-between;
+  }
+}
