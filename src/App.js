@@ -1,5 +1,4 @@
 // src/App.js
-/** @format */
 import React from "react";
 import { CartProvider } from "./Components/Cart/CartContext"; // Đường dẫn tới CartContext
 import Header from "./Components/Header/Header";

@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { CartContext } from "../Cart/CartContext";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../../styles/NewProduct.css";
-import productData from "../../data/product"; // Import dữ liệu sản phẩm từ file riêng
+import productData from "../../data/product"; 
 
 const NewProduct = () => {
   const [hoveredProduct, setHoveredProduct] = useState(null);

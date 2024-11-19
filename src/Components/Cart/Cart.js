@@ -1,174 +1,116 @@
-import React, { useContext, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { CartContext } from "../Cart/CartContext";
+// src/Components/Cart/Cart.js
+import React, { useEffect, useState } from 'react';
+import { fetchCart, addToCart, updateQuantity, removeFromCart, removeAllItems } from '../../services/cartAPI';
 import styles from '../../styles/Cart.module.css';
 
-// Hàm chuyển đổi giá từ chuỗi sang số
-const formatPrice = (priceString) => {
-  return Number(priceString.replace(/[^\d.-]/g, ""));
-};
-
 const Cart = () => {
-  const { cartItems, removeFromCart, updateQuantity, removeAllItems } = useContext(CartContext);
-  const [selectedItems, setSelectedItems] = useState([]);
-  const navigate = useNavigate();
+  const [cartItems, setCartItems] = useState([]);
+  const [loading, setLoading] = useState(false); // Thêm loading state
+  const [error, setError] = useState(null); // Thêm error state
 
-  const handleCheckout = () => {
-    if (selectedItems.length === 0) {
-      alert("Vui lòng chọn sản phẩm trước khi thanh toán.");
-    } else {
-      navigate("/checkout");
+  // Lấy giỏ hàng khi component được mount
+  useEffect(() => {
+    const getCartItems = async () => {
+      setLoading(true);
+      try {
+        const response = await fetchCart();
+        setCartItems(response.data); // Lưu giỏ hàng vào state
+      } catch (error) {
+        setError('Lỗi khi lấy giỏ hàng');
+        console.error('Lỗi khi lấy giỏ hàng:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    getCartItems();
+  }, []); // Chỉ chạy khi component mount
+
+  // Hàm thêm sản phẩm vào giỏ
+  const handleAddToCart = async (product) => {
+    setLoading(true);
+    try {
+      await addToCart(product);
+      const response = await fetchCart(); // Cập nhật lại giỏ hàng sau khi thêm sản phẩm
+      setCartItems(response.data);
+    } catch (error) {
+      setError('Lỗi khi thêm sản phẩm vào giỏ');
+      console.error('Lỗi khi thêm sản phẩm vào giỏ:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
-  const handleQuantityChange = (itemId, quantity) => {
-    if (quantity < 1) {
-      // If quantity is less than 1, remove the item from the cart
-      removeFromCart(itemId);
-    } else {
-      // Otherwise, update the quantity
-      updateQuantity(itemId, quantity);
+  // Hàm xóa sản phẩm khỏi giỏ
+  const handleRemoveFromCart = async (productId) => {
+    setLoading(true);
+    try {
+      await removeFromCart(productId);
+      const response = await fetchCart(); // Cập nhật lại giỏ hàng sau khi xóa sản phẩm
+      setCartItems(response.data);
+    } catch (error) {
+      setError('Lỗi khi xóa sản phẩm khỏi giỏ');
+      console.error('Lỗi khi xóa sản phẩm khỏi giỏ:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
-  const handleSelectItem = (itemId) => {
-    setSelectedItems((prevSelected) =>
-      prevSelected.includes(itemId)
-        ? prevSelected.filter((id) => id !== itemId)
-        : [...prevSelected, itemId]
-    );
-  };
-
-  const handleSelectAll = () => {
-    if (selectedItems.length === cartItems.length) {
-      setSelectedItems([]);
-    } else {
-      setSelectedItems(cartItems.map((item) => item.id));
+  // Hàm cập nhật số lượng sản phẩm trong giỏ
+  const handleUpdateQuantity = async (productId, quantity) => {
+    setLoading(true);
+    try {
+      await updateQuantity(productId, quantity);
+      const response = await fetchCart(); // Cập nhật lại giỏ hàng sau khi thay đổi số lượng
+      setCartItems(response.data);
+    } catch (error) {
+      setError('Lỗi khi cập nhật số lượng sản phẩm');
+      console.error('Lỗi khi cập nhật số lượng sản phẩm:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
-  const calculateTotal = () => {
-    return cartItems
-      .filter((item) => selectedItems.includes(item.id))
-      .reduce((total, item) => total + formatPrice(item.price) * item.quantity, 0);
-  };
-
-  const handleProductClick = (product, event) => {
-    // Prevent navigation if we're clicking on something other than the row itself
-    if (event.target.closest("button") || event.target.closest("input")) {
-      return; // Ignore the click if it's on buttons or inputs (like the quantity buttons or checkbox)
+  // Hàm xóa tất cả sản phẩm trong giỏ
+  const handleRemoveAllItems = async () => {
+    setLoading(true);
+    try {
+      await removeAllItems();
+      const response = await fetchCart(); // Cập nhật lại giỏ hàng sau khi xóa tất cả sản phẩm
+      setCartItems(response.data);
+    } catch (error) {
+      setError('Lỗi khi xóa tất cả sản phẩm');
+      console.error('Lỗi khi xóa tất cả sản phẩm:', error);
+    } finally {
+      setLoading(false);
     }
-    navigate(`/product/${product.id}`, { state: { product } });
   };
 
   return (
     <div className={styles.cartContainer}>
-      <h1>Giỏ Hàng của Bạn</h1>
+      <h1>Giỏ Hàng</h1>
+      {loading && <p>Đang tải...</p>} {/* Thêm thông báo loading */}
+      {error && <p className={styles.error}>{error}</p>} {/* Hiển thị lỗi nếu có */}
       {cartItems.length === 0 ? (
         <p>Giỏ hàng của bạn đang trống.</p>
       ) : (
-        <>
-          <table className={styles.cartTable}>
-            <thead>
-              <tr>
-                <th>
-                  <input
-                    type="checkbox"
-                    checked={selectedItems.length === cartItems.length}
-                    onChange={handleSelectAll}
-                  />
-                  Sản Phẩm
-                </th>
-                <th>Đơn Giá</th>
-                <th>Số Lượng</th>
-                <th>Số Tiền</th>
-                <th>Thao Tác</th>
-              </tr>
-            </thead>
-            <tbody>
-              {cartItems.map((item) => (
-                <tr
-                  key={item.id}
-                  onClick={(event) => handleProductClick(item, event)} // Prevent navigation when clicking on quantity controls or buttons
-                >
-                  <td>
-                    <div className={styles.productInfo}>
-                      <input
-                        type="checkbox"
-                        checked={selectedItems.includes(item.id)}
-                        onChange={(e) => {
-                          e.stopPropagation(); // Prevent row click navigation
-                          handleSelectItem(item.id);
-                        }}
-                      />
-                      <img
-                        src={item.imageUrl}
-                        alt={item.name}
-                        className={styles.productImage}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleProductClick(item, e);
-                        }}
-                      />
-                      <div>
-                        <p>{item.name}</p>
-                        <p className={styles.productCategory}>Phân Loại Hàng: {item.category}</p>
-                      </div>
-                    </div>
-                  </td>
-                  <td>
-                    <p className={styles.priceOld}><del>{item.originalPrice}</del></p>
-                    <p className={styles.priceNew}>{formatPrice(item.price).toLocaleString()} đ</p>
-                  </td>
-                  <td>
-                    <div className={styles.quantityControl}>
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation(); // Prevent row click navigation
-                          handleQuantityChange(item.id, item.quantity - 1); // Decrease quantity
-                        }}
-                      >
-                        -
-                      </button>
-                      <span>{item.quantity}</span>
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation(); // Prevent row click navigation
-                          handleQuantityChange(item.id, item.quantity + 1); // Increase quantity
-                        }}
-                      >
-                        +
-                      </button>
-                    </div>
-                  </td>
-                  <td>{(formatPrice(item.price) * item.quantity).toLocaleString()} đ</td>
-                  <td>
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation(); // Prevent row click navigation
-                        removeFromCart(item.id); // Manually remove item from cart
-                      }}
-                      className={styles.removeButton}
-                    >
-                      Xóa
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          <div className={styles.cartSummary}>
-            <button onClick={removeAllItems} className={styles.clearCartButton}>Xóa Tất Cả</button>
-            <div>
-              <p>
-                Tổng thanh toán ({selectedItems.length} Sản phẩm): 
-                <span> {calculateTotal().toLocaleString()} đ</span>
-              </p>
-              <button onClick={handleCheckout} className={styles.checkoutButton}>Mua Hàng</button>
-            </div>
-          </div>
-        </>
+        <ul className={styles.cartList}>
+          {cartItems.map((item) => (
+            <li key={item.id} className={styles.cartItem}>
+              <div className={styles.cartItemDetails}>
+                <p>{item.name}</p>
+                <p>{item.quantity} x {item.price} đ</p>
+              </div>
+              <div className={styles.cartItemActions}>
+                <button onClick={() => handleRemoveFromCart(item.id)} className={styles.removeButton}>Xóa</button>
+                <button onClick={() => handleUpdateQuantity(item.id, item.quantity + 1)} className={styles.updateButton}>Tăng Số Lượng</button>
+                <button onClick={() => handleUpdateQuantity(item.id, item.quantity - 1)} className={styles.updateButton}>Giảm Số Lượng</button>
+              </div>
+            </li>
+          ))}
+        </ul>
       )}
+      <button onClick={handleRemoveAllItems} className={styles.removeAllButton}>Xóa Tất Cả</button>
     </div>
   );
 };
