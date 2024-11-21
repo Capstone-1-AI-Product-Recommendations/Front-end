@@ -1,0 +1,20 @@
+/* Base styles cho tất cả layout */
+.layout-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Styles cho content area */
+.content-area {
+  flex: 1;
+  padding: 24px;
+  background: #f5f7fa;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .content-area {
+    padding: 16px;
+  }
+} 

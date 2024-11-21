@@ -1,17 +1,20 @@
 import React, { useState } from "react";
 import { BsCart2 } from "react-icons/bs";
 import { IoMdNotificationsOutline } from "react-icons/io";
+import { IoSearchOutline } from "react-icons/io5";
 import logo from "../../../assets/logo.png";
 import { FaUser, FaCaretDown } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-import Login from "../Login/Login";
-import Register from "../../Register/Register";
 import { NavLink } from "react-router-dom";
+import Login from "../Login/Login";
+import Register from "../../client/Register/Register";
 import "./HeaderNoLogin.css";
+import menuItems from "../../../data/menuItems";
 
 const HeaderNoLogin = ({ onLoginSuccess }) => {
   const [showLogin, setShowLogin] = useState(false);
   const [showRegister, setShowRegister] = useState(false);
+  const [hoveredCategory, setHoveredCategory] = useState(null); // Add this line
 
   const handleLoginClick = () => {
     setShowLogin(true);
@@ -31,6 +34,17 @@ const HeaderNoLogin = ({ onLoginSuccess }) => {
   const handleLoginSuccess = (role) => {
     onLoginSuccess(role);
     handleCloseModals();
+    if (role === 'user') {
+      navigate('/register-seller');
+    }
+  };
+
+  const handleMouseEnter = (categoryName) => {
+    setHoveredCategory(categoryName);
+  };
+
+  const handleMouseLeave = () => {
+    setHoveredCategory(null);
   };
 
   const navigate = useNavigate();
@@ -43,14 +57,41 @@ const HeaderNoLogin = ({ onLoginSuccess }) => {
       <div className="menu-container">
         <header className="header">
           <div className="top-bar">
-            <ul className="top-links">
-              <li>Về chúng tôi</li>
-              <li>Tài khoản của tôi</li>
-              <li>Danh sách mong muốn</li>
-              <li>Trở thành người bán</li>
-              <li>Hỗ trợ</li>
-            </ul>
+            <div className="top-links">
+              <NavLink
+                className="nav-link"
+                to="/about-us"
+                activeClassName="active"
+              >
+                Về chúng tôi
+              </NavLink>
+              <NavLink
+                className="nav-link"
+                to="/my-account"
+                activeClassName="active"
+              >
+                Tài khoản của tôi
+              </NavLink>
+              <NavLink
+                className="nav-link"
+                to="/wishlist"
+                activeClassName="active"
+              >
+                Danh sách mong muốn
+              </NavLink>
+              <span className="nav-link" onClick={handleRegisterClick}>
+                Trở thành người bán
+              </span>
+              <NavLink
+                className="nav-link"
+                to="/contact"
+                activeClassName="active"
+              >
+                Hỗ trợ
+              </NavLink>
+            </div>
           </div>
+
           <div className="main-header">
             <div className="logo" onClick={handleHomeClick}>
               <img src={logo} alt="ADSmart Logo" />
@@ -70,7 +111,6 @@ const HeaderNoLogin = ({ onLoginSuccess }) => {
               <div className="user-account">
                 <FaUser className="icon" />
                 <div className="account-text">
-                  {/* Tách riêng sự kiện onClick cho từng span để tránh bị ảnh hưởng */}
                   <span onClick={handleLoginClick}>Đăng nhập</span>
                   <span onClick={handleRegisterClick}>Đăng ký</span>
                 </div>
@@ -83,30 +123,32 @@ const HeaderNoLogin = ({ onLoginSuccess }) => {
               </div>
             </div>
           </div>
-          <nav className="nav-menu">
-            <NavLink className="nav-link" to="/">
-              Trang chủ
-            </NavLink>
-            <NavLink className="nav-link" to="/store">
-              Cửa hàng
-            </NavLink>
-            <NavLink className="nav-link" to="/fashion">
-              Thời trang
-            </NavLink>
-            <NavLink className="nav-link" to="/electronics">
-              Đồ điện tử
-            </NavLink>
-            <NavLink className="nav-link" to="/discounts">
-              Mã giảm giá
-            </NavLink>
-            <NavLink className="nav-link" to="/contact">
-              Liên hệ
-            </NavLink>
+          <nav className="category-menu">
+            <div className="category-grid">
+              {menuItems.categories.map((item, index) => (
+                <div
+                  key={index}
+                  className="category-item"
+                  onMouseEnter={() => handleMouseEnter(item.name)}
+                  onMouseLeave={handleMouseLeave}
+                >
+                  <div className="category-icon">{item.icon}</div>
+                  <div className="category-name">{item.name}</div>
+                  {hoveredCategory === item.name && (
+                    <div className="dropdown-menu">
+                      {item.subItems.map((subItem, subIndex) => (
+                        <div key={subIndex} className="dropdown-item">
+                          {subItem}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
           </nav>
         </header>
       </div>
-
-      {/* Chỉ hiển thị component đăng nhập/đăng ký tương ứng */}
       {showLogin && (
         <Login
           show={showLogin}
@@ -116,10 +158,7 @@ const HeaderNoLogin = ({ onLoginSuccess }) => {
         />
       )}
       {showRegister && (
-        <Register
-          show={showRegister}
-          onClose={handleCloseModals}
-        />
+        <Register show={showRegister} onClose={handleCloseModals} />
       )}
     </>
   );

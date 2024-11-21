@@ -1,18 +1,13 @@
-/** @format */
-// Register.js
-
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Register.css";
 import { GoogleLogin } from "@react-oauth/google";
-import { jwtDecode } from "jwt-decode";
 
-const Register = ({ onLoginSuccess, onClose, onLoginClick }) => {
+const Register = ({ onClose, onLoginClick }) => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     username: "",
     email: "",
-    phone: "",
     password: "",
   });
 
@@ -26,39 +21,15 @@ const Register = ({ onLoginSuccess, onClose, onLoginClick }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Xử lý đăng ký ở đây
-    console.log("Dữ liệu đăng ký:", formData);
+    console.log("Registering:", formData);
+    navigate('/register-seller');
+    if (onClose) onClose();
   };
 
   const handleGoogleLoginSuccess = (response) => {
-    try {
-      const decoded = jwtDecode(response.credential); // Sử dụng jwtDecode để giải mã JWT
-      console.log("Đăng nhập Google thành công:", decoded);
-
-      // Gọi hàm xử lý khi đăng nhập thành công
-      if (onLoginSuccess) {
-        onLoginSuccess();
-      }
-
-      if (onClose) {
-        onClose();
-      }
-
-      navigate("/");
-    } catch (error) {
-      console.error("Lỗi khi giải mã JWT:", error);
-    }
-  };
-
-  const handleGoogleLoginFailure = (error) => {
-    console.error("Đăng nhập Google thất bại:", error);
-  };
-
-  // Hàm để mở modal đăng nhập
-  const handleShowLogin = () => {
-    if (onLoginClick) {
-      onLoginClick();
-    }
+    console.log("Google login success:", response);
+    navigate('/register-seller');
+    if (onClose) onClose();
   };
 
   return (
@@ -68,8 +39,6 @@ const Register = ({ onLoginSuccess, onClose, onLoginClick }) => {
           ×
         </button>
         <h1>Tạo tài khoản</h1>
-        <p className="subtitle">Kết nối với bạn bè ngay hôm nay!</p>
-
         <form onSubmit={handleSubmit}>
           <div className="form-group">
             <label htmlFor="username">Tên người dùng</label>
@@ -82,7 +51,6 @@ const Register = ({ onLoginSuccess, onClose, onLoginClick }) => {
               onChange={handleChange}
             />
           </div>
-
           <div className="form-group">
             <label htmlFor="email">Email</label>
             <input
@@ -94,7 +62,6 @@ const Register = ({ onLoginSuccess, onClose, onLoginClick }) => {
               onChange={handleChange}
             />
           </div>
-
           <div className="form-group">
             <label htmlFor="password">Mật khẩu</label>
             <input
@@ -106,22 +73,15 @@ const Register = ({ onLoginSuccess, onClose, onLoginClick }) => {
               onChange={handleChange}
             />
           </div>
-
           <button type="submit" className="primary-button">
             Đăng ký
           </button>
         </form>
-
         <div className="divider">Hoặc</div>
-
-        <GoogleLogin
-          onSuccess={handleGoogleLoginSuccess}
-          onError={handleGoogleLoginFailure}
-        />
-
+        <GoogleLogin onSuccess={handleGoogleLoginSuccess} />
         <p className="switch-auth">
           Đã có tài khoản?{" "}
-          <span className="link-login" onClick={handleShowLogin}>
+          <span className="link-login" onClick={onLoginClick}>
             Đăng nhập
           </span>
         </p>

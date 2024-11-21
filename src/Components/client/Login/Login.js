@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { GoogleLogin } from "@react-oauth/google";
-import { jwtDecode } from "jwt-decode"; // Use jwtDecode correctly
+import { jwtDecode } from "jwt-decode";
 import "./Login.css";
 
 const Login = ({ onClose, onLoginSuccess, onRegisterClick }) => {
@@ -14,6 +14,7 @@ const Login = ({ onClose, onLoginSuccess, onRegisterClick }) => {
   });
   const [errorMessage, setErrorMessage] = useState("");
 
+  // Update form state on input change
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     setFormData((prev) => ({
@@ -23,48 +24,34 @@ const Login = ({ onClose, onLoginSuccess, onRegisterClick }) => {
     setErrorMessage("");
   };
 
+  // Handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Định nghĩa các tài khoản giả lập cho từng vai trò
-    const admin = {
-      email: "admin@gmail.com",
-      password: "123456",
+
+    const accounts = {
+      admin: { email: "admin@gmail.com", password: "123456" },
+      seller: { email: "seller@gmail.com", password: "123456" },
+      user: { email: "user@gmail.com", password: "123456" },
     };
 
-    const seller = {
-      email: "seller@gmail.com",
-      password: "123456",
-    };
-
-    const user = {
-      email: "user@gmail.com",
-      password: "123456",
-    };
-
-    if (formData.email === admin.email && formData.password === admin.password) {
-      console.log("Logged in as admin");
+    if (
+      formData.email === accounts.admin.email &&
+      formData.password === accounts.admin.password
+    ) {
       onLoginSuccess("admin");
-      setErrorMessage("");
       onClose();
-      navigate("/admin"); // Điều hướng tới trang admin
     } else if (
-      formData.email === seller.email &&
-      formData.password === seller.password
+      formData.email === accounts.seller.email &&
+      formData.password === accounts.seller.password
     ) {
-      console.log("Logged in as seller");
       onLoginSuccess("seller");
-      setErrorMessage("");
       onClose();
-      navigate("/"); // Điều hướng tới trang seller
     } else if (
-      formData.email === user.email &&
-      formData.password === user.password
+      formData.email === accounts.user.email &&
+      formData.password === accounts.user.password
     ) {
-      console.log("Logged in as user");
       onLoginSuccess("user");
-      setErrorMessage("");
       onClose();
-      navigate("/"); // Điều hướng tới trang user
     } else {
       setErrorMessage("Email hoặc mật khẩu không chính xác.");
     }
@@ -72,30 +59,28 @@ const Login = ({ onClose, onLoginSuccess, onRegisterClick }) => {
 
   const handleGoogleLoginSuccess = (response) => {
     const decoded = jwtDecode(response.credential);
-    console.log("Google login success:", decoded);
-    if (onLoginSuccess) onLoginSuccess();
-    if (onClose) onClose();
-    navigate("/");
+    onLoginSuccess('user');
+    onClose();
+    navigate('/register-seller');
   };
 
-  const handleGoogleLoginFailure = (error) => {
-    console.error("Google login failed:", error);
+  const handleGoogleLoginFailure = () => {
     setErrorMessage("Đăng nhập bằng Google thất bại.");
-  };
-
-  // Thêm hàm để mở modal đăng ký khi người dùng nhấn vào "Chưa có tài khoản?"
-  const handleShowRegister = () => {
-    if (onRegisterClick) {
-      onRegisterClick(); // Gọi hàm từ component cha để mở modal đăng ký
-    }
   };
 
   return (
     <div className="auth-container">
       <div className="auth-form">
-        <button className="close-btn" onClick={onClose}>
+        {/* Close button */}
+        <button
+          className="close-btn"
+          onClick={onClose}
+          aria-label="Close login modal"
+          role="button"
+        >
           ×
         </button>
+
         <h1>Xin chào bạn mới</h1>
         {errorMessage && <div className="error-message">{errorMessage}</div>}
         <form onSubmit={handleSubmit}>
@@ -152,7 +137,7 @@ const Login = ({ onClose, onLoginSuccess, onRegisterClick }) => {
 
         <p className="switch-auth">
           Chưa có tài khoản?{" "}
-          <span className="link-register" onClick={handleShowRegister}>
+          <span className="link-register" onClick={onRegisterClick}>
             Đăng ký
           </span>
         </p>

@@ -1,6 +1,7 @@
 import React from 'react';
 import './Product.css';
 import { FaThList, FaThLarge } from 'react-icons/fa';
+// import errorIcon fprm "../../../img/productBanner.png";
 
 const Product = () => {
     return (
@@ -56,14 +57,14 @@ const Product = () => {
                                 <th>Thao tác</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        {/* <tbody>
                             <tr>
                                 <td colSpan="6" className="empty">
-                                    <img src="https://path-to-empty-icon.png" alt="No products" />
+                                    <img src={errorIcon} alt="No products" />
                                     <p>Không tìm thấy sản phẩm</p>
                                 </td>
                             </tr>
-                        </tbody>
+                        </tbody> */}
                     </table>
                 </div>
             </div>

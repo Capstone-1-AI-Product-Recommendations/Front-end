@@ -4,7 +4,7 @@ import FeaturesSection from "../../Components/client/FeaturesSection/FeaturesSec
 import MiniAdBanner from "../../Components/client/MiniAdBanner/MiniAdBanner";
 import NewProduct from "../../Components/client/NewProduct/NewProduct";
 import FeaturedProduct from "../../Components/client/FeaturedProduct/FeaturedProduct";
-import Sidebar from "../../Components/client/Sidebar/Sidebar";
+// import Sidebar from "../../Components/client/Sidebar/Sidebar";
 import BestSellingProduct from "../../Components/client/BestSellingProduct/BestSellingProduct";
 import Chatbot from "../../Components/client/Chatbot/Chatbot";
 import "../../styles/MainLayout.css";
@@ -30,6 +30,7 @@ const HomePage = ({ userRole }) => {
     const getFeaturedProducts = async () => {
       try {
         const response = await fetchFeaturedProducts();
+        console.log(response.data)
         setFeaturedProducts(response.data);
       } catch (error) {
         console.error("Lỗi khi lấy sản phẩm nổi bật:", error);
@@ -64,7 +65,7 @@ const HomePage = ({ userRole }) => {
   return (
     <div className="container-all">
       <div className="main-layout">
-        <Sidebar />
+        {/* <Sidebar /> */}
         <ProductAdBanner />
       </div>
       <FeaturesSection />

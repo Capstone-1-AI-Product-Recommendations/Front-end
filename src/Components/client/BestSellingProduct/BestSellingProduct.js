@@ -158,14 +158,21 @@ const BestSellingProduct = ({ products }) => {
               <span className='product-badge'>{product.badge}</span>
               <h6 className='product-title'>{product.title}</h6>
               <div className='rating'>
-                {Array.from({ length: 5 }, (_, i) => (
-                  <span
-                    key={i}
-                    className={i < product.rating ? "star filled" : "star"}
-                  >
-                    ★
-                  </span>
-                ))}
+                {Array.from({ length: 5 }, (_, i) => {
+                  const starValue = i + 1;
+                  const ratingValue = product.rating;
+                  
+                  // Xử lý sao đầy
+                  if (starValue <= Math.floor(ratingValue)) {
+                    return <span key={i} className="star filled">★</span>;
+                  }
+                  // Xử lý nửa sao
+                  else if (starValue === Math.ceil(ratingValue) && !Number.isInteger(ratingValue)) {
+                    return <span key={i} className="star half-filled">★</span>;
+                  }
+                  // Sao rỗng
+                  return <span key={i} className="star">★</span>;
+                })}
               </div>
               <p className='price'>
                 <strong className='price-new '>{product.price}</strong>

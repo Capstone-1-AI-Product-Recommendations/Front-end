@@ -1,4 +1,4 @@
-import product from "../img/newProduct.png";
+import product from "../img/Product/newProduct.png";
 
 const cartItems = [
     {

@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import "./ADSmartCart.css";
-import product from "../../../img/newProduct.png";
+import product from "../../../img/Product/newProduct.png";
 
 const ADSmartCart = () => {
   const [shops, setShops] = useState([

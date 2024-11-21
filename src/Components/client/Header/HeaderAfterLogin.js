@@ -9,24 +9,31 @@ import Login from "../Login/Login";
 import CartDropdown from "../Cart/CartDropdown";
 import { NavLink } from "react-router-dom";
 import cartItems from "../../../data/cartItems";
+import menuItems from "../../../data/menuItems";
 import "./HeaderAfterLogin.css";
 
 const HeaderAfterLogin = ({ onLogout, userRole }) => {
   const navigate = useNavigate();
-  const [showLogin, setShowLogin] = useState(false);
-  const [showCartDropdown, setShowCartDropdown] = useState(false);
 
-  // Hàm xử lý khi nhấn vào icon tài khoản
-  const handleAccountClick = () => {
-    setShowLogin(true); // Mở modal đăng nhập
+  // ** State Management **
+  const [showLogin, setShowLogin] = useState(false); // Control Login Modal visibility
+  const [showCartDropdown, setShowCartDropdown] = useState(false); // Control Cart Dropdown visibility
+  const [hoveredCategory, setHoveredCategory] = useState(null); // Track hovered category
+
+  // ** Event Handlers **
+
+  // Handle logout and navigate to the home page
+
+  // Handle hover actions on categories
+  const handleMouseEnter = (categoryName) => {
+    setHoveredCategory(categoryName);
   };
 
-  // Hàm đóng modal đăng nhập
-  const handleCloseLogin = () => {
-    setShowLogin(false); // Đóng modal đăng nhập
+  const handleMouseLeave = () => {
+    setHoveredCategory(null);
   };
 
-  // Hàm xử lý điều hướng dựa trên vai trò người dùng
+  // Navigate based on user role
   const handleRoleNavigation = () => {
     if (userRole === "user") {
       navigate("/register-seller");
@@ -36,7 +43,6 @@ const HeaderAfterLogin = ({ onLogout, userRole }) => {
       navigate("/admin");
     }
   };
-
   const handleLogout = () => {
     if (typeof onLogout === "function") {
       onLogout();
@@ -45,57 +51,84 @@ const HeaderAfterLogin = ({ onLogout, userRole }) => {
       console.error("onLogout is not a function");
     }
   };
-
   return (
     <>
+      {/* ** Header Container ** */}
       <div className="menu-container">
         <header className="header">
+          {/* ** Top Bar ** */}
           <div className="top-bar">
-            <ul className="top-menu">
-              <NavLink className="top-link" to="/about us">
+            <div className="top-links">
+              <NavLink
+                className="nav-link"
+                to="/about-us"
+                activeClassName="active"
+              >
                 Về chúng tôi
               </NavLink>
-              <NavLink className="top-link" to="/my-account">
+              <NavLink
+                className="nav-link"
+                to="/my-account"
+                activeClassName="active"
+              >
                 Tài khoản của tôi
               </NavLink>
-              <NavLink className="top-link" to="/my-account">
-                Danh sách mong muốn
+              <NavLink className="nav-link" to="/wishlist">
+              Danh sách mong muốn
+            </NavLink>
+            {userRole === 'seller' ? (
+              <NavLink className="nav-link" to="/manage-store">
+                Quản lý đơn hàng
               </NavLink>
-              <NavLink className="top-link" to="/register-seller">
+            ) : userRole === 'user' ? (
+              <span className="nav-link" onClick={() => navigate('/register-seller')}>
                 Trở thành người bán
-              </NavLink>
-              <NavLink className="top-link" to="/contact">
-                Hỗ trợ
-              </NavLink>
-            </ul>
+              </span>
+            ) : null}
+            <NavLink className="nav-link" to="/contact">
+              Hỗ trợ
+            </NavLink>
+            </div>
           </div>
+
+          {/* ** Main Header ** */}
           <div className="main-header">
+            {/* Logo Section */}
             <div className="logo" onClick={() => navigate("/")}>
-              {" "}
-              {/* Khi nhấn vào logo, chuyển đến trang chủ */}
               <img src={logo} alt="ADSmart Logo" />
               <span>ADSmart</span>
             </div>
+
+            {/* Delivery Location */}
             <div className="location-wrapper">
               <span>Giao hàng đến</span>
               <div className="location">
                 tất cả <FaCaretDown />
               </div>
             </div>
+
+            {/* Search Bar */}
             <div className="search-bar">
               <input type="text" placeholder="Tìm kiếm sản phẩm..." />
               <button>🔍</button>
             </div>
+
+            {/* Account, Notifications, and Cart */}
             <div className="account-section">
-              <div className="user-account" onClick={handleLogout}>
+              {/* User Account Section */}
+              <div className="user-account">
                 <FaUser className="icon" />
                 <div className="account-text">
-                  <span>Đăng xuất</span>
+                  <span onClick={handleLogout}>Đăng xuất</span>
                 </div>
               </div>
+
+              {/* Notifications */}
               <div className="notification">
                 <IoMdNotificationsOutline className="icon" />
               </div>
+
+              {/* Cart Section */}
               <div
                 className="cart"
                 onMouseEnter={() => setShowCartDropdown(true)}
@@ -107,29 +140,34 @@ const HeaderAfterLogin = ({ onLogout, userRole }) => {
               </div>
             </div>
           </div>
-          <nav className="nav-menu">
-            <NavLink className="nav-link" to="/">
-              Trang chủ
-            </NavLink>
-            <NavLink className="nav-link" to="/store">
-              Cửa hàng
-            </NavLink>
-            <NavLink className="nav-link" to="/fashion">
-              Thời trang
-            </NavLink>
-            <NavLink className="nav-link" to="/electronics">
-              Đồ điện tử
-            </NavLink>
-            <NavLink className="nav-link" to="/discounts">
-              Mã giảm giá
-            </NavLink>
-            <NavLink className="nav-link" to="/contact">
-              Liên hệ
-            </NavLink>
+
+          {/* ** Category Menu ** */}
+          <nav className="category-menu">
+            <div className="category-grid">
+              {menuItems.categories.map((item, index) => (
+                <div
+                  key={index}
+                  className="category-item"
+                  onMouseEnter={() => handleMouseEnter(item.name)}
+                  onMouseLeave={handleMouseLeave}
+                >
+                  <div className="category-icon">{item.icon}</div>
+                  <div className="category-name">{item.name}</div>
+                  {hoveredCategory === item.name && (
+                    <div className="dropdown-menu">
+                      {item.subItems.map((subItem, subIndex) => (
+                        <div key={subIndex} className="dropdown-item">
+                          {subItem}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
           </nav>
         </header>
       </div>
-      {showLogin && <Login onClose={handleCloseLogin} />}
     </>
   );
 };

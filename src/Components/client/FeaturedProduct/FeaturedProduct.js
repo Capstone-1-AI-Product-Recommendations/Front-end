@@ -123,7 +123,7 @@ const FeaturedProduct = ({ products }) => {
               <div className="row g-0">
                 <div className="col-6 position-relative">
                   <div className="header-icons-container">
-                    <div className="discount-badge">{product.discount}</div>
+                    <div className="discount-badge">{product.discount}% </div>
                     <div className="heart-icon">
                       <FaHeart />
                     </div>
@@ -163,7 +163,7 @@ const FeaturedProduct = ({ products }) => {
                         ★
                       </span>
                     ))}
-                    <span className="reviews"> ({product.reviews})</span>
+                    <span className="reviews"> ({product.rating})</span>
                   </div>
                   <button className="add-to-cart-product w-100 mt-3">
                     Add to Cart
