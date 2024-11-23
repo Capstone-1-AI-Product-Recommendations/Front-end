@@ -4,12 +4,14 @@
   justify-content: space-between;
   padding: 20px;
   background: #f8f9fa;
-  border-bottom: 1px solid #e3e6f0;
+  /* border-bottom: 1px solid #e3e6f0; */
   height: 64px;
 }
 
 .header-left {
   flex: 1;
+  display: flex;
+  align-items: center;
 }
 
 .header-right {
@@ -26,6 +28,7 @@
   gap: 0.5rem;
   font-size: 14px;
   color: #6b7280;
+  
 }
 
 .breadcrumb-icon {

@@ -36,7 +36,7 @@ import RegisterSellerStep from "./Pages/RegisterSeller/RegisterSeller";
 import AdminDashboard from "./Pages/AdminDashboard/AdminDashboard";
 import AdminLayout from "./layouts/AdminLayout";
 import OrderManagement from "./Components/admin/orders/OrderManagement";
-import PublicLayout from './Components/admin/layout/PublicLayout';
+import PublicLayout from "./Components/admin/Dashboard/Overview/PublicLayout";
 
 // import SellerPage from "./Pages/SellerPage/SellerPage";
 

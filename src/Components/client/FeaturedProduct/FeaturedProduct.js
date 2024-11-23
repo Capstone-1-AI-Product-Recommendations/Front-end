@@ -158,11 +158,17 @@ const FeaturedProduct = ({ products }) => {
                     </small>
                   </p>
                   <div className="rating mb-2 mt-2">
-                    {Array.from({ length: 5 }, (_, idx) => (
-                      <span key={idx} className={idx < product.rating ? "star filled" : "star"}>
-                        ★
-                      </span>
-                    ))}
+                    {[1, 2, 3, 4, 5].map((star) => {
+                      const isFilled = star <= Math.floor(product.rating);
+                      const isHalf = star === Math.ceil(product.rating) && !Number.isInteger(product.rating);
+                      const isEmpty = star > Math.ceil(product.rating);
+
+                      return (
+                        <span key={star} className={`star ${isFilled ? 'filled' : isHalf ? 'half' : 'empty'}`}>
+                          {isFilled ? '★' : isHalf ? '★' : '☆'}
+                        </span>
+                      );
+                    })}
                     <span className="reviews"> ({product.rating})</span>
                   </div>
                   <button className="add-to-cart-product w-100 mt-3">

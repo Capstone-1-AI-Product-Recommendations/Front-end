@@ -1,9 +1,9 @@
 /** @format */
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import "./CartDropdown.css"; // Đường dẫn đến tệp hình ảnh
-import cartItems from "../../../data/cartItems"; // Đảm bảo rằng tệp cartItems nằm trong src/data
-const CartDropdown = () => {
+import "./CartDropdown.css";
+
+const CartDropdown = ({ items = [] }) => {
   const navigate = useNavigate();
 
   const handleCartClick = () => {
@@ -25,11 +25,11 @@ const CartDropdown = () => {
     <div className='cart-dropdown'>
       <div className='cart-header'>
         <h3>Sản Phẩm Mới Thêm</h3>
-        <span className='items-count'>{cartItems.length} sản phẩm</span>
+        <span className='items-count'>{items.length} sản phẩm</span>
       </div>
 
       <div className='cart-items'>
-        {cartItems.map((item) => (
+        {items.map((item) => (
           <div
             key={item.id}
             className='cart-item'

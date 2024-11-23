@@ -143,18 +143,32 @@
   font-weight: bold;
 }
 
-.rating .star {
-  font-size: 1.2em;
-  color: #ccc;
+.rating {
+  display: inline-flex;
+  align-items: center;
 }
 
-.rating .filled {
+.rating .star {
+  font-size: 1.2em;
+  margin-right: 2px;
+}
+
+.rating .star.filled {
   color: #ffc107;
+}
+
+.rating .star.half {
+  color: #ffc107;
+}
+
+.rating .star.empty {
+  color: #ddd;
 }
 
 .reviews {
   font-size: 0.8em;
   color: #6c757d;
+  margin-left: 5px;
 }
 
 .note {

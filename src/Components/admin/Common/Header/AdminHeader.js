@@ -4,7 +4,7 @@ import { FiSearch } from "react-icons/fi";
 import { FaHome } from "react-icons/fa";
 
 import "./AdminHeader.css";
-import userImg from "../../../img/people.png";
+import userImg from "../../../../img/people.png";
 
 const AdminHeader = () => {
   const [searchQuery, setSearchQuery] = useState("");

@@ -1,19 +1,18 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import "./AdminDashboard.css";
-import { useNavigate } from "react-router-dom"; // Use Navigate hook
-import Sidebar from "../../Components/admin/Sidebar/Sidebar";
+import { useNavigate } from "react-router-dom";
+import Sidebar from "../../Components/admin/Common/Sidebar/Sidebar";
+import AdminHeader from "../../Components/admin/Common/Header/AdminHeader";
 import Chatbot from "../../Components/client/Chatbot/Chatbot";
-import AdminHeader from "../../Components/admin/Header/AdminHeader";
-
 const AdminDashboard = ({ userRole }) => {
-  const navigate = useNavigate();
+//   const navigate = useNavigate();
 
   return (
     <div className="admin-container">
       <div className="main-layout">
-      <Sidebar />
+      {/* <Sidebar/> */}
       <div className="main-container">
-      <AdminHeader />
+      {/* <AdminHeader /> */}
       </div>
       </div>
       {/* <AdminHeader/> */}

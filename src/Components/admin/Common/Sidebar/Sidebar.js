@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import {ChevronDown} from "lucide-react";
 import "./Sidebar.css";
-import logoApp from "../../../img/logoApp.png";
-import menuAdminItems from "../../../data/menuAdminItems";
+import logoApp from "../../../../img/logoApp.png";
+import menuAdminItems from "../../../../data/menuAdminItems";
 
 const Sidebar = () => {
   const [activeDropdown, setActiveDropdown] = useState(null);
@@ -12,7 +12,7 @@ const Sidebar = () => {
   };
 
   return (
-    <div className="sidebar">
+    <div className="sidebar-admin">
       {/* Logo Section */}
       <div className="sidebar-logo">
         <img src={logoApp} alt="Logo" />

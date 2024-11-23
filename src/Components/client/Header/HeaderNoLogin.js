@@ -34,11 +34,11 @@ const HeaderNoLogin = ({ onLoginSuccess }) => {
   const handleLoginSuccess = (role) => {
     onLoginSuccess(role);
     handleCloseModals();
-    if (role === 'user') {
-      navigate('/register-seller');
-    }
+    // if (role === 'user') {
+    //   navigate('/register-seller');
+    // }
   };
-
+  
   const handleMouseEnter = (categoryName) => {
     setHoveredCategory(categoryName);
   };

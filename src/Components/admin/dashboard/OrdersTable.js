@@ -12,6 +12,33 @@ const OrdersTable = () => {
       status: 'Paid',
       delivery: 'Delivered'
     },
+    {
+      id: 'Arise827',
+      customer: 'Ellie Collins',
+      product: 'Ginger Snacks',
+      date: '12/12/2021',
+      amount: '$18.00',
+      status: 'Pending',
+      delivery: 'Delivered'
+    },
+    {
+      id: 'Arise827',
+      customer: 'Ellie Collins',
+      product: 'Ginger Snacks',
+      date: '12/12/2021',
+      amount: '$18.00',
+      status: 'Error',
+      delivery: 'Delivered'
+    },
+    {
+      id: 'Arise827',
+      customer: 'Ellie Collins',
+      product: 'Ginger Snacks',
+      date: '12/12/2021',
+      amount: '$18.00',
+      status: 'Đang xử lý',
+      delivery: 'Delivered'
+    },
     // Add more orders here
   ];
 

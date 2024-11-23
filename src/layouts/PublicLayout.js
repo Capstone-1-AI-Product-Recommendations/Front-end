@@ -11,7 +11,7 @@ const PublicLayout = () => {
   return (
     <Layout className="public-layout">
       {/* Header Section */}
-      <Header>
+      {/* <Header>
         <div className="logo">
           <Link to="/"></Link>
         </div>
@@ -19,21 +19,8 @@ const PublicLayout = () => {
           <Menu.Item key="/">
             <Link to="/">Home</Link>
           </Menu.Item>
-          <Menu.Item key="/about">
-            <Link to="/about">About</Link>
-          </Menu.Item>
-          <Menu.Item key="/contact">
-            <Link to="/contact">Contact</Link>
-          </Menu.Item>
-          <Menu.Item key="/login" className="float-right">
-            <Link to="/login">Login</Link>
-          </Menu.Item>
-          <Menu.Item key="/register" className="float-right">
-            <Link to="/register">Register</Link>
-          </Menu.Item>
         </Menu>
-      </Header>
-
+      </Header> */}
       {/* Content Section */}
       <Content>
         <div className="public-content">

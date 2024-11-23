@@ -13,7 +13,6 @@ import {
 } from 'chart.js';
 import './DashboardChart.css';
 
-// Đăng ký các thành phần cần thiết
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -26,6 +25,13 @@ ChartJS.register(
 );
 
 const DashboardChart = () => {
+  const metrics = {
+    overallSales: '12 Millions',
+    overallEarnings: '78 Millions',
+    overallRevenue: '60 Millions',
+    newCustomers: '23k'
+  };
+
   const data = {
     labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
     datasets: [
@@ -50,32 +56,103 @@ const DashboardChart = () => {
 
   const options = {
     responsive: true,
+    maintainAspectRatio: false,
     plugins: {
       legend: {
-        position: 'top'
+        position: 'bottom',
+        align: 'start',
+        labels: {
+          boxWidth: 8,
+          usePointStyle: true,
+          pointStyle: 'circle',
+          padding: 15,
+          font: {
+            size: 12
+          }
+        }
       }
     },
     scales: {
       y: {
-        beginAtZero: true
+        beginAtZero: true,
+        grid: {
+          drawBorder: false,
+          color: 'rgba(0, 0, 0, 0.05)'
+        },
+        ticks: {
+          font: {
+            size: 11
+          }
+        }
+      },
+      x: {
+        grid: {
+          display: false
+        },
+        ticks: {
+          font: {
+            size: 11
+          }
+        }
+      }
+    },
+    elements: {
+      point: {
+        radius: 0
       }
     }
   };
 
   return (
-    <div className="chart-container">
-      <div className="chart-header">
-        <h3>Sales Overview</h3>
-        <div className="chart-filters">
-          <button className="active">Today</button>
-          <button>Yesterday</button>
-          <button>7 days</button>
-          <button>30 days</button>
+    <div className="dashboard-container">
+<div className="metrics-list">
+  <div className="metric-item">
+    <span className="metric-dot blue"></span>
+    <div className="metric-content">
+      <p>Overall Sales</p>
+      <h4>12 Millions</h4>
+    </div>
+  </div>
+  <div className="metric-item">
+    <span className="metric-dot green"></span>
+    <div className="metric-content">
+      <p>Overall Earnings</p>
+      <h4>78 Millions</h4>
+    </div>
+  </div>
+  <div className="metric-item">
+    <span className="metric-dot red"></span>
+    <div className="metric-content">
+      <p>Overall Revenue</p>
+      <h4>60 Millions</h4>
+    </div>
+  </div>
+  <div className="metric-item">
+    <span className="metric-dot orange"></span>
+    <div className="metric-content">
+      <p>New Customers</p>
+      <h4>23k</h4>
+    </div>
+  </div>
+</div>
+
+
+      <div className="chart-wrapper">
+        <div className="chart-header">
+          <div className="chart-filters">
+            <button className="active">Today</button>
+            <button>Yesterday</button>
+            <button>7 days</button>
+            <button>15 days</button>
+            <button>30 days</button>
+          </div>
+        </div>
+        <div className="chart-area">
+          <Line data={data} options={options} height={240} />
         </div>
       </div>
-      <Line data={data} options={options} />
     </div>
   );
 };
 
-export default DashboardChart; 
+export default DashboardChart;

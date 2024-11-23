@@ -21,9 +21,6 @@ function App() {
       case "admin":
         navigate("/admin");
         break;
-      case "seller":
-        navigate("/");
-        break;
       case "user":
         navigate("/");
         break;
@@ -38,23 +35,18 @@ function App() {
     navigate("/");
   };
 
-  // Kiểm tra nếu đang ở trang admin hoặc user có role admin
-  const shouldHideHeader = location.pathname.startsWith('/admin') || userRole === 'admin';
-
-  // Nếu là admin route hoặc user có role admin, chỉ render Router
-  if (shouldHideHeader) {
-    return <RouterCustom onLoginSuccess={handleLoginSuccess} />;
-  }
-
-  // Các trường hợp khác render đầy đủ header và footer
   return (
     <CartProvider>
-      {isLoggedIn ? (
-        <HeaderAfterLogin onLogout={handleLogout} userRole={userRole} />
-      ) : (
-        <HeaderNoLogin onLoginSuccess={handleLoginSuccess} />
+      {!location.pathname.startsWith('/admin') && (
+        <>
+          {isLoggedIn ? (
+            <HeaderAfterLogin onLogout={handleLogout} userRole={userRole} />
+          ) : (
+            <HeaderNoLogin onLoginSuccess={handleLoginSuccess} />
+          )}
+        </>
       )}
-      <RouterCustom onLoginSuccess={handleLoginSuccess} />
+      <RouterCustom isLoggedIn={isLoggedIn} userRole={userRole} onLoginSuccess={handleLoginSuccess} />
       {!location.pathname.startsWith('/admin') && <Footer />}
     </CartProvider>
   );

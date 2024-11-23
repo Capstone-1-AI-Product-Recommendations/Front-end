@@ -42,7 +42,7 @@ const DashboardLayout = () => {
   };
 
   return (
-    <div className='dashboard-container'>
+    <div className='dashboard-container-seller'>
       <div className='sidebar'>
         <div className='user-info'>
           <div className='user-avatar'>👤</div>

@@ -1,65 +1,108 @@
-.chart-container {
-  background: white;
+.dashboard-container {
+  background: #fff;
   border-radius: 8px;
-  padding: 24px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  padding: 16px;
+}
+
+.metrics-list {
+  display: flex;
+  flex-direction: column;
+  grid-template-columns: repeat(1, 1fr);
+  gap: 12px;
+  margin-left: 20px;
+  margin-right: 200px;
+}
+
+.metric-item {
+  display: grid;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.metric-dot {
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  margin-top: 6px;
+}
+
+.metric-dot.blue { background-color: #4D96FF; }
+.metric-dot.green { background-color: #4CAF50; }
+.metric-dot.red { background-color: #FF6B6B; }
+.metric-dot.orange { background-color: #FFB946; }
+
+.metric-content p {
+  color: #666;
+  font-size: 12px;
+  margin: 0;
+}
+
+.metric-content h4 {
+  color: #333;
+  font-size: 14px;
+  margin: 4px 0 0;
+  font-weight: 600;
+}
+
+.chart-wrapper {
+  width: 100vh;
+  height: 300px;
 }
 
 .chart-header {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 24px;
-}
-
-.chart-header h3 {
-  font-size: 18px;
-  font-weight: 600;
-  color: #1f2937;
+  justify-content: flex-end;
+  margin-bottom: 16px;
 }
 
 .chart-filters {
   display: flex;
-  gap: 8px;
+  gap: 6px;
 }
 
 .chart-filters button {
-  padding: 6px 12px;
-  border: 1px solid #e5e7eb;
-  border-radius: 6px;
-  background: white;
-  color: #6b7280;
-  font-size: 14px;
+  padding: 4px 12px;
+  border: none;
+  background: #f5f5f5;
+  border-radius: 4px;
+  color: #666;
   cursor: pointer;
-  transition: all 0.2s;
+  font-size: 12px;
+  transition: all 0.2s ease;
 }
 
 .chart-filters button:hover {
-  background: #f9fafb;
+  background: #e0e0e0;
 }
 
 .chart-filters button.active {
-  background: #3b82f6;
+  background: #4CAF50;
   color: white;
-  border-color: #3b82f6;
 }
 
-.chart-content {
-  height: 300px;
+.chart-area {
+  height: 240px;
   position: relative;
 }
 
-/* Custom styles for Chart.js */
-canvas {
-  width: 100% !important;
-  height: 100% !important;
+@media (max-width: 992px) {
+  .metrics-list {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
-/* Tooltip customization */
-.chartjs-tooltip {
-  background: rgba(0, 0, 0, 0.8);
-  color: white;
-  padding: 8px;
-  border-radius: 4px;
-  font-size: 12px;
-} 
+@media (max-width: 576px) {
+  .metrics-list {
+    grid-template-columns: 1fr;
+  }
+  
+  .chart-filters {
+    flex-wrap: wrap;
+  }
+  
+  .chart-filters button {
+    font-size: 11px;
+    padding: 4px 8px;
+  }
+}
+

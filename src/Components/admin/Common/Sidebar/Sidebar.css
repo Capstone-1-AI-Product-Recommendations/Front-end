@@ -1,18 +1,17 @@
-.sidebar {
-  width: 260px;
+.sidebar-admin {
+  margin-left: 20px;
+  width: 240px;
   min-height: 100vh;
-  background: #f8f9fa;
-  border-right: 1px solid #e3e6f0;
+  background: #ffffff;
+  /* border: 1px solid #e3e6f0; */
   display: flex;
   flex-direction: column;
   padding: 10px 0;
-overflow-y: auto;
-
+  overflow-y: auto;
 }
 
 .sidebar-menu {
   flex: 1;
-
 }
 
 .sidebar-menu-item {
@@ -27,7 +26,6 @@ overflow-y: auto;
   transition: all 0.2s;
   border-left: 4px solid transparent;
   cursor: pointer;
-  
 }
 
 .sidebar-label {
@@ -94,4 +92,3 @@ overflow-y: auto;
 .sidebar::-webkit-scrollbar-thumb:hover {
   background: #999; /* Màu khi hover */
 }
-
