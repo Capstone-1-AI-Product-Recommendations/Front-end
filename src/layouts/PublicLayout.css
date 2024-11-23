@@ -1,0 +1,39 @@
+.public-layout {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .public-content {
+    flex-grow: 1;
+    padding: 24px;
+  }
+  
+  .footer-content {
+    text-align: center;
+    padding: 16px 0;
+    background: #001529;
+    color: white;
+  }
+  
+  .footer-links a {
+    margin: 0 12px;
+    color: white;
+    text-decoration: none;
+  }
+  
+  .footer-links a:hover {
+    text-decoration: underline;
+  }
+  
+  .logo a {
+    color: white;
+    font-size: 20px;
+    font-weight: bold;
+    text-decoration: none;
+  }
+  
+  .logo a:hover {
+    text-decoration: underline;
+  }
+  

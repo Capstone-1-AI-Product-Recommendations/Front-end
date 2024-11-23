@@ -1,0 +1,121 @@
+/** @format */
+
+.footer {
+  background-color: #ffffff;
+  padding: 40px 0 20px;
+  font-family: Arial, sans-serif;
+  color: #333;
+  width: 100%;
+}
+
+.footer-container {
+  margin-top: 20px bold black;
+
+  max-width: 100%;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 4fr 2fr 2fr 2fr 2fr; /* Cột phân chia đều */
+  gap: 30px;
+  padding: 0 120px;
+}
+
+.footer-section {
+  margin-bottom: 20px;
+}
+
+.footer-section h3 {
+  font-size: 14px;
+  font-weight: 600;
+  color: #222;
+  white-space: nowrap; /* Đảm bảo tiêu đề luôn nằm trên một dòng */
+}
+
+.footer-section ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-section ul li {
+  margin-bottom: 8px;
+}
+
+.footer-section ul li a {
+  color: #666;
+  text-decoration: none;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.footer-section ul li a:hover {
+  color: #ee4d2d;
+}
+
+.contact-info {
+  margin-top: 15px;
+}
+
+.payment-method,
+.shipping-partner {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.payment-icon,
+.shipping-icon,
+.app-download-button {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+}
+
+.app-downloads {
+  display: flex;
+  flex-direction: row; /* Đặt theo chiều ngang */
+  gap: 10px;
+}
+
+.footer-bottom {
+  width: 100%;
+  padding-top: 20px;
+  border-top: 1px solid #ddd; /* Dòng kẻ ngang tràn toàn màn hình */
+  text-align: center;
+  margin-top: 30px;
+}
+
+.footer-links {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+.footer-links a {
+  color: #666;
+  text-decoration: none;
+  font-size: 12px;
+}
+
+@media (max-width: 992px) {
+  .footer-container {
+    grid-template-columns: repeat(2, 1fr);
+    padding: 0 40px;
+  }
+}
+
+@media (max-width: 576px) {
+  .footer-container {
+    grid-template-columns: 1fr;
+    padding: 0 20px;
+  }
+
+  .footer-links {
+    flex-direction: column;
+    gap: 10px;
+  }
+}
+

@@ -1,0 +1,188 @@
+.header {
+  width: 1200px;
+  background: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+/* Ensure white, bold text for top links */
+.top-links {
+  list-style: none;
+  display: flex;
+  justify-content: flex-start;
+  max-width: 1200px;
+  margin: 0 120px;
+  padding: 0;
+  gap: 16px;
+}
+
+.nav-link {
+  color: white; /* White text */
+  font-weight: bold; /* Bold text */
+  font-size: 14px; /* Adjust font size if needed */
+  text-decoration: none; /* Remove underline for links */
+  cursor: pointer;
+}
+
+.nav-link:hover {
+  color: #d1c4e9; /* Optional: Lighter shade of white on hover */
+}
+
+.top-bar {
+  background: #673ab7;
+}
+
+.top-links {
+  list-style: none;
+  display: flex;
+  justify-content: flex-start;
+  max-width: 1200px;
+  margin: 0 120px;
+  padding: 0;
+  gap: 16px;
+}
+
+.top-links li {
+  color: white;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.main-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 15px;
+  max-width: 1200px;
+  margin: 0 auto;
+  gap: 10px;
+}
+
+/* Category Menu Styles */
+.category-menu {
+  background-color: #fff;
+  position: relative;
+  z-index: 1000;
+}
+
+.category-grid {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0 120px;
+  padding: 10px 0;
+}
+
+.category-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 5px 10px;
+  cursor: pointer;
+  position: relative;
+}
+
+.category-icon {
+  font-size: 24px;
+}
+
+.category-name {
+  font-size: 12px;
+  color: #333;
+  margin-top: 4px;
+}
+
+/* Logo and other existing styles remain unchanged */
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.logo img {
+  height: 32px;
+}
+
+.logo span {
+  font-size: 20px;
+  font-weight: bold;
+  color: #673ab7;
+}
+
+.search-bar {
+  flex: 1;
+  display: flex;
+  height: 36px;
+  max-width: 400px;
+}
+
+.search-bar input {
+  flex: 1;
+  padding: 0 12px;
+  border: 1px solid #673ab7;
+  border-right: none;
+  border-radius: 2px ;
+}
+
+.search-bar button {
+  width: 40px;
+  background: #673ab7;
+  border: none;
+  border-radius: 0 4px 4px 0;
+  color: white;
+  cursor: pointer;
+}
+
+.account-section {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+/* Dropdown Styles */
+.category-menu {
+  background-color: #fff;
+  position: relative;
+  z-index: 10; /* Đảm bảo dropdown ở trên banner */
+}
+
+.category-item {
+  position: relative;
+  cursor: pointer;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 30; /* Mặc định hiển thị từ bên trái */
+  background: white;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  max-height: 400px;
+  overflow-y: auto;
+  padding: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  z-index: 100;
+  transition: transform 0.3s ease, left 0.3s ease, right 0.3s ease;
+}
+
+.dropdown-item {
+  font-size: 14px;
+  text-align: flex-start;
+  padding: 2px;
+  background: #fff;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.dropdown-item:hover {
+  background-color: #f0f0f0;
+  color: #673ab7;
+}
+
+@media (max-width: 768px) {
+  .dropdown-menu {
+    grid-template-columns: repeat(2, 1fr); /* Giảm số cột trên màn hình nhỏ */
+  }
+}

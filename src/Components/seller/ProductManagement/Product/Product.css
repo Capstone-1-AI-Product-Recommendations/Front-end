@@ -1,0 +1,136 @@
+.product-management {
+    padding: 20px;
+    background-color: #f9f9f9;
+}
+
+.header {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+}
+
+.header h2 {
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.tabs {
+    display: flex;
+    gap: 20px;
+    font-size: 0.9rem;
+}
+
+.tab {
+    cursor: pointer;
+    color: #555;
+    padding-bottom: 8px;
+    border-bottom: 2px solid transparent;
+}
+
+.tab.active {
+    color: #ff4d4f;
+    border-bottom-color: #ff4d4f;
+}
+
+.controls {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.control-button, .add-button {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+.control-button {
+    background-color: #f3f4f6;
+    color: #555;
+}
+
+.add-button {
+    background-color: #ff4d4f;
+    color: white;
+}
+
+.search-bar {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    align-items: center;
+}
+
+.search-input, .category-input {
+    flex: 1;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.apply-button, .reset-button {
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: white;
+    cursor: pointer;
+}
+
+.apply-button {
+    color: #ff4d4f;
+}
+
+.view-toggle {
+    display: flex;
+    gap: 8px;
+    color: #555;
+    cursor: pointer;
+}
+
+.product-list {
+    background-color: white;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+}
+
+.no-products {
+    font-size: 0.9rem;
+    color: #555;
+    margin-bottom: 8px;
+}
+
+.limit {
+    font-size: 0.8rem;
+    color: #aaa;
+    margin-bottom: 15px;
+}
+
+.product-table table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+.product-table th, .product-table td {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+.product-table th {
+    color: #888;
+}
+
+.empty {
+    text-align: center;
+    padding: 30px;
+    color: #aaa;
+}
+
+.empty img {
+    width: 50px;
+    margin-bottom: 10px;
+}

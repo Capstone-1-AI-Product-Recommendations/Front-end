@@ -1,0 +1,37 @@
+.admin-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh; /* Full viewport height */
+  }
+  
+  .main-layout {
+    display: flex;
+    flex: 1; /* Take up remaining vertical space */
+    background-color: #F8F8FB;
+  }
+  
+  .sidebar {
+    flex-basis: 200px;
+    max-width: 200px;
+    background: #ffffff;
+  }
+  
+  .main-container {
+    flex-grow: 1; /* Allow main content to take remaining space */
+    display: flex;
+    flex-direction: column; /* Stack header and content vertically */
+  }
+  
+  .custom-header {
+    width: 100%; /* Full width */
+    flex-shrink: 0; /* Prevent shrinking */
+    background-color: #ffffff; /* Optional: Define header background color */
+    z-index: 1000; /* Ensure header is on top */
+  }
+  
+  .main-content {
+    flex-grow: 1; /* Take up remaining vertical space */
+    padding: 20px; /* Optional: Add padding for content area */
+    overflow-y: auto; /* Allow scrolling if content exceeds view height */
+  }
+  

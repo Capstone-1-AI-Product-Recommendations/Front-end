@@ -2,10 +2,10 @@
 
 // src/data/products.js
 
-import NewProductImg from "../img/newProduct.png";
-import AltProductImg1 from "../img/altProductImg1.png";
-import AltProductImg2 from "../img/altProductImg2.png";
-import AltProductImg3 from "../img/newProduct.png";
+import NewProductImg from "../img/Product/newProduct.png";
+import AltProductImg1 from "../img/Product/altProductImg1.png";
+import AltProductImg2 from "../img/Product/altProductImg2.png";
+import AltProductImg3 from "../img/Product/newProduct.png";
 
 const products = [
   {
