@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { GoogleLogin } from "@react-oauth/google";
 import { jwtDecode } from "jwt-decode";
 import "./Login.css";
+import ForgotPassword from "../ForgotPassword/ForgotPassword";
 
 const Login = ({ onClose, onLoginSuccess, onRegisterClick }) => {
   const navigate = useNavigate();
@@ -13,6 +14,7 @@ const Login = ({ onClose, onLoginSuccess, onRegisterClick }) => {
     rememberMe: false,
   });
   const [errorMessage, setErrorMessage] = useState("");
+  const [showForgotPassword, setShowForgotPassword] = useState(false);
 
   // Update form state on input change
   const handleChange = (e) => {
@@ -118,9 +120,13 @@ const Login = ({ onClose, onLoginSuccess, onRegisterClick }) => {
               />
               Ghi nhớ đăng nhập
             </label>
-            <a href="/forgot-password" className="forgot-password">
+            <span 
+              onClick={() => setShowForgotPassword(true)} 
+              className="forgot-password"
+              style={{ cursor: 'pointer' }}
+            >
               Quên mật khẩu?
-            </a>
+            </span>
           </div>
 
           <button type="submit" className="primary-button">
@@ -142,6 +148,11 @@ const Login = ({ onClose, onLoginSuccess, onRegisterClick }) => {
           </span>
         </p>
       </div>
+
+      {/* Hiển thị modal quên mật khẩu */}
+      {showForgotPassword && (
+        <ForgotPassword onClose={() => setShowForgotPassword(false)} />
+      )}
     </div>
   );
 };

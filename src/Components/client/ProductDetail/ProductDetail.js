@@ -1,96 +1,212 @@
-// <<<<<<< HEAD:src/Components/ProductDetail/ProductDetail.js
-// import { CartContext } from "../Cart/CartContext";
-// =======
 /** @format */
 
 // src/components/ProductDetail.js
-import products from "../../../data/product";
-import React, { useEffect, useContext } from "react";
-import { useLocation } from "react-router-dom";
+import React, { useEffect, useContext, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { CartContext } from "../Cart/CartContext";
-import featuredProducts from "../../../data/FeaturedProduct";
+import ProductDetailData from "../../../data/ProductDetailData";
 import "./ProductDetail.css";
-// >>>>>>> manh:src/Components/client/ProductDetail/ProductDetail.js
 
 const ProductDetail = () => {
-  
   const { id } = useParams();
   const { addToCart } = useContext(CartContext);
   const navigate = useNavigate();
+  const [quantity, setQuantity] = useState(1);
+  const [selectedImage, setSelectedImage] = useState(0);
+  const [likedComments, setLikedComments] = useState({});
+
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
-  const product =
-    products.find((prod) => prod.id === parseInt(id)) ||
-    featuredProducts.find((prod) => prod.id === parseInt(id));
+
+  // Nếu không có id, lấy sản phẩm đầu tiên
+  const product = id 
+    ? ProductDetailData.find(prod => prod.id === parseInt(id))
+    : ProductDetailData[0];
 
   if (!product) {
-    return <div>Không có sản phẩm nào!</div>;
+    return <div>Không tìm thấy sản phẩm!</div>;
   }
 
+  const handleDecreaseQuantity = () => {
+    if (quantity > 1) setQuantity(quantity - 1);
+  };
+
+  const handleIncreaseQuantity = () => {
+    setQuantity(quantity + 1);
+  };
+
   const handleAddToCart = () => {
-    addToCart(product);
+    addToCart({
+      ...product,
+      quantity: quantity
+    });
     alert("Sản phẩm đã được thêm vào giỏ hàng!");
     navigate("/cart");
   };
 
   const handleBuyNow = () => {
-    addToCart(product);
+    addToCart({
+      ...product,
+      quantity: quantity
+    });
     navigate("/checkout");
   };
 
+  const handleLike = (commentId) => {
+    setLikedComments(prev => ({
+      ...prev,
+      [commentId]: !prev[commentId]
+    }));
+  };
+
   return (
-    <div className="product-detail">
-      <div className="product-images">
-        <img src={product.imageUrl || product.images[0]} alt={product.title} className="main-image" />
-        <div className="thumbnail-images">
-          {(product.altImages || product.images.slice(1)).map((img, index) => (
-            <img key={index} src={img} alt={`${product.title} thumbnail ${index + 1}`} />
-          ))}
+    <div className="product-detail-container">
+      <div className="product-main-info">
+        <div className="product-images">
+          <img 
+            src={product.altImages ? product.altImages[selectedImage] : product.imageUrl} 
+            alt={product.title} 
+            className="main-image" 
+          />
+          <div className="thumbnail-images">
+            {product.altImages?.map((img, index) => (
+              <img 
+                key={index} 
+                src={img} 
+                alt={`${product.title} thumbnail ${index + 1}`}
+                className={selectedImage === index ? 'selected' : ''}
+                onClick={() => setSelectedImage(index)}
+              />
+            ))}
+          </div>
+        </div>
+
+        <div className="product-info">
+          <h1>{product.title}</h1>
+          <div className="product-meta">
+            <div className="price-section">
+              <span className="current-price">{product.price}</span>
+              {product.originalPrice && (
+                <span className="original-price">{product.originalPrice}</span>
+              )}
+              {product.discount && <span className="discount">{product.discount}</span>}
+            </div>
+            <div className="rating">
+              {"⭐".repeat(product.rating)}
+              <span>({product.rating}/5)</span>
+            </div>
+          </div>
+
+          <div className="details-section">
+            {product.details && Object.entries(product.details).map(([key, value]) => (
+              <div key={key} className="detail-item">
+                <span className="detail-label">{key}:</span>
+                <span className="detail-value">{value}</span>
+              </div>
+            ))}
+          </div>
+
+          <div className="quantity-section">
+            <span>Số lượng:</span>
+            <div className="quantity-controls">
+              <button onClick={handleDecreaseQuantity}>-</button>
+              <span>{quantity}</span>
+              <button onClick={handleIncreaseQuantity}>+</button>
+            </div>
+          </div>
+
+          <div className="action-buttons">
+            <button onClick={handleAddToCart} className="add-to-cart">
+              Thêm vào giỏ hàng
+            </button>
+            <button onClick={handleBuyNow} className="buy-now">
+              Mua ngay
+            </button>
+          </div>
         </div>
       </div>
 
-      <div className="product-info">
-        <h1>{product.title}</h1>
-        <div className="product-rating">
-          {"⭐".repeat(product.rating)}
+      <div className="product-description-section">
+        <h2>MÔ TẢ SẢN PHẨM</h2>
+        <div className="description-content">
+          <pre>{product.description}</pre>
         </div>
-        <p className="product-description-text">{product.description}</p>
-        {product.discount && <span className="discount">{product.discount}</span>}
-        <p className="price">
-          <span className="current-price">{product.price}</span>
-          <span className="original-price">{product.originalPrice}</span>
-        </p>       
-        <div className="quantity-control">
-          <button>-</button>
-          <span>1</span>
-          <button>+</button>
-        </div>
-        <button onClick={handleAddToCart} className="add-to-cart">Thêm vào giỏ hàng</button>
-        <button onClick={handleBuyNow} className="buy-now">Mua hàng</button>
-        <div className="extra-info">
+      </div>
+
+      <div className="product-reviews-section">
+        <h2>ĐÁNH GIÁ SẢN PHẨM</h2>
+        <div className="reviews-summary">
+          <div className="rating-overview">
+            <div className="average-rating">
+              <span className="rating-number">{product.reviews.averageRating}</span>
+              <span className="rating-total">trên 5</span>
+            </div>
+            <div className="rating-stars">
+              {"★".repeat(product.reviews.averageRating)}
+            </div>
+          </div>
+          
+          <div className="rating-filters">
+            <button className="filter-btn active">
+              Tất Cả ({product.reviews.totalReviews})
+            </button>
+            <button className="filter-btn">
+              5 Sao ({product.reviews.fiveStar})
+            </button>
+            <button className="filter-btn">
+              4 Sao ({product.reviews.fourStar})
+            </button>
+            <button className="filter-btn">
+              3 Sao ({product.reviews.threeStar})
+            </button>
+            <button className="filter-btn">
+              2 Sao ({product.reviews.twoStar})
+            </button>
+            <button className="filter-btn">
+              1 Sao ({product.reviews.oneStar})
+            </button>
+          </div>
+
+          <div className="review-types">
+            <div className="review-type has-content">
+              Có Bình Luận ({product.reviews.hasComments})
+            </div>
+            <div className="review-type has-content">
+              Có Hình Ảnh / Video ({product.reviews.hasImages})
+            </div>
+          </div>
         </div>
 
-        {/* Thêm phần mô tả chi tiết sản phẩm */}
-        <div className="product-full-description">
-          <h3>Mô tả sản phẩm</h3>
-          <p>{product.fullDescription || "Không có mô tả chi tiết nào cho sản phẩm này."}</p>
-        </div>  
-
-        {/* Thêm phần đánh giá và bình luận */}
-        <div className="product-reviews">
-          <h3>Đánh giá và Bình luận</h3>
-          {product.comments && product.comments.length > 0 ? (
-            product.comments.map((comment) => (
-              <div key={comment.id} className="review">
-                <strong>{comment.username}:</strong>
-                <p>{comment.comment}</p>
+        <div className="reviews-list">
+          {product.reviews.commentList.map((comment) => (
+            <div key={comment.id} className="review-item">
+              <div className="reviewer-info">
+                <div className="reviewer-name-rating">
+                  <span className="reviewer-name">{comment.username}</span>
+                  <div className="rating-stars">
+                    {"★".repeat(comment.rating)}
+                  </div>
+                </div>
+                <div className="review-date">{comment.date}</div>
               </div>
-            ))
-          ) : (
-            <p>Chưa có đánh giá nào cho sản phẩm này.</p>
-          )}
+              
+              <div className="review-content">
+                {comment.comment}
+              </div>
+              
+              <div className="review-footer">
+                <div className="like-button">
+                  <button 
+                    onClick={() => handleLike(comment.id)}
+                    className={`like-btn ${likedComments[comment.id] ? 'liked' : ''}`}
+                  >
+                    {likedComments[comment.id] ? 'Đã Thích' : 'Thích'}
+                  </button>
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </div>
