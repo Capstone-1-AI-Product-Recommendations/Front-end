@@ -1,9 +1,11 @@
 // src/Components/Cart/Cart.js
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { cartData } from '../../../data/cartData';
 import styles from './Cart.module.css';
 
 const Cart = () => {
+  const navigate = useNavigate();
   const [cartItems, setCartItems] = useState(cartData);
   const [selectedItems, setSelectedItems] = useState([]);
 
@@ -82,6 +84,21 @@ const Cart = () => {
       return shop;
     }).filter(shop => shop.products.length > 0));
     setSelectedItems(selectedItems.filter(id => id !== productId));
+  };
+
+  // Thêm hàm xử lý chuyển trang
+  const handleCheckout = () => {
+    if (selectedItems.length === 0) {
+      alert('Vui lòng chọn ít nhất một sản phẩm để mua hàng');
+      return;
+    }
+    navigate('/checkout', { 
+      state: { 
+        selectedItems: cartItems
+          .flatMap(shop => shop.products)
+          .filter(product => selectedItems.includes(product.id))
+      }
+    });
   };
 
   return (
@@ -182,7 +199,6 @@ const Cart = () => {
               </div>
               <div className={styles.itemActions}>
                 <button onClick={() => handleRemoveProduct(shop.id, product.id)}>Xóa</button>
-                <button>Tìm sản phẩm tương tự</button>
               </div>
             </div>
           ))}
@@ -204,7 +220,13 @@ const Cart = () => {
             <span>Tổng thanh toán ({getSelectedCount()} Sản phẩm):</span>
             <span className={styles.totalPrice}>₫{calculateTotal().toLocaleString()}</span>
           </div>
-          <button className={styles.checkoutButton}>Mua Hàng</button>
+          <button 
+            className={styles.checkoutButton} 
+            onClick={handleCheckout}
+            disabled={selectedItems.length === 0}
+          >
+            Mua Hàng
+          </button>
         </div>
       </div>
     </div>

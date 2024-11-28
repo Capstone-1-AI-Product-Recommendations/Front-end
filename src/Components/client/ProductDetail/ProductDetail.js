@@ -77,20 +77,22 @@ const ProductDetail = () => {
       <div className="product-detail-container">
         <div className="product-main-info">
           <div className="row">
-            {/* Phần hình ảnh - Col 5 */}
+            {/* Phần hình ảnh */}
             <div className="col-12 col-md-5">
               <div className="product-images">
-                <img 
-                  src={product.altImages ? product.altImages[selectedImage] : product.imageUrl} 
-                  alt={product.title} 
-                  className="main-image" 
-                />
+                <div className="main-image-container">
+                  <img 
+                    src={product.altImages[selectedImage]} 
+                    alt={product.title} 
+                    className="main-image"
+                  />
+                </div>
                 <div className="thumbnail-images">
                   {product.altImages?.map((img, index) => (
                     <img 
                       key={index} 
                       src={img} 
-                      alt={`${product.title} thumbnail ${index + 1}`}
+                      alt={`${product.title} ${index + 1}`}
                       className={selectedImage === index ? 'selected' : ''}
                       onClick={() => setSelectedImage(index)}
                     />
@@ -99,7 +101,7 @@ const ProductDetail = () => {
               </div>
             </div>
 
-            {/* Phần thông tin sản phẩm - Col 7 */}
+            {/* Phần thông tin sản phẩm */}
             <div className="col-12 col-md-7">
               <div className="product-info">
                 <h1>{product.title}</h1>
@@ -115,6 +117,7 @@ const ProductDetail = () => {
                 <div className="price-section">
                   <span className="current-price">{product.price}</span>
                   <span className="original-price">{product.originalPrice}</span>
+                  <span className="discount-tag">-{product.discount}</span>
                 </div>
 
                 <div className="promotion-section">
@@ -122,9 +125,17 @@ const ProductDetail = () => {
                   <div className="promotion-tags">
                     {product.promotions.map((promo, index) => (
                       <span key={index} className="promo-tag">
-                        Giảm ₫{promo.value}
+                        Giảm {promo.value}đ
                       </span>
                     ))}
+                  </div>
+                </div>
+
+                <div className="policy-section">
+                  <div className="policy-item">
+                    <i className="fas fa-undo"></i>
+                    <span>{product.shipping.returnPolicy}</span>
+                    <span>{product.shipping.freeShipping}</span>
                   </div>
                 </div>
 
@@ -138,13 +149,13 @@ const ProductDetail = () => {
                     </select>
                   </div>
                   <div className="shipping-fee">
-                    <span>Phí Vận Chuyển</span>
+                    <span>Phí Vận Chuyển: </span>
                     <span>₫{product.shipping.shippingFee.min} - ₫{product.shipping.shippingFee.max}</span>
                   </div>
                 </div>
 
                 <div className="quantity-section">
-                  <span>Số Lượng</span>
+                  <span className="quantity-label">Số Lượng</span>
                   <div className="quantity-controls">
                     <button onClick={handleDecreaseQuantity}>-</button>
                     <input type="text" value={quantity} readOnly />
@@ -159,7 +170,7 @@ const ProductDetail = () => {
                     Thêm Vào Giỏ Hàng
                   </button>
                   <button onClick={handleBuyNow} className="buy-now">
-                    Mua Ngay                  
+                    Mua Ngay
                   </button>
                 </div>
               </div>
