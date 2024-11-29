@@ -1,94 +1,197 @@
-import React, { useState } from 'react';
-import './Permission.css';
+import React, { useState, useEffect } from "react";
+import { BsHouseFill } from "react-icons/bs";
+import { PiGreaterThanBold } from "react-icons/pi";
+import { IoIosCheckbox } from "react-icons/io";
+import { MdCheckBoxOutlineBlank } from "react-icons/md";
+import "./Permission.css";
 
-const Permission = () => {
-  const [permissions, setPermissions] = useState({
-    search: {
+const Permisson = () => {
+  const [permissions, setPermissions] = useState([
+    {
+      name: "Quản lý sản phẩm",
+      admin: true,
+      staff: true, 
+      customer: false,
+    },
+    {
+      name: "Quản lý đơn hàng",
       admin: true,
       staff: true,
-      customer: true
+      customer: false,
     },
-    tourManagement: {
-      admin: false,
-      staff: true,
-      customer: false
+    {
+      name: "Quản lý người dùng",
+      admin: true,
+      staff: false,
+      customer: false,
     },
-    revenueStats: {
-      admin: false,
+    {
+      name: "Quản lý danh mục",
+      admin: true,
       staff: true,
-      customer: false
+      customer: false,
     },
-    permissions: {
-      admin: false,
+    {
+      name: "Thống kê doanh thu",
+      admin: true,
+      staff: false,
+      customer: false,
+    },
+    {
+      name: "Quản lý khuyến mãi",
+      admin: true,
       staff: true,
-      customer: false
+      customer: false,
+    },
+    {
+      name: "Quản lý kho hàng",
+      admin: true,
+      staff: true,
+      customer: false,
+    },
+    {
+      name: "Phân quyền người dùng",
+      admin: true,
+      staff: false,
+      customer: false,
+    },
+    {
+      name: "Xem sản phẩm",
+      admin: true,
+      staff: true,
+      customer: true,
+    },
+    {
+      name: "Đặt hàng",
+      admin: true,
+      staff: true,
+      customer: true,
+    },
+    {
+      name: "Xem lịch sử đơn hàng",
+      admin: true,
+      staff: true,
+      customer: true,
+    },
+    {
+      name: "Quản lý thông tin cá nhân",
+      admin: true,
+      staff: true,
+      customer: true,
+    },
+    {
+      name: "Đánh giá sản phẩm",
+      admin: true,
+      staff: true,
+      customer: true,
+    },
+    {
+      name: "Quản lý thanh toán",
+      admin: true,
+      staff: true,
+      customer: false,
+    },
+    {
+      name: "Quản lý vận chuyển",
+      admin: true,
+      staff: true,
+      customer: false,
     }
-  });
+  ]);
 
-  const handlePermissionChange = (feature, role) => {
-    setPermissions(prev => ({
-      ...prev,
-      [feature]: {
-        ...prev[feature],
-        [role]: !prev[feature][role]
-      }
-    }));
+  const handleCheckboxChange = (index, field) => {
+    const updatedPermissions = [...permissions];
+    updatedPermissions[index][field] = !updatedPermissions[index][field];
+    setPermissions(updatedPermissions);
   };
+
+  useEffect(() => {
+    const savePermissions = async () => {
+      try {
+        console.log("Saving updated permissions:", permissions);
+        // Replace with actual API call
+        // await api.savePermissions(permissions);
+      } catch (error) {
+        console.error("Error saving permissions:", error);
+      }
+    };
+    savePermissions();
+  }, [permissions]);
 
   return (
     <div className="permission-container">
       <div className="permission-header">
-        <h2>Phân quyền</h2>
-        <div className="permission-toggle">
-          <label>
-            <input type="checkbox" checked={true} readOnly />
+        <h2>
+          <span className="home-icon">
+            <BsHouseFill />
+          </span>
+          <span className="arrow-icon">
+            <PiGreaterThanBold />
+          </span>
+          Phân quyền người dùng
+        </h2>
+
+        <div className="permission-legend">
+          <div className="legend-item">
+            <span className="checkbox-icon">
+              <IoIosCheckbox />
+            </span>
             Có quyền truy cập
-          </label>
-          <label>
-            <input type="checkbox" checked={false} readOnly />
+          </div>
+          <div className="legend-item">
+            <span className="checkbox-icon">
+              <MdCheckBoxOutlineBlank />
+            </span>
             Không có quyền truy cập
-          </label>
+          </div>
         </div>
       </div>
 
-      <table className="permission-table">
-        <thead>
-          <tr>
-            <th>Phân quyền</th>
-            <th>Quản trị viên</th>
-            <th>Staff</th>
-            <th>Khách hàng</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>Tìm kiếm</td>
-            <td><input type="checkbox" checked={permissions.search.admin} onChange={() => handlePermissionChange('search', 'admin')} /></td>
-            <td><input type="checkbox" checked={permissions.search.staff} onChange={() => handlePermissionChange('search', 'staff')} /></td>
-            <td><input type="checkbox" checked={permissions.search.customer} onChange={() => handlePermissionChange('search', 'customer')} /></td>
-          </tr>
-          <tr>
-            <td>Quản lý Tour</td>
-            <td><input type="checkbox" checked={permissions.tourManagement.admin} onChange={() => handlePermissionChange('tourManagement', 'admin')} /></td>
-            <td><input type="checkbox" checked={permissions.tourManagement.staff} onChange={() => handlePermissionChange('tourManagement', 'staff')} /></td>
-            <td><input type="checkbox" checked={permissions.tourManagement.customer} onChange={() => handlePermissionChange('tourManagement', 'customer')} /></td>
-          </tr>
-          <tr>
-            <td>Thống kê doanh thu</td>
-            <td><input type="checkbox" checked={permissions.revenueStats.admin} onChange={() => handlePermissionChange('revenueStats', 'admin')} /></td>
-            <td><input type="checkbox" checked={permissions.revenueStats.staff} onChange={() => handlePermissionChange('revenueStats', 'staff')} /></td>
-            <td><input type="checkbox" checked={permissions.revenueStats.customer} onChange={() => handlePermissionChange('revenueStats', 'customer')} /></td>
-          </tr>
-          <tr>
-            <td>Phân Quyền</td>
-            <td><input type="checkbox" checked={permissions.permissions.admin} onChange={() => handlePermissionChange('permissions', 'admin')} /></td>
-            <td><input type="checkbox" checked={permissions.permissions.staff} onChange={() => handlePermissionChange('permissions', 'staff')} /></td>
-            <td><input type="checkbox" checked={permissions.permissions.customer} onChange={() => handlePermissionChange('permissions', 'customer')} /></td>
-          </tr>
-        </tbody>
-      </table>
+      <div className="permission-table-container">
+        <table className="permission-table">
+          <thead>
+            <tr>
+              <th>Chức năng</th>
+              <th>Quản trị viên</th>
+              <th>Nhân viên</th>
+              <th>Khách hàng</th>
+            </tr>
+          </thead>
+          <tbody>
+            {permissions.map((item, index) => (
+              <tr key={index}>
+                <td>{item.name}</td>
+                <td>
+                  <input
+                    type="checkbox"
+                    checked={item.admin}
+                    onChange={() => handleCheckboxChange(index, "admin")}
+                    className="permission-checkbox"
+                  />
+                </td>
+                <td>
+                  <input
+                    type="checkbox"
+                    checked={item.staff}
+                    onChange={() => handleCheckboxChange(index, "staff")}
+                    className="permission-checkbox"
+                  />
+                </td>
+                <td>
+                  <input
+                    type="checkbox"
+                    checked={item.customer}
+                    onChange={() => handleCheckboxChange(index, "customer")}
+                    className="permission-checkbox"
+                  />
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };
 
-export default Permission; 
+export default Permisson;

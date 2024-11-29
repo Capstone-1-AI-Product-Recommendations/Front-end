@@ -92,3 +92,16 @@
 .sidebar::-webkit-scrollbar-thumb:hover {
   background: #999; /* Màu khi hover */
 }
+
+.logout-item {
+  margin-top: auto;  /* Đẩy logout xuống cuối sidebar */
+  color: black;    /* Màu đỏ cho logout */
+  cursor: pointer;
+}
+
+/* Nếu bạn muốn logout item luôn ở cuối sidebar */
+.sidebar-menu {
+  display: flex;
+  flex-direction: column;
+  height: calc(100% - [chiều cao của logo]);
+}

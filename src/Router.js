@@ -5,43 +5,41 @@ import { Routes, Route, Navigate } from "react-router-dom"; // Import Navigate
 import HomePage from "./Pages/homePage/HomePage";
 import Cart from "./Components/client/Cart/Cart";
 import Product from "./Components/client/Product/Product"
-// import Product from "./Components/client/Product/Product";
 import ProductList from "./Components/client/Product/ProductList";
 import ProductDetail from "./Components/client/ProductDetail/ProductDetail";
 import OrderSummary from "./Components/client/Payment/OrderSummary";
 import PaymentQRCode from "./Components/client/Payment/PaymentQRCode";
 import OrderConfirmation from "./Components/client/Payment/OderConfirmation";
-import Checkout from "./Components/client/Payment/Checkout";
-
+// import Checkout from "./Components/client/Payment/Checkout";
 import ADSmartCart from "./Components/client/ADShop/ADSmartCart";
 // import VendorForm from "./Components/client/VendorForm/VendorForm";
-import DashboardLayout from "./Components/client/VendorForm/DashboardLayout";
+// import SellerDashboard from "./Components/client/VendorForm/SellerDashboard";
 import Contact from "./Components/client/Contact/Contact";
+
+
 
 // Trang dành cho seller
 import Register from "./Components/client/Register/Register";
 import Login from "./Components/client/Login/Login";
 import RegisterSeller from "./Pages/RegisterSeller/RegisterSeller";
-import ShippingSetting from "./Components/seller/ShippingSetting/ShippingSetting";
-import TaxInformation from "./Components/seller/TaxInformation/TaxInformation";
-import IdentityInformation from "./Components/seller/IdentityInformation/IdentityInformation";
-import SuccessRegistration from "./Components/seller/SuccessRegistration/SuccessRegistration";
+import ShippingSetting from "./Components/seller/Register/ShippingSetting/ShippingSetting";
+import TaxInformation from "./Components/seller/Register/TaxInformation/TaxInformation";
+import IdentityInformation from "./Components/seller/Register/IdentityInformation/IdentityInformation";
+import SuccessRegistration from "./Components/seller/Register/SuccessRegistration/SuccessRegistration";
 import ProductForm from "./Components/seller/ProductForm/ProductForm";
-import ProductManagement from "./Components/seller/ProductManagement/ProductManagement";
+import SellerProductManagement from "./Components/seller/SellerDashboard/SellerProductManagement/SellerProductManagement";
 import RegisterSellerStep from "./Pages/RegisterSeller/RegisterSeller";
 
 
-
 //Trang dành cho admin
-import AdminDashboard from "./Pages/AdminDashboard/AdminDashboard";
 import AdminLayout from "./layouts/AdminLayout";
-import OrderManagement from "./Components/admin/orders/OrderManagement";
+// import OrderManagement from "./Components/admin/orders/OrderManagement";
 import PublicLayout from "./Components/admin/Dashboard/Overview/PublicLayout";
+import UserManagement from "./Components/admin/Dashboard/UserManagement/UserManagement"; // Import component UserManagement
+import AdminProductManagement from "./Components/admin/Dashboard/AdminProductManagement/AdminProductManagement";
+import Permission from "./Components/admin/Permission/Permission";
 
-// import SellerPage from "./Pages/SellerPage/SellerPage";
-
-
-const RouterCustom = ({ onClose }) => {
+const RouterCustom = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userRole, setUserRole] = useState(""); // State cho vai trò người dùng
 
@@ -55,9 +53,12 @@ const RouterCustom = ({ onClose }) => {
   return (
     <Routes>
       {/* Các route chung cho tất cả người dùng */}
-      <Route path="/" element={<HomePage />} />
-      {/* <Route path="/productMa" element={<SellerPage/>} /> */}
-      
+       <Route path="/" element={<HomePage userRole={userRole} />} />
+      <Route path="/contact" element={<Contact />} />
+
+      {/* Test link route  */}
+      <Route path="/product/:id" element={<ProductDetail />} />
+      <Route path="/ADSmartCart" element={<ADSmartCart />} />
       <Route path="/cart" element={<Cart />} />
       <Route path="/register-seller" element={<RegisterSeller />} />
       <Route path="/shipping-setting" element={<ShippingSetting />} />
@@ -65,18 +66,20 @@ const RouterCustom = ({ onClose }) => {
       <Route path="/identity-information" element={<IdentityInformation/>} />
       <Route path="/check-registration" element={<SuccessRegistration/>} />
       <Route path="/product-form" element={<ProductForm/>} />
-      <Route path="/product-management" element={<ProductManagement/>} />
-      <Route path="/registerseller" element={<RegisterSellerStep/>} />
+      <Route path="/product-seller-management" element={<SellerProductManagement/>} />
 
+      <Route path="/sellerRegisterstep" element={<RegisterSellerStep />}/>{" "}
 
-
-{/* Test link route  */}
       <Route path="/product" element={<Product/>} />
       <Route path="/list" element={<ProductList />} />
+
+      
       <Route path="/admin" element={<AdminLayout />}>
         <Route index element={<PublicLayout />} />
-        <Route path="products" element={<ProductManagement />} />
-        <Route path="orders" element={<OrderManagement />} />
+        <Route path="dashboard" element={<PublicLayout />} />
+        <Route path="permissions" element={<Permission />} />
+        <Route path="products" element={<AdminProductManagement />} />
+        <Route path="users" element={<UserManagement />} />
         {/* Thêm các routes admin khác */}
       </Route>
 
@@ -94,12 +97,11 @@ const RouterCustom = ({ onClose }) => {
               <Route path="/order-summary" element={<OrderSummary />} />
               <Route path="/QRCode" element={<PaymentQRCode />} />
               <Route path="/confirmation" element={<OrderConfirmation />} />
-              <Route path="/checkout" element={<Checkout />} />
               <Route path="/register-seller" element={<RegisterSeller />} />
-              <Route
-                path="/shipping-setting"
-                element={<ShippingSetting />}
-              />{" "}
+              <Route path="/shipping-setting" element={<ShippingSetting />}/>{" "}
+              
+              <Route path="/sellerRegisterstep" element={<RegisterSellerStep />}/>{" "}
+              
               {/* Thêm route này */}
             </>
           ) : (
@@ -107,14 +109,14 @@ const RouterCustom = ({ onClose }) => {
           )}
 
           {userRole === "admin" ? (
-            <Route path="/admin" element={<AdminDashboard />} />
+            <Route path="/admin" element={<AdminLayout/>} />
           ) : null}
 
           {userRole === "seller" ? (
             <>
               <Route path="/register-seller" element={<RegisterSeller />} />
               <Route path="/shipping-setting" element={<ShippingSetting />} />
-              {/* <Route path="/tax-information" element={<TaxInformation />} /> */}
+              <Route path="/tax-information" element={<TaxInformation />} />
             </>
           ) : null}
         </>
@@ -125,15 +127,11 @@ const RouterCustom = ({ onClose }) => {
           <Route
             path="/login"
             element={
-              <Login onLoginSuccess={handleLoginSuccess} onClose={onClose} />
+              <Login onLoginSuccess={handleLoginSuccess} />
             }
           />
         </>
       )}
-
-      {/* Các route khác */}
-      <Route path="/ADSmartCart" element={<ADSmartCart />} />
-      <Route path="/contact" element={<Contact />} />
 
       {/* Điều hướng đến trang chủ cho các route không xác định */}
       <Route path="*" element={<Navigate to="/" replace />} />

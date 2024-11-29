@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import RegisterSeller from '../../Components/seller/RegisterSeller/RegisterSeller';
-import ShippingSetting from "../../Components/seller/ShippingSetting/ShippingSetting";
-import TaxInformation  from "../../Components/seller/TaxInformation/TaxInformation";
-import IdentityInformation from "../../Components/seller/IdentityInformation/IdentityInformation";
-import SuccessRegistration from "../../Components/seller/SuccessRegistration/SuccessRegistration";
+import RegisterSeller from '../../Components/seller/Register/RegisterSeller/RegisterSeller';
+import ShippingSetting from "../../Components/seller/Register/ShippingSetting/ShippingSetting";
+import TaxInformation  from "../../Components/seller/Register/TaxInformation/TaxInformation";
+import IdentityInformation from "../../Components/seller/Register/IdentityInformation/IdentityInformation";
+import SuccessRegistration from "../../Components/seller/Register/SuccessRegistration/SuccessRegistration";
 
 
 const RegisterSellerStep = () => {

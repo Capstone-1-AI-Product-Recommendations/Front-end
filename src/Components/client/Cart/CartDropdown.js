@@ -7,7 +7,7 @@ const CartDropdown = ({ items = [] }) => {
   const navigate = useNavigate();
 
   const handleCartClick = () => {
-    navigate("/ADSmartCart");
+    navigate("/cart");
   };
 
   const handleProductClick = (productId) => {

@@ -7,20 +7,12 @@ import OrderSummary from "./OrderSummary";
 
 const Checkout = () => {
   return (
-    <>
-      <div
-        style={{
-          display: "flex",
-          gap: "100px",
-          padding: "20px",
-          marginLeft: "200px",
-          marginRight: "220px",
-        }}
-      >
+    <div className="checkout-container">
+      <div className="checkout-content">
         <AddressForm />
         <OrderSummary />
       </div>
-    </>
+    </div>
   );
 };
 

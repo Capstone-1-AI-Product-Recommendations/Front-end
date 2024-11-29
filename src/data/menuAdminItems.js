@@ -1,9 +1,8 @@
 import {
-  FaTachometerAlt,
+  FaHome,
+  FaUsersCog,
+  FaBoxes,
   FaUserShield,
-  FaShoppingCart,
-  FaUsers,
-  FaUserCog,
   FaChartBar,
   FaSignOutAlt,
 } from "react-icons/fa";
@@ -11,110 +10,58 @@ import {
 const menuAdminItems = [
   {
     id: "dashboard",
-    icon: FaTachometerAlt,
+    icon: FaHome,
     label: "Dashboard",
-    subItems: ["Tổng Quan", "Phân Tích", "Báo Cáo"],
+    path: "/admin/dashboard",
+    subItems: []
   },
   {
-    id: "widgets",
+    id: "permissions",
     icon: FaUserShield,
     label: "Phân quyền",
-    subItems: [
-      "Công Cụ",
-      "Tiện Ích Mở Rộng",
-      "Cài Đặt",
-      "Quản Lý Tiện Ích",
-      "Thêm Tiện Ích",
-      "Xóa Tiện Ích",
-      "Chỉnh Sửa Tiện Ích",
-    ],
+    path: "/admin/permissions",
+    subItems: []
   },
   {
-    id: "product",
-    icon: FaShoppingCart,
+    id: "products",
+    icon: FaBoxes,
     label: "Quản lý sản phẩm",
-    subItems: [
-      "Lịch Sử Đơn Hàng",
-      "Danh Sách Sản Phẩm",
-      "Giỏ Hàng",
-      "Chi Tiết Thanh Toán",
-      "Khách Hàng",
-      "Thêm Sản Phẩm",
-      "Đánh Giá",
-    ],
+    path: "/admin/products",
+    subItems: []
   },
   {
     id: "users",
-    icon: FaUsers,
+    icon: FaUsersCog,
     label: "Quản lý người dùng",
-    color: "#f6c23e",
-    subItems: [
-      "Danh Sách Người Dùng",
-      "Phân Quyền Người Dùng",
-      "Thêm Người Dùng Mới",
-      "Nhóm Người Dùng",
-      "Lịch Sử Hoạt Động",
-      "Khóa Tài Khoản",
-      "Khôi Phục Tài Khoản",
-      "Thống Kê Người Dùng",
-    ],
+    path: "/admin/users",
+    subItems: []
   },
   {
-    id: "graphs",
+    id: "statistics",
     icon: FaChartBar,
     label: "Thống kê",
     subItems: [
-      "Biểu Đồ Cột",
-      "Biểu Đồ Đường",
-      "Bản Đồ Địa Lý",
-      "Tạo Biểu Đồ Mới",
-      "Quản Lý Biểu Đồ",
-      "Chỉnh Sửa Biểu Đồ",
-      "Xóa Biểu Đồ",
-    ],
+      {
+        label: "Doanh thu",
+        path: "/admin/statistics/revenue"
+      },
+      {
+        label: "Sản phẩm",
+        path: "/admin/statistics/products"
+      },
+      {
+        label: "Người dùng",
+        path: "/admin/statistics/users"
+      }
+    ]
   },
   {
     id: "logout",
     icon: FaSignOutAlt,
-    label: "Logout",
-    subItems: [
-      "Bảng Dữ Liệu",
-      "Bảng Thống Kê",
-      "Bảng Giá",
-      "Tạo Bảng Mới",
-      "Quản Lý Bảng",
-      "Chỉnh Sửa Bảng",
-      "Xóa Bảng",
-    ],
-  },
-  // {
-  //   id: "pages",
-  //   icon: FileText,
-  //   label: "Trang",
-  //   subItems: [
-  //     "Trang Chủ",
-  //     "Liên Hệ",
-  //     "Giới Thiệu",
-  //     "Hỗ Trợ",
-  //     "Tạo Trang Mới",
-  //     "Quản Lý Trang",
-  //     "Chỉnh Sửa Trang",
-  //   ],
-  // },
-  // {
-  //   id: "forms",
-  //   icon: Edit,
-  //   label: "Mẫu Biểu",
-  //   subItems: [
-  //     "Form Đăng Nhập",
-  //     "Form Đăng Ký",
-  //     "Form Liên Hệ",
-  //     "Form Đặt Hàng",
-  //     "Chỉnh Sửa Form",
-  //     "Xóa Form",
-  //     "Thêm Form Mới",
-  //   ],
-  // },
+    label: "Đăng xuất",
+    path: "/",
+    subItems: []
+  }
 ];
 
 export default menuAdminItems;

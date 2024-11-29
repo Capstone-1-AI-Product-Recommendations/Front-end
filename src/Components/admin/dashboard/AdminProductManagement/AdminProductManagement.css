@@ -1,0 +1,116 @@
+.admin-product-management table {
+  width: 100%;
+  border-collapse: collapse;
+  border: 1px solid #ddd;
+}
+
+.admin-product-management th,
+.admin-product-management td {
+  text-align: center;
+  padding: 8px;
+  font-size: 14px;
+  border: 1px solid #ddd;
+  vertical-align: middle; /* Căn giữa theo chiều dọc */
+}
+
+.admin-product-management th {
+  background-color: #f5f5f5;
+  font-weight: bold;
+  white-space: nowrap;
+}
+
+.admin-product-management td img {
+  width: 50px; /* Đặt kích thước cố định cho hình ảnh */
+  height: 50px; /* Đồng bộ chiều cao */
+  object-fit: contain; /* Giữ tỷ lệ hình ảnh */
+  border-radius: 5px;
+}
+
+.admin-product-management td {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.admin-product-management .toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.admin-product-management .toolbar button {
+  margin-right: 10px;
+}
+
+.admin-product-management .toolbar input {
+  width: 300px;
+}
+
+.admin-product-management th:nth-child(1),
+.admin-product-management td:nth-child(1) {
+  width: 5%; /* Mã sản phẩm */
+}
+
+.admin-product-management th:nth-child(3),
+.admin-product-management td:nth-child(3) {
+  width: 10%; /* Cột ảnh */
+}
+
+.admin-product-management th:nth-child(4),
+.admin-product-management td:nth-child(4) {
+  width: 8%; /* Số lượng */
+}
+
+.admin-product-management th:nth-child(5),
+.admin-product-management td:nth-child(5) {
+  width: 12%; /* Tình trạng */
+}
+
+.admin-product-management td,
+.admin-product-management th {
+  height: 60px; /* Đặt chiều cao tối thiểu cho các ô */
+}
+
+/* Màu vàng cho bút */
+.edit-icon-ad {
+  color: #ffc107; /* Màu vàng */
+}
+
+/* Màu đỏ cho sọt rác */
+.delete-icon-ad {
+  color: #dc3545; /* Màu đỏ */
+}
+
+/* Hiệu ứng hover */
+.edit-icon:hover {
+  color: #e0a800; /* Màu vàng đậm hơn khi hover */
+}
+
+.delete-icon:hover {
+  color: #c82333; /* Màu đỏ đậm hơn khi hover */
+}
+
+/* Cơ bản cho các ô tình trạng */
+.admin-product-management .status {
+  padding: 5px 10px;
+  border-radius: 5px; /* Bo góc mềm mại */
+  font-weight: bold;
+  display: inline-block; /* Hiển thị như thẻ inline */
+}
+
+/* Màu nền cho từng trạng thái */
+.admin-product-management .status.in-stock {
+  background-color: #d4edda; /* Pastel xanh lá cho "Còn hàng" */
+  color: #155724; /* Chữ xanh đậm */
+}
+
+.admin-product-management .status.low-stock {
+  background-color: #fff3cd; /* Pastel vàng cho "Gần hết hàng" */
+  color: #856404; /* Chữ vàng đậm */
+}
+
+.admin-product-management .status.out-of-stock {
+  background-color: #f8d7da; /* Pastel đỏ cho "Hết hàng" */
+  color: #721c24; /* Chữ đỏ đậm */
+}

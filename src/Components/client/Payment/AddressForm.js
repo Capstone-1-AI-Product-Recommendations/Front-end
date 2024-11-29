@@ -15,6 +15,8 @@ const AddressForm = () => {
     isDefaultAddress: false,
   });
 
+  const navigate = useNavigate(); // Initialize navigate
+
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
     setFormData((prev) => ({
@@ -26,9 +28,10 @@ const AddressForm = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log("Address form submitted:", formData);
+    // Điều hướng đến trang đặt hàng thành công sau khi hoàn tất
+    navigate("/order-success");
   };
 
-  const navigate = useNavigate();
   const handleBack = () => {
     navigate("/register-seller");
   };
@@ -136,6 +139,9 @@ const AddressForm = () => {
         </div>
 
         <div className="form-buttons">
+          <button type="button" className="btn-add">
+            Thêm vị trí <span className="ms-1">+</span>
+          </button>
           <button type="button" className="btn-back" onClick={handleBack}>
             Trở lại
           </button>

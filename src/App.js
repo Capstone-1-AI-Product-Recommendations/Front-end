@@ -37,7 +37,7 @@ function App() {
 
   return (
     <CartProvider>
-      {!location.pathname.startsWith('/admin') && (
+      {!location.pathname.startsWith('/admin') && !location.pathname.startsWith('/register-seller') && (
         <>
           {isLoggedIn ? (
             <HeaderAfterLogin onLogout={handleLogout} userRole={userRole} />
@@ -47,7 +47,7 @@ function App() {
         </>
       )}
       <RouterCustom isLoggedIn={isLoggedIn} userRole={userRole} onLoginSuccess={handleLoginSuccess} />
-      {!location.pathname.startsWith('/admin') && <Footer />}
+      {!location.pathname.startsWith('/admin') && !location.pathname.startsWith('/register-seller') && <Footer />}
     </CartProvider>
   );
 }

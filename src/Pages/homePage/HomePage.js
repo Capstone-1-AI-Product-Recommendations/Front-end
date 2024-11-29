@@ -62,6 +62,14 @@ const HomePage = ({ userRole }) => {
     }
   };
 
+  const handleManageStore = () => {
+    if (userRole === 'seller') {
+      navigate('/seller');
+    } else {
+      navigate('/register-seller');
+    }
+  };
+
   return (
     <div className="container-all">
       <div className="main-layout">

@@ -51,6 +51,15 @@ const HeaderAfterLogin = ({ onLogout, userRole }) => {
       console.error("onLogout is not a function");
     }
   };
+
+  const handleStoreManagement = () => {
+    if (userRole === 'seller') {
+      navigate('/seller/dashboard');
+    } else if (userRole === 'user') {
+      navigate('/register-seller');
+    }
+  };
+
   return (
     <>
       {/* ** Header Container ** */}
@@ -77,8 +86,8 @@ const HeaderAfterLogin = ({ onLogout, userRole }) => {
               Danh sách mong muốn
             </NavLink>
             {userRole === 'seller' ? (
-              <NavLink className="nav-link" to="/manage-store">
-                Quản lý đơn hàng
+              <NavLink className="nav-link" onClick={handleStoreManagement}>
+                Quản lý cửa hàng
               </NavLink>
             ) : userRole === 'user' ? (
               <span className="nav-link" onClick={() => navigate('/register-seller')}>

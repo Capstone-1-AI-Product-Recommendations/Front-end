@@ -1,14 +1,16 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
-import DashboardStats from "../DashboardStats";
-import DashboardChart from "../DashboardChart";
-import OrdersTable from "../OrdersTable";
+import DashboardStats from "../MainDashboard/DashboardStats";
+import DashboardChart from "../MainDashboard/DashboardChart";
+import OrdersTable from "../MainDashboard/OrdersTable";
 import "./PublicLayout.css";
 // import Overview from './Overview';
 
 const PublicLayout = () => {
   return (
+
     <div className="public-layout">
+    {/* <AdminHeader/> */}
       <DashboardStats />
 
       {/* Charts Section */}

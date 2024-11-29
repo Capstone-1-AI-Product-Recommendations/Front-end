@@ -2,20 +2,24 @@
 .admin-layout {
     display: flex;
     min-height: 100vh;
+    background-color: #f8f9fa;
   }
   
   .admin-main {
     flex: 1;
-    background-color: #f5f7fb;
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden;
   }
   
   .admin-content {
-    /* padding: 20px; */
-    /* margin: 20px; */
-    background: white;
-    /* border-radius: 8px; */
-    /* box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); */
+    flex: 1;
+    padding: 24px;
+    background: #ffffff;
+    overflow-y: auto;
   }
+  
+
 
 
   /* Bổ sung đoạn sau  */
@@ -35,7 +39,7 @@
 
 .admin-content {
   flex-grow: 1;
-  padding: 24px;
+  padding: 0px;
   background: #ffffff;
   overflow-y: auto; /* Đảm bảo cuộn nếu nội dung quá lớn */
 }
