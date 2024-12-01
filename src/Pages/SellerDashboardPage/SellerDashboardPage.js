@@ -9,9 +9,9 @@ const SellerDashboardPage = () => {
   return (
     <div className="seller-dashboard-page">
       <SellerHeader />
-      <div className="dashboard-content">
+      <div className="dashboard-content-seller">
         <Sidebar />
-        <div className="main-content">
+        <div className="main-content-seller">
           <Routes>
             <Route path="/" element={<SellerProductManagement />} />
             <Route path="/products" element={<SellerProductManagement />} />

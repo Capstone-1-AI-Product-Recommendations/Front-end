@@ -1,11 +1,10 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import { CartProvider } from "./Components/client/Cart/CartContext";
 import Footer from "./Components/client/Footer/Footer";
 import RouterCustom from "./Router";
 import HeaderNoLogin from "./Components/client/Header/HeaderNoLogin";
 import HeaderAfterLogin from "./Components/client/Header/HeaderAfterLogin";
-import { useLocation } from "react-router-dom";
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -13,41 +12,54 @@ function App() {
   const location = useLocation();
   const navigate = useNavigate();
 
+  // Kiểm tra trạng thái đăng nhập khi component mount
+  useEffect(() => {
+    const loggedInStatus = localStorage.getItem("isLoggedIn");
+    const savedUserRole = localStorage.getItem("userRole");
+    
+    if (loggedInStatus === "true" && savedUserRole) {
+      setIsLoggedIn(true);
+      setUserRole(savedUserRole);
+    }
+  }, []);
+
   const handleLoginSuccess = (role) => {
     setIsLoggedIn(true);
     setUserRole(role);
-    
-    switch(role) {
-      case "admin":
-        navigate("/admin");
-        break;
-      case "user":
-        navigate("/");
-        break;
-      default:
-        navigate("/");
-    }
+    // Lưu trạng thái vào localStorage
+    localStorage.setItem("isLoggedIn", "true");
+    localStorage.setItem("userRole", role);
+    navigate("/");
   };
 
   const handleLogout = () => {
     setIsLoggedIn(false);
     setUserRole("");
+    // Xóa trạng thái khỏi localStorage
+    localStorage.removeItem("isLoggedIn");
+    localStorage.removeItem("userRole");
     navigate("/");
   };
 
+  const shouldShowHeader = !location.pathname.startsWith('/admin') && 
+                          !location.pathname.startsWith('/seller-dashboard') && 
+                          !location.pathname.startsWith('/seller');
+
   return (
     <CartProvider>
-      {!location.pathname.startsWith('/admin') && !location.pathname.startsWith('/register-seller') && (
-        <>
-          {isLoggedIn ? (
-            <HeaderAfterLogin onLogout={handleLogout} userRole={userRole} />
-          ) : (
-            <HeaderNoLogin onLoginSuccess={handleLoginSuccess} />
-          )}
-        </>
+      {shouldShowHeader && (
+        isLoggedIn ? (
+          <HeaderAfterLogin onLogout={handleLogout} userRole={userRole} />
+        ) : (
+          <HeaderNoLogin onLoginSuccess={handleLoginSuccess} />
+        )
       )}
-      <RouterCustom isLoggedIn={isLoggedIn} userRole={userRole} onLoginSuccess={handleLoginSuccess} />
-      {!location.pathname.startsWith('/admin') && !location.pathname.startsWith('/register-seller') && <Footer />}
+      <RouterCustom 
+        isLoggedIn={isLoggedIn} 
+        userRole={userRole} 
+        onLoginSuccess={handleLoginSuccess} 
+      />
+      {shouldShowHeader && <Footer />}
     </CartProvider>
   );
 }

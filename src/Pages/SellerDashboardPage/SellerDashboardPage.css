@@ -10,13 +10,13 @@
   min-height: 100vh;
 }
 
-.dashboard-content {
+.dashboard-content-seller {
   display: flex;
   flex: 1;
   margin-top: 60px;
 }
 
-.main-content {
+.main-content-seller {
   flex: 1;
   padding: 20px;
   margin-left: 250px;

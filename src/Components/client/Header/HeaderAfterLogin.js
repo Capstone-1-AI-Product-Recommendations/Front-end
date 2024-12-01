@@ -34,15 +34,15 @@ const HeaderAfterLogin = ({ onLogout, userRole }) => {
   };
 
   // Navigate based on user role
-  const handleRoleNavigation = () => {
-    if (userRole === "user") {
-      navigate("/register-seller");
-    } else if (userRole === "seller") {
-      navigate("/manage-store");
-    } else if (userRole === "admin") {
-      navigate("/admin");
-    }
-  };
+  // const handleRoleNavigation = () => {
+  //   if (userRole === "user") {
+  //     navigate("/register-seller");
+  //   } else if (userRole === "seller") {
+  //     navigate("/manage-store");
+  //   } else if (userRole === "admin") {
+  //     navigate("/admin");
+  //   }
+  // };
   const handleLogout = () => {
     if (typeof onLogout === "function") {
       onLogout();
@@ -52,19 +52,19 @@ const HeaderAfterLogin = ({ onLogout, userRole }) => {
     }
   };
 
-  const handleStoreManagement = () => {
-    if (userRole === 'seller') {
-      navigate('/seller/dashboard');
-    } else if (userRole === 'user') {
-      navigate('/register-seller');
-    }
-  };
+  // const handleStoreManagement = () => {
+  //   if (userRole === "seller") {
+  //     navigate("/seller-dashboard");
+  //   } else if (userRole === "user") {
+  //     navigate("/register-seller");
+  //   }
+  // };
 
   return (
     <>
       {/* ** Header Container ** */}
       <div className="menu-container">
-        <header className="header">
+        <header className="header-user">
           {/* ** Top Bar ** */}
           <div className="top-bar">
             <div className="top-links">
@@ -83,20 +83,34 @@ const HeaderAfterLogin = ({ onLogout, userRole }) => {
                 Tài khoản của tôi
               </NavLink>
               <NavLink className="nav-link" to="/wishlist">
-              Danh sách mong muốn
-            </NavLink>
-            {userRole === 'seller' ? (
-              <NavLink className="nav-link" onClick={handleStoreManagement}>
-                Quản lý cửa hàng
+                Danh sách mong muốn
               </NavLink>
-            ) : userRole === 'user' ? (
-              <span className="nav-link" onClick={() => navigate('/register-seller')}>
-                Trở thành người bán
-              </span>
-            ) : null}
-            <NavLink className="nav-link" to="/contact">
-              Hỗ trợ
-            </NavLink>
+
+
+              {userRole === "seller" ? (
+                <NavLink className="nav-link" to="/seller-dashboard">
+                  Quản lý cửa hàng
+                </NavLink>
+              ) : userRole === "user" ? (
+                <span
+                  className="nav-link"
+                  onClick={() => navigate("/register-seller")}
+                >
+                  Trở thành người bán
+                </span>
+              ) : userRole === "admin" ? (
+                <span
+                  className="nav-link" 
+                  onClick={() => navigate("/admin")}
+                >
+                  Quản lý hệ thống
+                </span>
+              ) : null}
+
+
+              <NavLink className="nav-link" to="/contact">
+                Hỗ trợ
+              </NavLink>
             </div>
           </div>
 

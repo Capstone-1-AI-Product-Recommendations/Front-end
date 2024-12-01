@@ -1,0 +1,47 @@
+.seller-layout {
+  display: flex;
+  min-height: 100vh;
+  background-color: #f6f6f6;
+}
+
+.seller-sidebar {
+  width: 240px;
+  background-color: #fff;
+  border-right: 1px solid #e5e7eb;
+  position: fixed;
+  height: 100vh;
+  left: 0;
+  top: 0;
+}
+
+.seller-main-container {
+  flex: 1;
+  margin-left: 240px; /* Bằng với width của sidebar */
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.seller-content {
+  flex: 1;
+  padding: 20px;
+  background-color: #f6f6f6;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .seller-sidebar {
+    width: 0;
+    transform: translateX(-100%);
+    transition: all 0.3s ease;
+  }
+  
+  .seller-main-container {
+    margin-left: 0;
+  }
+  
+  .seller-sidebar.open {
+    width: 240px;
+    transform: translateX(0);
+  }
+}

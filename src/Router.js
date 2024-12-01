@@ -29,15 +29,21 @@ import SuccessRegistration from "./Components/seller/Register/SuccessRegistratio
 import ProductForm from "./Components/seller/ProductForm/ProductForm";
 import SellerProductManagement from "./Components/seller/SellerDashboard/SellerProductManagement/SellerProductManagement";
 import RegisterSellerStep from "./Pages/RegisterSeller/RegisterSeller";
+import SellerLayout from "./layouts/Seller/SellerLayout";
+import SellerProducts from "./Components/seller/SellerDashboard/SellerProduct/SellerProducts";
+
 
 
 //Trang dành cho admin
-import AdminLayout from "./layouts/AdminLayout";
+import AdminLayout from "./layouts/Admin/AdminLayout";
 // import OrderManagement from "./Components/admin/orders/OrderManagement";
 import PublicLayout from "./Components/admin/Dashboard/Overview/PublicLayout";
 import UserManagement from "./Components/admin/Dashboard/UserManagement/UserManagement"; // Import component UserManagement
 import AdminProductManagement from "./Components/admin/Dashboard/AdminProductManagement/AdminProductManagement";
 import Permission from "./Components/admin/Permission/Permission";
+
+
+
 
 const RouterCustom = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -84,6 +90,10 @@ const RouterCustom = () => {
       </Route>
 
 
+      <Route path="seller-dashboard" element={<SellerLayout />} >
+        <Route path="users" element={<UserManagement />} />
+        <Route path="products" element={<SellerProducts />} />
+      </Route>
 
 
       {/* Nếu đã đăng nhập */}

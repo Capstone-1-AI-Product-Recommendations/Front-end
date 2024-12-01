@@ -60,7 +60,9 @@
 }
 
 .location-wrapper {
+  
   display: flex;
+  /* margin-left: 50px; */
   flex-direction: column;
   gap: 2px;
 }
@@ -74,7 +76,7 @@
   display: flex;
   align-items: center;
   gap: 4px;
-  font-size: 14px;
+  font-size: 10px;
   color: #333;
   cursor: pointer;
   text-transform: capitalize;

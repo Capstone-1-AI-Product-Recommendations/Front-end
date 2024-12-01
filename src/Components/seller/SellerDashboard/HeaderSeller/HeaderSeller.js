@@ -1,13 +1,14 @@
 import React from 'react';
-import './SellerHeader.css';
+import './HeaderSeller.css';
 import { FaChevronRight, FaTh, FaUserCircle } from 'react-icons/fa';
+import logoApp from '../../../../img/logoApp.png';
 
-const SellerHeader = () => {
+const HeaderSeller = () => {
     return (
         <div className="header">
             <div className="header-left">
                 <img 
-                    src="https://path-to-shopee-logo.png" // Replace with actual Shopee logo path
+                    src={logoApp} // Replace with actual Shopee logo path
                     alt="Shopee Logo"
                     className="logo"
                 />
@@ -25,4 +26,4 @@ const SellerHeader = () => {
     );
 };
 
-export default SellerHeader;
+export default HeaderSeller;

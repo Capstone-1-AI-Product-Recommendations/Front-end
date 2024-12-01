@@ -52,23 +52,23 @@ const HomePage = ({ userRole }) => {
   }, []);
 
   // Hàm xử lý khi nhấn "Trở thành người bán"
-  const handleBecomeSeller = () => {
-    if (userRole === "user") {
-      navigate("/signup"); // Chuyển đến trang đăng ký nếu là user
-    } else if (userRole === "seller") {
-      navigate("/register-seller"); // Chuyển đến trang quản lý seller
-    } else if (userRole === "admin") {
-      navigate("/admin"); // Chuyển đến trang admin
-    }
-  };
+  // const handleBecomeSeller = () => {
+  //   if (userRole === "user") {
+  //     navigate("/signup"); // Chuyển đến trang đăng ký nếu là user
+  //   } else if (userRole === "seller") {
+  //     navigate("/register-seller"); // Chuyển đến trang quản lý seller
+  //   } else if (userRole === "admin") {
+  //     navigate("/admin"); // Chuyển đến trang admin
+  //   }
+  // };
 
-  const handleManageStore = () => {
-    if (userRole === 'seller') {
-      navigate('/seller');
-    } else {
-      navigate('/register-seller');
-    }
-  };
+  // const handleManageStore = () => {
+  //   if (userRole === 'seller') {
+  //     navigate('/seller');
+  //   } else {
+  //     navigate('/register-seller');
+  //   }
+  // };
 
   return (
     <div className="container-all">

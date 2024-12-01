@@ -55,7 +55,7 @@ const HeaderNoLogin = ({ onLoginSuccess }) => {
   return (
     <>
       <div className="menu-container">
-        <header className="header">
+        <header className="header-user">
           <div className="top-bar">
             <div className="top-links">
               <NavLink
