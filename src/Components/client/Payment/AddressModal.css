@@ -42,13 +42,20 @@
 
 .address-item {
   display: flex;
-  gap: 15px;
+  align-items: flex-start;
   padding: 15px;
-  border-bottom: 1px solid #f5f5f5;
+  border-bottom: 1px solid #eee;
+}
+
+.address-item input[type="radio"] {
+  margin-top: 4px;
+  margin-right: 12px;
+  cursor: pointer;
 }
 
 .address-info {
   flex: 1;
+  cursor: pointer;
 }
 
 .user-info {
@@ -109,4 +116,47 @@
   border: none;
   border-radius: 4px;
   cursor: pointer;
+}
+
+/* Thêm style cho label để cải thiện UX */
+.address-item label {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  cursor: pointer;
+}
+
+/* Style cho radio button */
+.address-item input[type="radio"] {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border: 2px solid #ddd;
+  border-radius: 50%;
+  outline: none;
+  cursor: pointer;
+}
+
+.address-item input[type="radio"]:checked {
+  border-color: #ee4d2d;
+  position: relative;
+}
+
+.address-item input[type="radio"]:checked::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 10px;
+  height: 10px;
+  background-color: #ee4d2d;
+  border-radius: 50%;
+}
+
+/* Hover effect */
+.address-item:hover {
+  background-color: #f8f8f8;
 } 

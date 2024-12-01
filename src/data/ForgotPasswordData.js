@@ -8,21 +8,21 @@ const ForgotPasswordData = {
       email: "admin@gmail.com",
       password: "admin123",
       role: "admin",
-      verificationCode: "74578" // Mã xác thực mặc định
+      verificationCode: "745781" // Mã xác thực mặc định
     },
     {
       id: 2,
       email: "seller@gmail.com",
       password: "seller123",
       role: "seller",
-      verificationCode: "85214"
+      verificationCode: "852141"
     },
     {
       id: 3,
       email: "user@gmail.com",
       password: "user123",
-      role: "user",
-      verificationCode: "96325"
+      role: "userqwww2",
+      verificationCode: "963251"
     }
   ],
 

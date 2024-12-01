@@ -111,7 +111,7 @@ const ForgotPassword = ({ onClose }) => {
               </p>
               <form onSubmit={handleVerifyCode}>
                 <div className="verification-inputs">
-                  {[0, 1, 2, 3, 4].map((index) => (
+                  {[0, 1, 2, 3, 4, 5].map((index) => (
                     <input
                       key={index}
                       id={`code-${index}`}

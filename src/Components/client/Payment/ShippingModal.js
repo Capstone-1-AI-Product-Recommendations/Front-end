@@ -1,7 +1,7 @@
 import React from 'react';
 import './ShippingModal.css';
 
-const ShippingModal = ({ isOpen, onClose, shippingMethods, onSelectShipping }) => {
+const ShippingModal = ({ isOpen, onClose, shippingMethods, onSelectShipping, selectedShipping }) => {
   if (!isOpen) return null;
 
   return (
@@ -11,23 +11,24 @@ const ShippingModal = ({ isOpen, onClose, shippingMethods, onSelectShipping }) =
           <h3>Chọn phương thức vận chuyển</h3>
           <button className="close-btn" onClick={onClose}>×</button>
         </div>
-        
+
         <div className="shipping-methods-list">
           <h4>PHƯƠNG THỨC VẬN CHUYỂN LIÊN KẾT VỚI SHOPEE</h4>
-          
+
           {shippingMethods.map((method) => (
-            <div key={method.id} className="shipping-method-item" onClick={() => {
-              onSelectShipping(method);
-              onClose();
-            }}>
+            <div
+              key={method.id}
+              className={`shipping-method-item ${selectedShipping?.id === method.id ? 'selected' : ''}`}
+              onClick={() => onSelectShipping(method)}
+            >
               <div className="method-info">
                 <div className="method-name">{method.name}</div>
                 <div className="delivery-estimate">
-                  Đảm bảo nhận hàng {method.estimatedDelivery}
+                  Đảm bảo nhận hàng từ {method.estimatedDelivery}
                 </div>
-                {method.voucherNote && (
-                  <div className="voucher-note">{method.voucherNote}</div>
-                )}
+                <div className="voucher-note">
+                  Nhận Voucher trị giá ₫15.000 nếu đơn hàng được giao đến bạn sau ngày {method.voucherDate}
+                </div>
               </div>
               <div className="method-price">₫{method.price.toLocaleString()}</div>
             </div>
