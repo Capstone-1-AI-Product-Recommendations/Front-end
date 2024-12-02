@@ -1,0 +1,288 @@
+/* Main container */
+.banner-container {
+  max-width: 1340px; /* Độ rộng tối đa của container */
+  margin: auto; /* Căn giữa container */
+  padding: 20px 0; /* Khoảng cách trên và dưới */
+}
+
+/* Main banner */
+.main-banner {
+  position: relative; /* Định vị tương đối cho các phần tử con */
+  overflow: hidden; /* Ẩn nội dung tràn ra ngoài */
+  height: 400px; /* Chiều cao cố định của banner */
+}
+
+.main-banner-image {
+  width: 100%; /* Chiếm toàn bộ chiều rộng */
+  height: 100%; /* Chiếm toàn bộ chiều cao container */
+  object-fit: fill; /* Đảm bảo hình ảnh giữ tỷ lệ */
+  border-radius: 2px;
+  cursor: pointer;
+}
+
+/* Indicator dót */
+.indicator-dots {
+  position: absolute; /* Định vị tuyệt đối */
+  bottom: 15px; /* Cách đáy 15px */
+  left: 50%; /* Căn giữa theo chiều ngang */
+  transform: translateX(-50%); /* Điều chỉnh căn giữa */
+  display: flex; /* Hiển thị theo hàng ngang */
+  gap: 8px; /* Khoảng cách giữa các dấu chấm */
+}
+
+.dot {
+  width: 12px; /* Đường kính */
+  height: 12px; /* Đường kính */
+  border-radius: 50%; /* Hình tròn */
+  background-color: #ddd; /* Màu nền mặc định */
+  cursor: pointer; /* Biểu tượng chuột khi di chuột qua */
+  transition: background-color 0.3s ease; /* Hiệu ứng mượt khi đổi màu */
+}
+
+.dot.active {
+  background-color: #673ab7; /* Màu cho trạng thái đang chọn */
+}
+
+/* Small right banner */
+.small-banners {
+  display: flex; /* Hiển thị theo chiều dọc */
+  flex-direction: column; /* Đặt hướng các phần tử theo cột */
+  gap: 16px; /* Khoảng cách giữa các banner nhỏ */
+}
+
+.small-banner {
+  padding: 20px; /* Khoảng cách bên trong */
+  text-align: center; /* Căn giữa văn bản */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Hiệu ứng đổ bóng */
+}
+
+.voucher-banner {
+  background: linear-gradient(135deg, #fff3e6, #ffe4cc); /* Màu nền gradient */
+  color: #ff5722; /* Màu chữ */
+}
+
+.sale-banner {
+  background: linear-gradient(135deg, #ff6e7f, #f77062); /* Bold pink-red gradient */
+  color: white;
+  cursor: pointer; /* Hiển thị con trỏ pointer khi di chuột qua */
+  position: relative;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Hiệu ứng đổ bóng */
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+
+.save-now-btn {
+  background-color: #ff5722; /* Màu nền */
+  color: white; /* Màu chữ */
+  padding: 10px 16px; /* Khoảng cách bên trong */
+  border: none; /* Loại bỏ viền */
+  border-radius: 4px; /* Bo góc */
+  cursor: pointer; /* Biểu tượng chuột */
+  transition: background-color 0.3s ease; /* Hiệu ứng khi đổi màu */
+}
+
+.save-now-btn:hover {
+  background-color: #e64a19; /* Màu nền khi hover */
+}
+
+/* Navigation */
+.banner-btn {
+  position: absolute; /* Định vị tuyệt đối */
+  top: 50%; /* Căn giữa theo chiều dọc */
+  transform: translateY(-50%); /* Điều chỉnh căn giữa */
+  background-color: rgba(0, 0, 0, 0.5); /* Nền mờ */
+  color: white; /* Màu chữ */
+  border: none; /* Loại bỏ viền */
+  border-radius: 50%; /* Hình tròn */
+  width: 40px; /* Chiều rộng nút */
+  height: 40px; /* Chiều cao nút */
+  font-size: 20px; /* Kích thước chữ */
+  cursor: pointer; /* Biểu tượng chuột */
+  z-index: 1; /* Đưa lên trên */
+  opacity: 0; /* Ẩn mặc định */
+  transition: opacity 0.3s ease; /* Hiệu ứng xuất hiện mượt */
+}
+
+.banner-btn:hover {
+  background-color: rgba(0, 0, 0, 0.8); /* Màu nền khi hover */
+}
+
+.prev-btn {
+  left: 10px; /* Định vị bên trái */
+}
+
+.next-btn {
+  right: 10px; /* Định vị bên phải */
+}
+
+/* Hiển thị nút khi hover vào banner chính */
+.main-banner:hover .banner-btn {
+  opacity: 1; /* Hiển thị nút */
+  
+}
+
+/* Small Right Banners */
+.small-banners {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.small-banner {
+  padding: 20px;
+  border-radius: 2px; /* More rounded corners for modern design */
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15); /* Stronger shadow for depth */
+  transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth hover effect */
+  text-align: center;
+  position: relative; /* Positioning for layered effects */
+  overflow: hidden; /* Hide overflow for background designs */
+}
+
+/* Background animation */
+.small-banner::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    120deg,
+    rgba(255, 255, 255, 0.1),
+    rgba(255, 255, 255, 0)
+  );
+  transform: rotate(45deg);
+  z-index: 0;
+  transition: all 0.5s ease;
+  opacity: 0.5;
+}
+
+/* Hover glow effect */
+.small-banner:hover::before {
+  transform: rotate(0deg);
+  opacity: 1;
+}
+
+/* Voucher Banner Specific Styling */
+.voucher-banner {
+  background: linear-gradient(135deg, #ffe0b2, #ffcc80); /* Warm gradient */
+  color: #ff5722;
+}
+
+.voucher-header h3 {
+  font-size: 18px;
+  font-weight: bold;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.voucher-header h2 {
+  font-size: 28px;
+  font-weight: bold;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+}
+
+.voucher-types {
+  display: grid;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  cursor: pointer;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  position: relative;
+  z-index: 1;
+}
+
+.voucher-type {
+  padding: 8px 16px;
+  font-size: 14px;
+  background: #ffe4c4;
+  color: #e64a19;
+  border-radius: 20px;
+  font-weight: 500;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+}
+
+.save-now-btn {
+  padding: 12px 20px;
+  background: #ff5722;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 30px;
+  box-shadow: 0 4px 10px rgba(255, 87, 34, 0.3);
+  transition: transform 0.2s ease, background 0.3s ease;
+}
+
+.save-now-btn:hover {
+  background: #e64a19;
+  transform: scale(1.05); /* Slight bounce on hover */
+}
+
+/* Sale Banner Specific Styling */
+.sale-banner {
+  background: linear-gradient(
+    135deg,
+    #ff6e7f,
+    #f77062
+  ); /* Bold pink-red gradient */
+  color: white;
+}
+
+.sale-header {
+  margin-bottom: 15px;
+}
+
+.sale-title h2 {
+  font-size: 30px;
+  font-weight: bold;
+  color: #ffe082; /* Light gold */
+  cursor: pointer;
+}
+
+.sale-title .countdown {
+  font-size: 20px;
+  padding: 4px 10px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  display: inline-block;
+  color: #ffffff;
+}
+
+.sale-header h1 {
+  font-size: 36px;
+  font-weight: bold;
+  color: #fff;
+}
+
+.sale-subtitle {
+  font-size: 16px;
+  color: #ffe082;
+}
+
+.sale-offers {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.offer {
+  padding: 10px 15px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.2);
+  font-size: 14px;
+  font-weight: bold;
+  color: #fff;
+  text-align: center;
+  transition: background 0.3s ease;
+}
+
+.offer:hover {
+  background: rgba(255, 255, 255, 0.4);
+}

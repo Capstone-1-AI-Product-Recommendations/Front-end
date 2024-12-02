@@ -1,0 +1,327 @@
+/* RegisterSeller.css */
+.register-seller-top {
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 0 120px;
+    background: #fff;
+  }
+  
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .logo img {
+    height: 40px;
+  }
+  
+  .user-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+  }
+  
+  .progress-bar {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    margin: 40px 0;
+    position: relative;
+    flex-direction: row; /* Đặt thành hàng ngang */
+    justify-content: space-between; /* Khoảng cách đều giữa các mục */
+    align-items: center;
+    
+  }
+  
+  .progress-bar::before {
+    content: '';
+    position: absolute;
+    top: 25px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: #e8e8e8;
+    z-index: 1;
+  }
+  
+  .step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    z-index: 2;
+  }
+  
+  .step-number {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: #fff;
+    border: 2px solid #e8e8e8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 10px;
+    display: flex;
+
+  }
+  
+  .step.active .step-number {
+    background: #673ab7;
+    border-color: #673ab7;
+    color: #fff;
+  }
+  
+  .step-label {
+    font-size: 14px;
+    color: #555;
+  }
+  
+  .form-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  .form-group {
+    margin-bottom: 24px;
+  }
+  
+  .form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+  }
+  
+  .required {
+    color: #673ab7;
+    margin-right: 4px;
+  }
+  
+  .form-input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #e8e8e8;
+    border-radius: 4px;
+    font-size: 14px;
+  }
+  
+  .char-count {
+    display: block;
+    text-align: right;
+    font-size: 12px;
+    color: #999;
+    margin-top: 4px;
+  }
+  
+  .address-input {
+    position: relative;
+  }
+  
+  .address-details {
+    margin-top: 8px;
+    padding: 8px;
+    background: #f5f5f5;
+    border-radius: 4px;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+  
+  .edit-link {
+    color: #673ab7;
+    text-decoration: none;
+    font-size: 14px;
+    margin-top: 8px;
+    display: inline-block;
+  }
+  
+  .button-group {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 40px;
+  }
+  
+  .btn-save,
+  .btn-next {
+    padding: 8px 24px;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+  }
+  
+  .btn-save {
+    background: #fff;
+    border: 1px solid #e8e8e8;
+    color: #555;
+  }
+  
+  .btn-next {
+    background: #673ab7;
+    border: none;
+    color: #fff;
+  }
+  
+  .btn-save:hover {
+    background: #f5f5f5;
+  }
+  
+  .btn-next:hover {
+    background: #673ab7;
+  }
+
+  /* RegisterSeller.css */
+.register-seller-top {
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 20px;
+    background: #fff;
+    /* Thêm z-index để đảm bảo hiển thị đúng thứ tự */
+    position: relative;
+    z-index: 1;
+  }
+  
+  /* Đổi tên class để tránh xung đột */
+  .register-seller-top .seller-header {
+    max-width: 1440px;
+    padding: 0;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid #e8e8e8;
+  }
+  
+  .register-seller-top .seller-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .register-seller-top .seller-logo img {
+    height: 40px;
+  }
+  
+  .register-seller-top .seller-user-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .register-seller-top .seller-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+  }
+  
+  /* Cập nhật JSX component tương ứng */
+  /* RegisterSeller.css */
+.register-seller-top {
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 20px;
+    background: #fff;
+    position: relative;
+    z-index: 1;
+  }
+  
+  .seller-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid #e8e8e8;
+  }
+  
+  .seller-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .seller-logo img {
+    height: 40px;
+  }
+  
+  .seller-user-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .seller-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+  }
+  
+  .progress-bar {
+    display: flex;
+    justify-content: center;
+    margin: 40px 0;
+    position: relative;
+    
+  }
+  
+  .progress-bar::before {
+    content: '';
+    position: absolute;
+    top: 25px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: #e8e8e8;
+    z-index: 1;
+  }
+  
+  .step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    z-index: 2;
+    margin: 0 40px;
+  }
+  
+  .step-number {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: #fff;
+    border: 2px solid #e8e8e8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 10px;
+    cursor: pointer;
+  }
+  
+  .step.active .step-number {
+    background: #673ab7;
+    border-color: #673ab7;
+    color: #fff;
+  }
+  
+  .step-label {
+    font-size: 14px;
+    color: #555;
+  }
+  
+  .form-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  /* Rest of the CSS remains the same */
+  
