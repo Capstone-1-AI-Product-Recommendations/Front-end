@@ -54,7 +54,14 @@ function App() {
   
   const shouldShowHeader = !location.pathname.startsWith('/admin') && 
                           !location.pathname.startsWith('/seller-dashboard') && 
-                          !location.pathname.startsWith('/seller');
+                          !location.pathname.startsWith('/seller') &&
+                          !location.pathname.startsWith('/register-seller') &&
+                          !location.pathname.startsWith('/shipping-setting') &&
+                          !location.pathname.startsWith('/tax-information') &&
+                          !location.pathname.startsWith('/identity-information') &&
+                          !location.pathname.startsWith('/check-registration') &&
+                          !location.pathname.startsWith('/product-form');
+                          
 
   return (
     <CartProvider>

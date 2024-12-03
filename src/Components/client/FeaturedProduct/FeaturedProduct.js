@@ -178,7 +178,7 @@ const FeaturedProduct = ({ products }) => {
                   </button>
                 </div>
               </div>
-              <p className="note text-muted text-center mt-2">Remains until the end of the offer</p>
+              {/* <p className="note text-muted text-center mt-2">Remains until the end of the offer</p> */}
             </div>
           </div>
         ))}

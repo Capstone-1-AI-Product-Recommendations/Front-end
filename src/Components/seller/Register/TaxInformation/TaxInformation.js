@@ -51,7 +51,8 @@ const TaxInformation = () => {
           <span>minhmanh2709</span>
         </div>
       </div>
-
+      
+      <div className="register-seller-content">
       {/* Progress Bar */}
       <div className="progress-bar">
         <div className="step" onClick={handleBack}>
@@ -181,6 +182,7 @@ const TaxInformation = () => {
           </div>
         </div>
       </form>
+      </div>
     </div>
   );
 };

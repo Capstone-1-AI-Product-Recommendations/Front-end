@@ -27,6 +27,7 @@ const SuccessRegistration = () => {
           <span>minhmanh2709</span>
         </div>
       </div>
+      <div className="register-seller-content">
       <div className="progress-bar">
         <div className="step">
           <div className="step-number">1</div>
@@ -54,9 +55,10 @@ const SuccessRegistration = () => {
       <p>
         Hãy đăng bán sản phẩm đầu tiên để khởi động hành trình bán hàng cùng Shopee nhé!
       </p>
-      <button onClick={handleAddProduct} className="add-product-btn">
+      <button onClick={handleAddProduct} className="add-product-seller-btn">
         Thêm sản phẩm
       </button>
+      </div>
     </div>
   );
 };

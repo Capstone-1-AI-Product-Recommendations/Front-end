@@ -62,7 +62,7 @@ const IdentityInformation = () => {
           <span>minhmanh2709</span>
         </div>
       </div>
-
+      <div className="register-seller-content">
       {/* Progress Bar */}
       <div className="progress-bar">
         <div className="step" onClick={handleBeginning}>
@@ -203,10 +203,11 @@ const IdentityInformation = () => {
           <button type="button" className="btn-back" onClick={handleBack}>Quay lại</button>
           <div className="right-actions">
             <button type="button" className="btn-save">Lưu</button>
-            <button type="submit" className="btn-next">Hoàn tất</button>
+            <button type="submit" className="btn-next" onClick={handleSubmit}>Hoàn tất</button>
           </div>
         </div>
       </form>
+      </div>
     </div>
   );
 };
