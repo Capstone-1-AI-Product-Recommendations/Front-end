@@ -51,12 +51,12 @@ const handlePrevious = (bannerIndex) => {
         {activeBanner.map((activeIndex, index) => (
           <div key={index} className="col-md-4 mb-4">
             <div className="banner-wrapper">
-              <button 
+              {/* <button 
                 className="nav-button prev-button" 
                 onClick={() => handlePrevious(index)}
               >
                 ←
-              </button>
+              </button> */}
               <div className="card h-100">
                 <div className="row g-0">
                   <div className="col-8">
@@ -80,12 +80,12 @@ const handlePrevious = (bannerIndex) => {
                   </div>
                 </div>
               </div>
-              <button 
+              {/* <button 
                 className="nav-button next-button" 
                 onClick={() => handleNext(index)}
               >
                 →
-              </button>
+              </button> */}
             </div>
           </div>
         ))}

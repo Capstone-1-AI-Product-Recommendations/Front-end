@@ -98,6 +98,7 @@ const FeaturedProduct = ({ products }) => {
     currentPage * PRODUCTS_PER_PAGE
   );
 
+
   return (
     <div className="featured-product-container">
       <div className="d-flex justify-content-between align-items-center mb-1">
@@ -171,8 +172,8 @@ const FeaturedProduct = ({ products }) => {
                     })}
                     <span className="reviews"> ({product.rating})</span>
                   </div>
-                  <button className="add-to-cart-product w-100 mt-3">
-                    Add to Cart
+                  <button className="add-to-cart-product w-100 mt-5">
+                    Thêm vào giỏ hàng
                     <span className="ms-2">+</span>
                   </button>
                 </div>

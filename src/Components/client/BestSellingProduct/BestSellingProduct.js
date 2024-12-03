@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { CartContext } from ".././Cart/CartContext";
+import { CartContext } from "../Cart/CartContext";
 import "./BestSellingProduct.css";
 
 const PRODUCTS_PER_PAGE = 36;

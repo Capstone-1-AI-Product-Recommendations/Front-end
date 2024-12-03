@@ -1,5 +1,14 @@
+// <<<<<<< HEAD
+// import React, { useState, useEffect } from "react";
+// =======
+// <<<<<<< HEAD
+// // src/App.js
+// import React from "react";
+// import { CartProvider } from "./Components/Cart/CartContext"; // Đường dẫn tới CartContext
+// import Header from "./Components/Header/Header";
+// import Footer from "./Components/Footer/Footer";
 import React, { useState, useEffect } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate,useLocation } from "react-router-dom";
 import { CartProvider } from "./Components/client/Cart/CartContext";
 import Footer from "./Components/client/Footer/Footer";
 import RouterCustom from "./Router";
@@ -41,6 +50,8 @@ function App() {
     navigate("/");
   };
 
+
+  
   const shouldShowHeader = !location.pathname.startsWith('/admin') && 
                           !location.pathname.startsWith('/seller-dashboard') && 
                           !location.pathname.startsWith('/seller');

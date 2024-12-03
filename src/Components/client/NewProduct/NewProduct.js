@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { CartContext } from ".././Cart/CartContext";
+import { CartContext } from "../../client/Cart/CartContext";
 import "./NewProduct.css";
 
 const PRODUCTS_PER_PAGE = 36;
