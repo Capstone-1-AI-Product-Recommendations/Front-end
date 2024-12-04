@@ -1,54 +1,76 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+// <<<<<<< HEAD
+// import React, { useState, useEffect } from "react";
+// =======
+// <<<<<<< HEAD
+// // src/App.js
+// import React from "react";
+// import { CartProvider } from "./Components/Cart/CartContext"; // Đường dẫn tới CartContext
+// import Header from "./Components/Header/Header";
+// import Footer from "./Components/Footer/Footer";
+import React, { useState, useEffect } from "react";
+import { useNavigate,useLocation } from "react-router-dom";
 import { CartProvider } from "./Components/client/Cart/CartContext";
-// import Header from "./Components/client/Header/Header";
 import Footer from "./Components/client/Footer/Footer";
 import RouterCustom from "./Router";
 import HeaderNoLogin from "./Components/client/Header/HeaderNoLogin";
 import HeaderAfterLogin from "./Components/client/Header/HeaderAfterLogin";
-import { useLocation } from "react-router-dom";
-import "./styles/style.css";
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [userRole, setUserRole] = useState(""); // State for user role
+  const [userRole, setUserRole] = useState("");
   const location = useLocation();
   const navigate = useNavigate();
 
-  // Handle login success
+  // Kiểm tra trạng thái đăng nhập khi component mount
+  useEffect(() => {
+    const loggedInStatus = localStorage.getItem("isLoggedIn");
+    const savedUserRole = localStorage.getItem("userRole");
+    
+    if (loggedInStatus === "true" && savedUserRole) {
+      setIsLoggedIn(true);
+      setUserRole(savedUserRole);
+    }
+  }, []);
+
   const handleLoginSuccess = (role) => {
     setIsLoggedIn(true);
-    setUserRole(role); // Set user role (user/admin/seller)
-    if (role === "admin") {
-      navigate("/admin"); // Redirect to admin dashboard
-    } else if (role === "seller") {
-      navigate("/register-seller"); // Redirect to seller registration
-    } else {
-      navigate("/"); // Redirect to homepage for regular user
-    }
+    setUserRole(role);
+    // Lưu trạng thái vào localStorage
+    localStorage.setItem("isLoggedIn", "true");
+    localStorage.setItem("userRole", role);
+    navigate("/");
   };
 
-  // Close modal
-  const handleClose = () => {
-    console.log("Modal closed");
+  const handleLogout = () => {
+    setIsLoggedIn(false);
+    setUserRole("");
+    // Xóa trạng thái khỏi localStorage
+    localStorage.removeItem("isLoggedIn");
+    localStorage.removeItem("userRole");
+    navigate("/");
   };
 
-  const HeaderComponent = () => {
-    if (["/dashboard", "/manageCus", "/manageOwner"].includes(location.pathname)) {
-      return null;
-    }
-    return isLoggedIn ? (
-      <HeaderAfterLogin onLogout={() => setIsLoggedIn(false)} />
-    ) : (
-      <HeaderNoLogin onLoginSuccess={handleLoginSuccess} />
-    );
-  };
+
+  
+  const shouldShowHeader = !location.pathname.startsWith('/admin') && 
+                          !location.pathname.startsWith('/seller-dashboard') && 
+                          !location.pathname.startsWith('/seller');
 
   return (
     <CartProvider>
-      <HeaderComponent />
-      <RouterCustom onLoginSuccess={handleLoginSuccess} onClose={handleClose} />
-      <Footer />
+      {shouldShowHeader && (
+        isLoggedIn ? (
+          <HeaderAfterLogin onLogout={handleLogout} userRole={userRole} />
+        ) : (
+          <HeaderNoLogin onLoginSuccess={handleLoginSuccess} />
+        )
+      )}
+      <RouterCustom 
+        isLoggedIn={isLoggedIn} 
+        userRole={userRole} 
+        onLoginSuccess={handleLoginSuccess} 
+      />
+      {shouldShowHeader && <Footer />}
     </CartProvider>
   );
 }

@@ -1,0 +1,82 @@
+.orders-table {
+  margin-top: 24px;
+  background: white;
+  border-radius: 8px;
+  padding: 20px;
+  border: 1px solid #e5e7eb;
+  /* box-shadow: 0 2px 4px rgba(0,0,0,0.1); */
+}
+
+.orders-table h3 {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  color: #1f2937;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  border: 1px solid #e5e7eb;
+}
+
+th {
+  text-align: left;
+  padding: 12px;
+  font-weight: 500;
+  color: #6b7280;
+  border: 1px solid #e5e7eb;
+}
+
+td {
+  padding: 12px;
+  border: 1px solid #e5e7eb;
+}
+
+tr:hover {
+  background-color: #f9fafb;
+}
+
+.status, .delivery {
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  border: 1px solid transparent;
+}
+
+.status.paid {
+  background-color: #dcfce7;
+  color: #16a34a;
+  border-color: #16a34a;
+}
+
+.status.failed {
+  background-color: #fee2e2;
+  color: #dc2626;
+  border-color: #dc2626;
+}
+
+.status.pending {
+  background-color: #fef3c7;
+  color: #d97706;
+  border-color: #d97706;
+}
+
+.delivery.delivered {
+  background-color: #dbeafe;
+  color: #2563eb;
+  border-color: #2563eb;
+}
+
+.delivery.processing {
+  background-color: #f3e8ff;
+  color: #9333ea;
+  border-color: #9333ea;
+}
+
+.delivery.cancelled {
+  background-color: #fee2e2;
+  color: #dc2626;
+  border-color: #dc2626;
+} 

@@ -3,20 +3,25 @@
 .card {
   background-color: #f3ede1; /* Màu nền dạng creamy */
   border: none;
-  border-radius: 8px;
+  border-radius: 2px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.card-body {
+/* .card-body {
   padding: 20px;
   background-color: transparent;
-}
+} */
+
 
 .card-title {
   font-weight: bold;
   color: #333; /* Màu chữ tối để dễ đọc */
 }
 
+.card-text {
+  margin-bottom: 15px;
+  color: #555; /* Subtle gray for description */
+}
 .btn-custom {
   background-color: white; /* Màu nền của button khi chưa hover */
   color: black !important; /* Màu chữ của button khi chưa hover */
@@ -60,3 +65,38 @@
   object-fit: cover; /* Đảm bảo ảnh không bị méo khi thay đổi kích thước */
   margin-left: -10%; /* Đặt lại ảnh để cân đối với chiều rộng mới */
 }
+
+.banner-wrapper {
+  position: relative;
+}
+
+.nav-button {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255, 255, 255, 0.8);
+  border: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 1;
+}
+
+.nav-button:hover {
+  background: #634c9f;
+  color: white;
+}
+
+.prev-button {
+  left: -16px;
+}
+
+.next-button {
+  right: -16px;
+}
+

@@ -1,43 +1,350 @@
 /* src/components/Cart/Cart.module.css */
 
 .cartContainer {
-    padding: 20px;
-    max-width: 800px;
-    margin: 0 auto;
+    max-width: 100%;
+    /* margin: 20px auto; */
+    background: #f5f5f5;
+    padding: 20px 120px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell;
+    border-top: 2px  solid #E7E7E7;
+    border-bottom: 2px  solid #E7E7E7;
+
+}
+
+.cartHeader {
+    display: flex;
+    align-items: center;
+    padding: 1rem 2rem;
+    background-color: #fff;
+    border-bottom: 1px solid #f1f1f1;
+}
+
+.headerItem {
+    display: grid;
+    grid-template-columns: 20px auto;
+    align-items: center;
+    
+}
+
+.headerItem input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    accent-color: #ee4d2d;
+    justify-self: center;
+}
+
+
+.shopSection {
+    background: #fff;
+    border-radius: 4px;
+    margin-bottom: 12px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    overflow: hidden;
+}
+
+.shopHeader {
+    display: flex;
+    align-items: center;
+    padding: 16px 20px;
+    border-bottom: 1px solid #f5f5f5;
+    background: #fafafa;
+    padding-left: 2rem;
+}
+
+.shopHeader input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    accent-color: #ee4d2d;
+    margin-right: 12px;
+}
+
+.shopInfo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-left: 0;
+}
+
+.shopIcon {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: 1px solid #eee;
+}
+
+.shopName {
+    font-weight: 500;
+    color: #333;
+    font-size: 14px;
+}
+
+.officialBadge {
+    background: #ee4d2d;
+    color: #fff;
+    padding: 2px 8px;
+    border-radius: 3px;
+    font-size: 12px;
+    font-weight: 500;
+    text-transform: uppercase;
 }
 
 .cartItem {
-    display: flex;
+    display: grid;
+    grid-template-columns: 30px minmax(auto, 1fr) 200px 150px 150px 150px;
+    padding: 1rem 2rem;
     align-items: center;
-    border: 1px solid #ddd;
-    padding: 10px;
-    margin-bottom: 10px;
+    background: #fff;
+    border-bottom: 1px solid #f5f5f5;
+    gap: 1rem;
 }
 
-.cartItemImage {
-    width: 100px;
-    height: 100px;
-    margin-right: 20px;
+.cartItem:hover {
+    background-color: #fafafa;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.03);
 }
 
-.cartItemDetails {
+.itemInfo {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.itemImage {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border: 1px solid #f0f0f0;
+    flex-shrink: 0;
+}
+
+.itemDetails {
     flex-grow: 1;
 }
 
-.cartTotal {
-    margin-top: 20px;
-    font-size: 1.5rem;
+.itemDetails h3 {
+    margin: 0;
+    font-size: 0.9rem;
+    color: #222;
+    line-height: 1.4;
+}
+
+.itemVariant {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+.itemVariant select {
+    padding: 0.3rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 0.9rem;
+}
+
+.priceSection {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.originalPrice {
+    text-decoration: line-through;
+    color: #999;
+    font-size: 0.9rem;
+}
+
+.currentPrice {
+    color: #ee4d2d;
+    font-weight: 500;
+}
+
+.quantityControl {
+    display: flex;
+    align-items: center;
+    border: 1px solid #ddd;
+    border-radius: 2px;
+    width: fit-content;
+}
+
+.quantityControl button {
+    width: 25px;
+    height: 25px;
+    border: none;
+    background: #fff;
+    cursor: pointer;
+}
+
+.quantityControl input {
+    width: 35px;
+    height: 25px;
+    border: none;
+    border-left: 1px solid #ddd;
+    border-right: 1px solid #ddd;
+    text-align: center;
+}
+
+.cartFooter {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 20px;
+    background: #fff;
+    border-radius: 4px;
+    margin-top: 12px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    position: sticky;
+    bottom: 20px;
+}
+
+.footerLeft {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding-left: 0.7rem;
+}
+
+.footerLeft input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    accent-color: #ee4d2d;
+}
+
+.footerLeft span {
+    font-size: 14px;
+    color: #333;
+    margin-left: 12px;
+}
+
+.deleteButton {
+    border: none;
+    background: none;
+    color: #757575;
+    cursor: pointer;
+    font-size: 14px;
+    padding: 6px 12px;
+    border-radius: 3px;
+    transition: all 0.2s ease;
+}
+
+.deleteButton:hover {
+    background: #fafafa;
+    color: #ee4d2d;
+}
+
+.footerRight {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.totalSection {
+    text-align: right;
+}
+
+.totalLabel {
+    color: #333;
+    font-size: 14px;
+}
+
+.totalPrice {
+    color: #ee4d2d;
+    font-weight: 500;
 }
 
 .checkoutButton {
-    padding: 10px 20px;
-    background-color: #634C9F;
-    color: white;
+    background: #ee4d2d;
+    color: #fff;
     border: none;
+    padding: 12px 48px;
+    border-radius: 4px;
     cursor: pointer;
-    border-radius: 5px;
+    font-size: 16px;
+    font-weight: 500;
+    transition: all 0.2s ease;
 }
 
 .checkoutButton:hover {
-    background-color: #7A67B3;
+    background: #d73211;
+    transform: translateY(-1px);
+}
+
+.checkoutButton:active {
+    transform: translateY(0);
+}
+
+.itemActions {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.itemActions button {
+    border: none;
+    background: none;
+    color: #ee4d2d;
+    cursor: pointer;
+    padding: 4px 8px;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+    text-align: center;
+}
+
+.itemActions button:hover {
+    color: #ee4d2d;
+}
+
+@media (max-width: 768px) {
+    .cartContainer {
+        padding: 10px;
+    }
+
+    .cartHeader {
+        grid-template-columns: 60% 20% 20%;
+    }
+
+    .cartItem {
+        grid-template-columns: 60% 20% 20%;
+        padding: 15px;
+    }
+
+    .itemImage {
+        width: 60px;
+        height: 60px;
+    }
+
+    .footerRight {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .checkoutButton {
+        padding: 10px 24px;
+    }
+}
+
+.headerDetails {
+    display: grid;
+    grid-template-columns: 300px 60px 250px 130px;
+    margin-left: auto;
+    padding-right: 2rem;
+}
+
+.headerDetails span {
+    text-align: center;
+    color: #757575;
+    font-size: 0.85rem;
+}
+
+.cartItem input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    accent-color: #ee4d2d;
+    justify-self: center;
 }

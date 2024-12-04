@@ -1,5 +1,13 @@
 /** @format */
 
+
+.featured-product-container {
+  padding: 2rem 120px;
+  /* Cách lề trái phải 120px */
+  width: 100%;
+  margin: 0 auto;
+}
+
 .view-all-btn {
   border: 1px solid #ddd;
   border-radius: 30px;
@@ -73,6 +81,7 @@
 .product-badge {
   font-size: 0.8em;
 }
+
 .badge {
   margin-left: 20px;
 }
@@ -89,23 +98,19 @@
   height: 10px;
   border-radius: 50%;
   margin: 0 2px;
-  background-color: white; /* Default background color */
+  background-color: white;
+  /* Default background color */
 }
 
 .indicator-dot.active {
-  background-color: #673ab7; /* Active state background color */
+  background-color: #673ab7;
+  /* Active state background color */
 }
 
 .product-title {
   font-size: 1em;
   font-weight: bold;
   line-height: 1.2;
-}
-
-.price-new {
-  font-size: 1.5em;
-  color: red !important;
-  font-weight: bold;
 }
 
 .price-old {
@@ -137,18 +142,32 @@
   font-weight: bold;
 }
 
-.rating .star {
-  font-size: 1.2em;
-  color: #ccc;
+.rating {
+  display: inline-flex;
+  align-items: center;
 }
 
-.rating .filled {
+.rating .star {
+  font-size: 1.2em;
+  margin-right: 2px;
+}
+
+.rating .star.filled {
   color: #ffc107;
+}
+
+.rating .star.half {
+  color: #ffc107;
+}
+
+.rating .star.empty {
+  color: #ddd;
 }
 
 .reviews {
   font-size: 0.8em;
   color: #6c757d;
+  margin-left: 5px;
 }
 
 .note {
@@ -160,8 +179,7 @@
   font-size: 1.5em;
   color: black;
   cursor: pointer;
-  margin-left: 120px;
-  margin-top: 10px;
+  margin-left: 240px;
 }
 
 .heart-icon:hover {
@@ -172,5 +190,18 @@
   display: flex;
   justify-content: flex-start;
   /* align-items: center; Đảm bảo các thành phần thẳng hàng */
-  margin-bottom: 10px; /* Khoảng cách với phần nội dung phía dưới, nếu cần */
+  margin-bottom: 10px;
+  /* Khoảng cách với phần nội dung phía dưới, nếu cần */
 }
+
+
+/* Phần của duyên  */
+/* .link-button {
+  background: none;
+  color: blue;
+  text-decoration: underline;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  font: inherit;
+} */

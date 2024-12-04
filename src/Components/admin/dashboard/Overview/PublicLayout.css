@@ -1,0 +1,52 @@
+.public-layout {
+  background-color: #F8F8FB;
+  padding: 0  30px 30px ;
+}
+
+.dashboard-container {
+  display: flex;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+.metrics-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 200px;
+}
+
+.metric-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.metric-label {
+  color: #666;
+  font-size: 14px;
+}
+
+.metric-value {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.view-reports-btn {
+  margin-top: 8px;
+  padding: 8px 16px;
+  background: #4187FF;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.chart-section {
+  flex: 1;
+  min-height: 400px;
+}
+
+.recent-orders {
+  margin-top: 0;
+}

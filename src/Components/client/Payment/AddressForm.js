@@ -1,145 +1,102 @@
-/** @format */
+import { useNavigate } from "react-router-dom";
+import "./AddressForm.css";
+import React, { useState, useEffect } from 'react';
+import './AddressForm.css';
 
-import React, { useState } from "react";
-import "./AddressForm.css"; // Ensure you link the CSS file correctly
-
-const AddressForm = () => {
+const AddressForm = ({ address, onClose, isEdit }) => {
   const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
-    phone: "",
-    country: "United States (US)",
-    district: "",
-    ward: "",
-    address: "",
-    email: "",
-    isDefaultAddress: false,
+    name: '',
+    phone: '',
+    address: '',
+    isDefault: false
   });
+  const navigate = useNavigate();
 
-  const handleInputChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: type === "checkbox" ? checked : value,
-    }));
-  };
+
+  useEffect(() => {
+    if (address && isEdit) {
+      setFormData(address);
+    }
+  }, [address, isEdit]);
+
+
 
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log("Address form submitted:", formData);
+    // Điều hướng đến trang đặt hàng thành công sau khi hoàn tất
+    navigate("/order-success");
+  };
+
+  const handleBack = () => {
+    navigate("/register-seller");
+    // Xử lý logic lưu địa chỉ ở đây
+    onClose();
   };
 
   return (
-    <div className='address-form'>
-      <h1 className='form-title'>Địa chỉ mới</h1>
+    <div className="address-form">
+      <div className="form-header">
+        <h2>{isEdit ? 'Cập Nhật Địa Chỉ' : 'Thêm Địa Chỉ Mới'}</h2>
+        <button className="close-button" onClick={onClose}>&times;</button>
+      </div>
 
       <form onSubmit={handleSubmit}>
-        <div className='form-row'>
-          <div className='form-group'>
-            <label>Họ</label>
-            <input
-              type='text'
-              name='firstName'
-              value={formData.firstName}
-              onChange={handleInputChange}
-            />
-          </div>
-
-          <div className='form-group'>
-            <label>Tên</label>
-            <input
-              type='text'
-              name='lastName'
-              value={formData.lastName}
-              onChange={handleInputChange}
-            />
-          </div>
+        <div className="form-group">
+          <label>Họ và tên</label>
+          <input
+            type="text"
+            value={formData.name}
+            onChange={(e) => setFormData({...formData, name: e.target.value})}
+            required
+          />
         </div>
 
-        <div className='form-group'>
+        <div className="form-group">
           <label>Số điện thoại</label>
           <input
-            type='tel'
-            name='phone'
+            type="tel"
             value={formData.phone}
-            onChange={handleInputChange}
-          />
-        </div>
-
-        <div className='form-group'>
-          <label>Tỉnh/ Thành phố</label>
-          <select
-            name='country'
-            value={formData.country}
-            onChange={handleInputChange}
-          >
-            <option value='United States (US)'>United States (US)</option>
-          </select>
-        </div>
-
-        <div className='form-group'>
-          <label>Quận/ Huyện</label>
-          <input
-            type='text'
-            name='district'
-            placeholder='House number and street name'
-            value={formData.district}
-            onChange={handleInputChange}
-          />
-        </div>
-
-        <div className='form-group'>
-          <label>Phường/ Xã</label>
-          <input
-            type='text'
-            name='ward'
-            value={formData.ward}
-            onChange={handleInputChange}
-          />
-        </div>
-
-        <div className='form-group'>
-          <label>Địa chỉ cụ thể</label>
-          <input
-            type='text'
-            name='address'
-            value={formData.address}
-            onChange={handleInputChange}
-          />
-        </div>
-
-        <div className='form-group'>
-          <label>Email address *</label>
-          <input
-            type='email'
-            name='email'
+            onChange={(e) => setFormData({...formData, phone: e.target.value})}
             required
-            value={formData.email}
-            onChange={handleInputChange}
           />
         </div>
 
-        <div className='form-checkbox'>
-          <label>
-            <input
-              type='checkbox'
-              name='isDefaultAddress'
-              checked={formData.isDefaultAddress}
-              onChange={handleInputChange}
-            />
-            <span>Đặt làm vị trí mặc định</span>
-          </label>
+        <div className="form-group">
+          <label>Địa chỉ</label>
+          <textarea
+            value={formData.address}
+            onChange={(e) => setFormData({...formData, address: e.target.value})}
+            required
+          />
         </div>
 
-        <div className='form-buttons'>
-          <button type='button' className='btn-add'>
-            Thêm vị trí <span className='ms-1'>+</span>
+{/* <<<<<<< HEAD
+        <div className="form-buttons">
+          <button type="button" className="btn-add">
+            Thêm vị trí <span className="ms-1">+</span>
           </button>
-          <button type='button' className='btn-back'>
+          <button type="button" className="btn-back" onClick={handleBack}>
             Trở lại
           </button>
-          <button type='submit' className='btn-submit'>
+          <button type="submit" className="btn-submit">
             Hoàn thành
+======= */}
+        <div className="form-group checkbox">
+          <input
+            type="checkbox"
+            checked={formData.isDefault}
+            onChange={(e) => setFormData({...formData, isDefault: e.target.checked})}
+          />
+          <label>Đặt làm địa chỉ mặc định</label>
+        </div>
+
+        <div className="form-actions">
+          <button type="button" className="cancel-button" onClick={onClose}>
+            Huỷ
+          </button>
+          <button type="submit" className="save-button">
+            {isEdit ? 'Cập nhật' : 'Thêm mới'}
           </button>
         </div>
       </form>

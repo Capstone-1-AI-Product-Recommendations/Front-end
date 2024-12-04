@@ -1,65 +1,91 @@
 /** @format */
 
-import React from "react";
-import myPhamImage from "../../../img/AdBanner.png"; // Update these paths as necessary
-import doAnNheImage from "../../../img/AdBanner.png";
-import chatLuongImage from "../../../img/AdBanner.png";
+import React, { useState, useEffect } from "react";
 import "./MiniAdBanner.css";
-
-const products = [
-  {
-    id: 1,
-    tag: "Duy nhất tuần này",
-    title: "Mỹ phẩm chất lượng với giá cả phải chăng",
-    description: "Eat one every day",
-    imageUrl: myPhamImage,
-    buttonLabel: "Mua ngay →",
-  },
-  {
-    id: 2,
-    tag: "Duy nhất tuần này",
-    title: "Đồ ăn nhẹ nuôi dưỡng tâm trí và cơ thể của bạn",
-    description: "Shine the morning...",
-    imageUrl: doAnNheImage,
-    buttonLabel: "Mua ngay →",
-  },
-  {
-    id: 3,
-    tag: "Duy nhất tuần này",
-    title: "Chất lượng, giá cả không giải sách bằng",
-    description: "Chỉ tuần này thôi. Đừng bỏ lỡ...",
-    imageUrl: chatLuongImage,
-    buttonLabel: "Mua ngay →",
-  },
-  // Include other products as per above pattern
-];
+import products from "../../../data/miniBanner";
 
 const MiniAdBanner = () => {
+  const [activeBanner, setActiveBanner] = useState([0, 1, 2]); // Ensure this array starts with valid indices
+
+  useEffect(() => {
+    const intervals = activeBanner.map((_, index) =>
+      setInterval(() => {
+        setActiveBanner((prevActiveBanner) => {
+          const updatedBanners = [...prevActiveBanner];
+          updatedBanners[index] = (updatedBanners[index] + 1) % products.length; // Rotate indices correctly
+          return updatedBanners;
+        });
+      }, 2000 + index * 1000) // Stagger transitions for each banner
+    );
+
+    return () => {
+      intervals.forEach((interval) => clearInterval(interval)); // Clear intervals on unmount
+    };
+  }, []);
+
+// Thêm phần nhóm banner riêng 
+const groupProducts = (arr, size) => {
+  return arr.reduce((acc, _, index) => {
+    if (index % size === 0) acc.push(arr.slice(index, index + size));
+    return acc;
+  }, []);
+};
+const groupedProducts = groupProducts(products, 3);
+const [activeIndices, setActiveIndices] = useState([0, 0, 0]);
+
+const handleNext = (bannerIndex) => {
+  setActiveIndices((prevIndices) =>
+    prevIndices.map((idx, i) => (i === bannerIndex ? (idx + 1) % groupedProducts[i].length : idx))
+  );
+};
+
+const handlePrevious = (bannerIndex) => {
+  setActiveIndices((prevIndices) =>
+    prevIndices.map((idx, i) => (i === bannerIndex ? (idx - 1 + groupedProducts[i].length) % groupedProducts[i].length : idx))
+  );
+};
+
   return (
-    <div className='container mt-1'>
-      <div className='row'>
-        {products.map((product) => (
-          <div key={product.id} className='col-md-4 mb-4'>
-            <div className='card h-100'>
-              <div className='row g-0'>
-                <div className='col-8'>
-                  <div className='card-body'>
-                    <h6 className='text-tag mb-2'>{product.tag}</h6>
-                    <h5 className='card-title'>{product.title}</h5>
-                    <p className='card-text'>{product.description}</p>
-                    <a href='#' className='btn-custom'>
-                      {product.buttonLabel}
-                    </a>
+    <div className="container mt-1">
+      <div className="row">
+        {activeBanner.map((activeIndex, index) => (
+          <div key={index} className="col-md-4 mb-4">
+            <div className="banner-wrapper">
+              {/* <button 
+                className="nav-button prev-button" 
+                onClick={() => handlePrevious(index)}
+              >
+                ←
+              </button> */}
+              <div className="card h-100">
+                <div className="row g-0">
+                  <div className="col-8">
+                    <div className="card-body">
+                      <h6 className="text-tag mb-2">{products[activeIndex].tag}</h6>
+                      <h5 className="card-title">{products[activeIndex].title}</h5>
+                      <p className="card-text">
+                        {products[activeIndex].description}
+                      </p>
+                      <a href="#" className="btn-custom">
+                        {products[activeIndex].buttonLabel}
+                      </a>
+                    </div>
+                  </div>
+                  <div className="col-4 d-flex justify-content-center align-items-center">
+                    <img
+                      src={products[activeIndex].imageUrl}
+                      alt={products[activeIndex].title}
+                      className="img-fluid rounded-end"
+                    />
                   </div>
                 </div>
-                <div className=' col-4'>
-                  <img
-                    src={product.imageUrl}
-                    alt={product.title}
-                    className='img-fluid rounded-end'
-                  />
-                </div>
               </div>
+              {/* <button 
+                className="nav-button next-button" 
+                onClick={() => handleNext(index)}
+              >
+                →
+              </button> */}
             </div>
           </div>
         ))}
