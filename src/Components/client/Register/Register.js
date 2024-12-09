@@ -2,13 +2,14 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Register.css";
 import { GoogleLogin } from "@react-oauth/google";
+import { registerUser } from "../../../services/apiLogin";
 
-const Register = ({ onClose, onLoginClick }) => {
+const Register = ({ onClose, onLoginClick }) => { 
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    username: "",
-    email: "",
-    password: "",
+    username: '',
+    email: '',
+    password: '',
   });
 
   const handleChange = (e) => {
@@ -19,11 +20,17 @@ const Register = ({ onClose, onLoginClick }) => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Registering:", formData);
-    navigate('/');
-    if (onClose) onClose();
+    try {
+      const data = await registerUser(formData);
+      console.log('User registered successfully:', data);
+      navigate('/login');
+      // Handle successful registration (e.g., redirect to login page)
+    } catch (error) {
+      console.error('Error registering user:', error);
+      // Handle registration error (e.g., show error message)
+    }
   };
 
   const handleGoogleLoginSuccess = (response) => {
@@ -138,8 +145,8 @@ export default Register;
 
 //     try {
 //       const response = await registerUser(formData);
-//       // Nếu đăng ký thành công, chuyển đến trang đăng ký seller
-//       navigate('/register-seller');
+//       // Nếu đăng ký thành công, chuyển đến trang đăng ký homepage
+//       navigate('/');
 //       if (onClose) onClose();
 //     } catch (error) {
 //       setErrorMessage(

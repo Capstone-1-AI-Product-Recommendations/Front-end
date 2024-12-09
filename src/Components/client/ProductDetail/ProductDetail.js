@@ -40,7 +40,7 @@ const ProductDetail = () => {
     setQuantity(quantity + 1);
   };
 
-  const handleAddToCart = () => {
+  const handleAddToCart = (e,product) => {
     addToCart({
       ...product,
       quantity: quantity

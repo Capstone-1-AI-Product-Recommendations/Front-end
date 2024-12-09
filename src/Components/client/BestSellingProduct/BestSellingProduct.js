@@ -46,6 +46,7 @@ const BestSellingProduct = ({ products }) => {
   const handleAddToCart = (e, product) => {
     e.stopPropagation();
     addToCart(product);
+
   };
 
   const handleMouseEnter = (index) => {

@@ -5,14 +5,16 @@ import { GoogleLogin } from "@react-oauth/google";
 import { jwtDecode } from "jwt-decode";
 import "./Login.css";
 import ForgotPassword from "../ForgotPassword/ForgotPassword";
+import { loginUser } from '../../../services/apiLogin';
 
 const Login = ({ onClose, onLoginSuccess, onRegisterClick }) => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    email: "",
+    username: "",
     password: "",
     rememberMe: false,
   });
+  
   const [errorMessage, setErrorMessage] = useState("");
   const [showForgotPassword, setShowForgotPassword] = useState(false);
 
@@ -27,35 +29,18 @@ const Login = ({ onClose, onLoginSuccess, onRegisterClick }) => {
   };
 
   // Handle form submission
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-
-    const accounts = {
-      admin: { email: "admin@gmail.com", password: "123456" },
-      seller: { email: "seller@gmail.com", password: "123456" },
-      user: { email: "user@gmail.com", password: "123456" },
-    };
-
-    if (
-      formData.email === accounts.admin.email &&
-      formData.password === accounts.admin.password
-    ) {
-      onLoginSuccess("admin");
-      onClose();
-    } else if (
-      formData.email === accounts.seller.email &&
-      formData.password === accounts.seller.password
-    ) {
-      onLoginSuccess("seller");
-      onClose();
-    } else if (
-      formData.email === accounts.user.email &&
-      formData.password === accounts.user.password
-    ) {
-      onLoginSuccess("user");
-      onClose();
-    } else {
-      setErrorMessage("Email hoặc mật khẩu không chính xác.");
+    try {
+    const data = await loginUser(formData);
+      if (data.role) {
+        onLoginSuccess(data.role);
+        onClose();
+      } else {
+        setErrorMessage('Đăng nhập thất bại.');
+      }
+    } catch (error) {
+      setErrorMessage(error.message || 'Tên đăng nhập hoặc mật khẩu không chính xác.');
     }
   };
 
@@ -87,13 +72,13 @@ const Login = ({ onClose, onLoginSuccess, onRegisterClick }) => {
         {errorMessage && <div className="error-message">{errorMessage}</div>}
         <form onSubmit={handleSubmit}>
           <div className="form-group">
-            <label htmlFor="email">Email</label>
+            <label htmlFor="username">Tên đăng nhập</label>
             <input
-              type="email"
-              id="email"
-              name="email"
-              placeholder="example@gmail.com"
-              value={formData.email}
+              type="text"
+              id="username"
+              name="username"
+              placeholder="Nhập tên đăng nhập của bạn"
+              value={formData.username}
               onChange={handleChange}
             />
           </div>
@@ -158,8 +143,6 @@ const Login = ({ onClose, onLoginSuccess, onRegisterClick }) => {
 };
 
 export default Login;
-
-
 
 
 
@@ -312,3 +295,4 @@ export default Login;
 // };
 
 // export default Login;
+

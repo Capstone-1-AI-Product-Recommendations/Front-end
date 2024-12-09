@@ -8,12 +8,13 @@
 // import Header from "./Components/Header/Header";
 // import Footer from "./Components/Footer/Footer";
 import React, { useState, useEffect } from "react";
-import { useNavigate,useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { CartProvider } from "./Components/client/Cart/CartContext";
 import Footer from "./Components/client/Footer/Footer";
 import RouterCustom from "./Router";
 import HeaderNoLogin from "./Components/client/Header/HeaderNoLogin";
 import HeaderAfterLogin from "./Components/client/Header/HeaderAfterLogin";
+import SearchResults from './Components/client/Search/SearchResults/SearchResults';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);

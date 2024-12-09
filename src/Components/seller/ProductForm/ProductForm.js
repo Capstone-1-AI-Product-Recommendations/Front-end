@@ -1,8 +1,11 @@
 // ProductForm.js
 import React, { useState, useCallback, useEffect, useRef } from 'react';
 import './ProductForm.css';
+import { useNavigate } from 'react-router-dom';
 
 const ProductForm = () => {
+  const navigate = useNavigate();
+
   // State management for form
   const [activeTab, setActiveTab] = useState('basic');
   const [formData, setFormData] = useState({
@@ -228,6 +231,25 @@ const ProductForm = () => {
     };
   }, []);
 
+  // Thêm hàm xử lý reset form
+  const handleReset = () => {
+    setFormData({
+      images: [],
+      videos: [],
+      name: '',
+      category: '',
+      description: ''
+    });
+    setImagePreview([]);
+    setVideoPreview([]);
+    setValidationErrors({});
+    setCurrentStep(1);
+    setActiveTab('basic');
+    
+    // Xóa draft trong localStorage
+    localStorage.removeItem('productFormDraft');
+  };
+
   return (
     <div className="product-form-container">
       {/* Navigation Breadcrumb */}
@@ -355,9 +377,9 @@ const ProductForm = () => {
                     }}
                     placeholder="Nhập tên sản phẩm"
                   />
-                  <span className="character-count">
+                  {/* <span className="character-count">
                     {formData.name.length}/{MAX_PRODUCT_NAME_LENGTH}
-                  </span>
+                  </span> */}
                 </div>
 
                 <div className="form-group">
@@ -375,19 +397,25 @@ const ProductForm = () => {
 
           {/* Form Actions */}
           <div className="form-actions">
-            <button className="btn-cancel">Hủy</button>
+            <button 
+              className="btn-cancel"
+              onClick={handleReset}
+            >
+              Hủy
+            </button>
             <div className="right-actions">
-              <button className="btn-save">Lưu & Ẩn</button>
               <button 
                 className="btn-submit"
                 onClick={() => {
                   if (validateCurrentTab()) {
-                    // Handle form submission
-                    console.log('Form data:', formData);
+                    // Xóa draft sau khi lưu thành công
+                    localStorage.removeItem('productFormDraft');
+                    // Chuyển hướng đến trang seller dashboard
+                    navigate('/seller-dashboard');
                   }
                 }}
               >
-                Lưu & Hiện thị
+                Lưu 
               </button>
             </div>
           </div>

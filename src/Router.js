@@ -15,6 +15,8 @@ import ADSmartCart from "./Components/client/ADShop/ADSmartCart";
 // import VendorForm from "./Components/client/VendorForm/VendorForm";
 // import SellerDashboard from "./Components/client/VendorForm/SellerDashboard";
 import Contact from "./Components/client/Contact/Contact";
+import Filter from "./Components/client/Search/Filter/Filter";
+import Search from "./Pages/Search/Search";
 
 // Trang dành cho seller
 import Register from "./Components/client/Register/Register";
@@ -66,7 +68,8 @@ const RouterCustom = () => {
       <Route path="/order-summary" element={<OrderSummary />} />
       <Route path="/payment" element={<PaymentQRCode />} />
       <Route path="/confirmation" element={<OrderConfirmation />} />
-      
+      <Route path="/filter" element={<Filter/>} />
+      <Route path="/search" element={<Search/>} />
 
       {/* Test link route  */}
       <Route path="/product/:id" element={<ProductDetail />} />
