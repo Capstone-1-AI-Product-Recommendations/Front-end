@@ -61,7 +61,9 @@ function App() {
                           !location.pathname.startsWith('/tax-information') &&
                           !location.pathname.startsWith('/identity-information') &&
                           !location.pathname.startsWith('/check-registration') &&
-                          !location.pathname.startsWith('/product-form');
+                          !location.pathname.startsWith('/product-form')&&
+                          !location.pathname.startsWith('/product');
+
                           
 
   return (

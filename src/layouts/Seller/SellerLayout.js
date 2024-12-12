@@ -14,7 +14,7 @@ const SellerLayout = () => {
       <div className="seller-main-container">
         <HeaderSeller />
         <div className="seller-content">
-        <SellerProducts/>
+        {/* <SellerProducts/> */}
           <Outlet />
         </div>
       </div>

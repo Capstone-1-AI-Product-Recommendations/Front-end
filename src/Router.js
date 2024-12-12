@@ -17,6 +17,10 @@ import ADSmartCart from "./Components/client/ADShop/ADSmartCart";
 import Contact from "./Components/client/Contact/Contact";
 import Filter from "./Components/client/Search/Filter/Filter";
 import Search from "./Pages/Search/Search";
+import AccountManagement from "./Components/client/AccountManagement/AccountManagement";
+
+
+
 
 // Trang dành cho seller
 import Register from "./Components/client/Register/Register";
@@ -31,6 +35,13 @@ import SellerProductManagement from "./Components/seller/SellerDashboard/SellerP
 import RegisterSellerStep from "./Pages/RegisterSeller/RegisterSeller";
 import SellerLayout from "./layouts/Seller/SellerLayout";
 import SellerProducts from "./Components/seller/SellerDashboard/SellerProduct/SellerProducts";
+import DashboardOverview from "./Components/seller/SellerDashboard/DashboardOverview/DashboardOverview";
+import Inventory from "./Components/seller/SellerDashboard/Inventory/Inventory";
+import Dashboard from "./Components/seller/SellerDashboard/Dashboard/Dashboard";
+import Chatbox from "./Components/seller/SellerDashboard/Chatbox/Chatbox";
+import Statistics from "./Components/seller/SellerDashboard/Statistics/Statistics";
+
+
 
 //Trang dành cho admin
 import AdminLayout from "./layouts/Admin/AdminLayout";
@@ -70,6 +81,9 @@ const RouterCustom = () => {
       <Route path="/confirmation" element={<OrderConfirmation />} />
       <Route path="/filter" element={<Filter/>} />
       <Route path="/search" element={<Search/>} />
+      <Route path="/account" element={<AccountManagement/>} />
+    
+
 
       {/* Test link route  */}
       <Route path="/product/:id" element={<ProductDetail />} />
@@ -88,6 +102,9 @@ const RouterCustom = () => {
       <Route path="/sellerRegisterstep" element={<RegisterSellerStep />} />{" "}
       {/* <Route path="/product" element={<Product/>} /> */}
       <Route path="/list" element={<ProductList />} />
+
+
+
       <Route path="/admin" element={<AdminLayout />}>
         <Route index element={<PublicLayout />} />
         <Route path="dashboard" element={<PublicLayout />} />
@@ -96,10 +113,22 @@ const RouterCustom = () => {
         <Route path="users" element={<UserManagement />} />
         {/* Thêm các routes admin khác */}
       </Route>
-      <Route path="seller-dashboard" element={<SellerLayout />}>
-        <Route path="users" element={<UserManagement />} />
+
+
+
+      <Route path="/seller-dashboard" element={<SellerLayout />}>
+        <Route index element={<Navigate to="dashboard" replace />} />
         <Route path="products" element={<SellerProducts />} />
+        <Route path="order" element={<DashboardOverview/>} />
+        <Route path="inventory" element={<Inventory/>} />
+        <Route path="dashboard" element={<Dashboard/>} />
+        <Route path="chatbox" element={<Chatbox/>} />
+        <Route path="statistics" element={<Statistics />} />
+      
       </Route>
+
+
+      
       {/* Nếu đã đăng nhập */}
       {isLoggedIn ? (
         <>
