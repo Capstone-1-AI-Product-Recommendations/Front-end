@@ -1,5 +1,5 @@
 /** @format */
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { BsCart2 } from "react-icons/bs";
 import { IoMdNotificationsOutline } from "react-icons/io";
 import logo from "../../../assets/logo.png";
@@ -11,14 +11,17 @@ import { NavLink } from "react-router-dom";
 import cartItems from "../../../data/cartItems";
 import menuItems from "../../../data/menuItems";
 import "./HeaderAfterLogin.css";
+import { CartContext } from "../Cart/CartContext";
 
 const HeaderAfterLogin = ({ onLogout, userRole }) => {
   const navigate = useNavigate();
+  const { cartItemCount } = useContext(CartContext);
 
   // ** State Management **
   const [showLogin, setShowLogin] = useState(false); // Control Login Modal visibility
   const [showCartDropdown, setShowCartDropdown] = useState(false); // Control Cart Dropdown visibility
   const [hoveredCategory, setHoveredCategory] = useState(null); // Track hovered category
+  const [showUserDropdown, setShowUserDropdown] = useState(false); // Thêm state cho dropdown người dùng
 
   // ** Event Handlers **
 
@@ -116,11 +119,18 @@ const HeaderAfterLogin = ({ onLogout, userRole }) => {
             {/* Account, Notifications, and Cart */}
             <div className="account-section">
               {/* User Account Section */}
-              <div className="user-account">
+              <div className="user-account" onMouseEnter={() => setShowUserDropdown(true)} onMouseLeave={() => setShowUserDropdown(false)}>
                 <FaUser className="icon" />
                 <div className="account-text">
-                  <span onClick={handleLogout}>Đăng xuất</span>
+                  <span>User</span>
                 </div>
+                {showUserDropdown && (
+                  <div className="user-dropdown">
+                    <NavLink className="dropdown-item" to="/profile">Tài Khoản Của Tôi</NavLink>
+                    <NavLink className="dropdown-item" to="/orders">Đơn Mua</NavLink>
+                    <span className="dropdown-item" onClick={handleLogout}>Đăng Xuất</span>
+                  </div>
+                )}
               </div>
 
               {/* Notifications */}
@@ -135,7 +145,9 @@ const HeaderAfterLogin = ({ onLogout, userRole }) => {
                 onMouseLeave={() => setShowCartDropdown(false)}
               >
                 <BsCart2 className="icon" />
-                <span className="badge">{cartItems.length}</span>
+                {cartItemCount > 0 && (
+                  <span className="badge">{cartItemCount}</span>
+                )}
                 {showCartDropdown && <CartDropdown items={cartItems} />}
               </div>
             </div>

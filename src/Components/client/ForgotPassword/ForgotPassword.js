@@ -13,9 +13,9 @@ const ForgotPassword = ({ onClose }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    
+
     const account = ForgotPasswordData.accounts.find(acc => acc.email === email);
-    
+
     if (account) {
       setMessage(ForgotPasswordData.successMessages.codeSent);
       setStep(2);
@@ -28,7 +28,7 @@ const ForgotPassword = ({ onClose }) => {
     e.preventDefault();
     const account = ForgotPasswordData.accounts.find(acc => acc.email === email);
     const enteredCode = verificationCode.join("");
-    
+
     if (account && enteredCode === account.verificationCode) {
       setMessage("");
       setStep(4);
@@ -39,7 +39,7 @@ const ForgotPassword = ({ onClose }) => {
 
   const handlePasswordSubmit = (e) => {
     e.preventDefault();
-    
+
     if (newPassword !== confirmPassword) {
       setMessage(ForgotPasswordData.errorMessages.passwordMismatch);
       return;
@@ -75,7 +75,7 @@ const ForgotPassword = ({ onClose }) => {
       <div className="forgot-password-container">
         <div className="forgot-password-form">
           <button className="close-btn" onClick={handleClose}>×</button>
-          
+
           {step === 1 && (
             <>
               <h1>Quên mật khẩu</h1>
@@ -122,8 +122,8 @@ const ForgotPassword = ({ onClose }) => {
                         const newCode = [...verificationCode];
                         newCode[index] = e.target.value;
                         setVerificationCode(newCode);
-                        
-                        if (e.target.value && index < 4) {
+
+                        if (e.target.value && index < 5) {
                           const nextInput = document.getElementById(`code-${index + 1}`);
                           if (nextInput) nextInput.focus();
                         }
