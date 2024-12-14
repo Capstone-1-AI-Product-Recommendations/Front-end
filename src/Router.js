@@ -14,6 +14,7 @@ import Checkout from "./Components/client/Payment/Checkout";
 import ADSmartCart from "./Components/client/ADShop/ADSmartCart";
 import DashboardLayout from "./Components/client/VendorForm/DashboardLayout";
 import Contact from "./Components/client/Contact/Contact";
+import Profile from "./Components/client/AccountManagement/profile";
 
 // Trang đăng ký/đăng nhập
 import Register from "./Components/client/Register/Register";
@@ -82,6 +83,10 @@ const RouterCustom = ({ onClose }) => {
       
       {/* Fallback Route */}
       <Route path="*" element={<Navigate to="/" replace />} />
+      
+      {/* Thêm route profile */}
+      <Route path="/profile" element={<Profile />} />
+
     </Routes>
   );
 };

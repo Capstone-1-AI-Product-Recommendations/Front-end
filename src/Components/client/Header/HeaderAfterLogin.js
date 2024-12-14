@@ -119,16 +119,34 @@ const HeaderAfterLogin = ({ onLogout, userRole }) => {
             {/* Account, Notifications, and Cart */}
             <div className="account-section">
               {/* User Account Section */}
-              <div className="user-account" onMouseEnter={() => setShowUserDropdown(true)} onMouseLeave={() => setShowUserDropdown(false)}>
+              <div
+                className="user-account"
+                onMouseEnter={() => setShowUserDropdown(true)}
+                onMouseLeave={() => setShowUserDropdown(false)}
+              >
                 <FaUser className="icon" />
                 <div className="account-text">
                   <span>User</span>
                 </div>
                 {showUserDropdown && (
                   <div className="user-dropdown">
-                    <NavLink className="dropdown-item" to="/profile">Tài Khoản Của Tôi</NavLink>
-                    <NavLink className="dropdown-item" to="/orders">Đơn Mua</NavLink>
-                    <span className="dropdown-item" onClick={handleLogout}>Đăng Xuất</span>
+                    <NavLink
+                      className="dropdown-item"
+                      to="/profile"
+                      state={{ activeTab: "Hồ Sơ" }} // Pass "Hồ Sơ" as activeTab
+                    >
+                      Tài Khoản Của Tôi
+                    </NavLink>
+                    <NavLink
+                      className="dropdown-item"
+                      to="/profile"
+                      state={{ activeTab: "Đơn Mua" }} // Pass "Đơn Mua" as activeTab
+                    >
+                      Đơn Mua
+                    </NavLink>
+                    <span className="dropdown-item" onClick={handleLogout}>
+                      Đăng Xuất
+                    </span>
                   </div>
                 )}
               </div>
