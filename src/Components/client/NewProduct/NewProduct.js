@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { CartContext } from "../../client/Cart/CartContext";
 import "./NewProduct.css";
+import { fetchNewProducts } from "../../../services/apiHomePage"; // Import the API function
 
 const PRODUCTS_PER_PAGE = 36;
 
@@ -33,6 +34,19 @@ const NewProduct = ({ products }) => {
 
     return () => clearInterval(interval);
   }, [hoveredProduct, isHoverTimerActive, products]);
+
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const response = await fetchNewProducts(); // Use the imported API function
+  //       setProducts(response.data); // Assuming response.data contains the product array
+  //     } catch (error) {
+  //       console.error("Error fetching data:", error);
+  //     }
+  //   };
+
+  //   fetchData();
+  // }, []); // Run once when the component mounts
 
   const handleProductClick = (productId) => {
     navigate(`/product/${productId}`);

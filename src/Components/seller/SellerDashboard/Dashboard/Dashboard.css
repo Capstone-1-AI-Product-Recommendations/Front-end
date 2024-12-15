@@ -1,0 +1,129 @@
+.dashboard {
+    padding: 20px;
+    background-color: #f5f6fa;
+    min-height: 100vh;
+  }
+  
+  .navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #fff;
+    padding: 15px 30px;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px;
+  }
+  
+  .navbar h1 {
+    margin: 0;
+    color: #2d3436;
+  }
+  
+  .user-info {
+    color: #636e72;
+  }
+  
+  .stats-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+  }
+  
+  .stat-card {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .stat-card h3 {
+    margin: 0;
+    color: #636e72;
+    font-size: 14px;
+  }
+  
+  .stat-card p {
+    margin: 10px 0 0;
+    font-size: 24px;
+    font-weight: bold;
+    color: #2d3436;
+  }
+  
+  .recent-orders {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .recent-orders h2 {
+    margin: 0 0 20px;
+    color: #2d3436;
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  th, td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #dfe6e9;
+  }
+  
+  th {
+    color: #636e72;
+    font-weight: 600;
+  }
+  
+  td {
+    color: #2d3436;
+  }
+  
+  .status {
+    padding: 6px 12px;
+    border-radius: 15px;
+    font-size: 14px;
+    font-weight: 500;
+  }
+  
+  .status.pending {
+    background-color: #ffeaa7;
+    color: #fdcb6e;
+  }
+  
+  .status.completed {
+    background-color: #55efc4;
+    color: #00b894;
+  }
+  
+  .status.processing {
+    background-color: #81ecec;
+    color: #00cec9;
+  }
+  
+  @media (max-width: 768px) {
+    .dashboard {
+      padding: 10px;
+    }
+  
+    .navbar {
+      padding: 10px 15px;
+    }
+  
+    .stat-card {
+      padding: 15px;
+    }
+  
+    .recent-orders {
+      padding: 15px;
+    }
+  
+    table {
+      display: block;
+      overflow-x: auto;
+    }
+  }
