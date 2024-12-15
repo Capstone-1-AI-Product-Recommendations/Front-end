@@ -23,6 +23,7 @@ const HomePage = ({ userRole }) => {
         const response = await fetchNewProducts();
         console.log(response.data)
         setNewProducts(response.data);
+        console.log(response.data);
       } catch (error) {
         console.error("Lỗi khi lấy sản phẩm mới về:", error);
       }
@@ -31,7 +32,6 @@ const HomePage = ({ userRole }) => {
     const getFeaturedProducts = async () => {
       try {
         const response = await fetchFeaturedProducts();
-        console.log(response.data)
         setFeaturedProducts(response.data);
       } catch (error) {
         console.error("Lỗi khi lấy sản phẩm nổi bật:", error);

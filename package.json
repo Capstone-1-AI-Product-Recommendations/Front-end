@@ -58,5 +58,6 @@
   "devDependencies": {
     "file-loader": "^6.2.0",
     "json-server": "^1.0.0-beta.3"
-  }
+  },
+  "proxy": "http://localhost:8000"
 }

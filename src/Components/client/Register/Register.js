@@ -22,13 +22,20 @@ const Register = ({ onClose, onLoginClick }) => {
     }));
   };
 
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
+  //   console.log("Registering:", formData);
+  //   navigate('/');
+  //   if (onClose) onClose();
+  // };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const data = await registerUser(formData);
       console.log('User registered successfully:', data);
-      onLoginClick();
-      // Handle successful registration (e.g., open login modal)
+      navigate('/login');
+      // Handle successful registration (e.g., redirect to login page)
     } catch (error) {
       console.error('Error registering user:', error);
       // Handle registration error (e.g., show error message)
