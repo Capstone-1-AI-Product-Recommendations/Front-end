@@ -1,11 +1,10 @@
 .success-registration {
-    max-width: 100%;
-    margin: 0 auto;
+    /* max-width: 1440px; */
+    /* margin: 0 auto; */
     text-align: center;
-    padding: 40px;
-    background-color: #fff;
+    /* background-color: #fff; */
     border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); */
   }
   
   .check-icon { 
@@ -27,8 +26,11 @@
     margin-bottom: 20px;
   }
   
-  .add-product-btn {
-    background-color: #ee4d2d;
+  .add-product-seller-btn {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #663AB6;
     color: #fff;
     border: none;
     padding: 12px 24px;
@@ -36,9 +38,10 @@
     font-size: 16px;
     cursor: pointer;
     transition: background-color 0.3s;
+    margin: 0 auto;
+    min-width: 200px;
   }
   
   .add-product-btn:hover {
-    background-color: #d73211;
+    background-color: #663AB6;
   }
-  

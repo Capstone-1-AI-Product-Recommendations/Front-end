@@ -1,0 +1,67 @@
+.filter-container {
+    width: 250px;
+    padding: 16px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-family: Arial, sans-serif;
+    position: relative;
+  }
+  
+  .filter-section {
+    margin-bottom: 16px;
+  }
+  
+  .filter-section h4 {
+    margin-bottom: 8px;
+    font-size: 14px;
+    font-weight: bold;
+  }
+  
+  .filter-section label {
+    display: block;
+    margin-bottom: 4px;
+    font-size: 13px;
+  }
+  
+  .filter-section input[type="text"] {
+    width: calc(50% - 8px);
+    margin-right: 8px;
+    padding: 4px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 13px;
+  }
+  
+  .apply-button, .clear-button {
+    width: 100%;
+    padding: 8px;
+    margin-top: 8px;
+    border: none;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+  }
+  
+  .apply-button {
+    background-color: #ee4d2d;
+    color: #fff;
+  }
+  
+  .clear-button {
+    background-color: #f0f0f0;
+    color: #333;
+  }
+  
+  .rc-slider {
+    margin-top: 20px;
+    margin-bottom: 30px;
+  }
+
+  .filter-price span{
+    font-size: 14px;
+    color: #333; /* Default color for text */
+  }
+  .filter-price span b { /* Assuming the numbers are wrapped in <b> tags */
+    color: #ee4d2d; /* Color for numbers */
+  }

@@ -1,8 +1,11 @@
 // ProductForm.js
 import React, { useState, useCallback, useEffect, useRef } from 'react';
 import './ProductForm.css';
+import { useNavigate } from 'react-router-dom';
 
 const ProductForm = () => {
+  const navigate = useNavigate();
+
   // State management for form
   const [activeTab, setActiveTab] = useState('basic');
   const [formData, setFormData] = useState({
@@ -228,6 +231,43 @@ const ProductForm = () => {
     };
   }, []);
 
+  // Thêm hàm xử lý reset form
+  const handleReset = () => {
+    setFormData({
+      images: [],
+      videos: [],
+      name: '',
+      category: '',
+      description: ''
+    });
+    setImagePreview([]);
+    setVideoPreview([]);
+    setValidationErrors({});
+    setCurrentStep(1);
+    setActiveTab('basic');
+    
+    // Xóa draft trong localStorage
+    localStorage.removeItem('productFormDraft');
+  };
+
+  // Giả định hàm để cập nhật vai trò người dùng
+  const updateUserRole = (role) => {
+    // Logic để cập nhật vai trò người dùng
+    console.log(`Cập nhật vai trò người dùng thành: ${role}`);
+  };
+
+  const handleSubmit = () => {
+    if (validateCurrentTab()) {
+      // Cập nhật vai trò từ user thành seller
+      updateUserRole('seller'); // Giả sử bạn có một hàm để cập nhật vai trò người dùng
+
+      // Xóa draft sau khi lưu thành công
+      localStorage.removeItem('productFormDraft');
+      // Chuyển hướng đến trang seller dashboard
+      navigate('/seller-dashboard');
+    }
+  };
+
   return (
     <div className="product-form-container">
       {/* Navigation Breadcrumb */}
@@ -266,7 +306,7 @@ const ProductForm = () => {
                 onDragOver={handleDragOver}
                 onDrop={handleDrop}
               >
-                <h3>Hình ảnh sản phẩm</h3>
+                <h3>Hình ảnh sản ph��m</h3>
                 <div className="image-grid">
                   {imagePreview.map((url, index) => (
                     <div key={index} className="image-preview">
@@ -355,9 +395,9 @@ const ProductForm = () => {
                     }}
                     placeholder="Nhập tên sản phẩm"
                   />
-                  <span className="character-count">
+                  {/* <span className="character-count">
                     {formData.name.length}/{MAX_PRODUCT_NAME_LENGTH}
-                  </span>
+                  </span> */}
                 </div>
 
                 <div className="form-group">
@@ -375,19 +415,18 @@ const ProductForm = () => {
 
           {/* Form Actions */}
           <div className="form-actions">
-            <button className="btn-cancel">Hủy</button>
+            <button 
+              className="btn-cancel"
+              onClick={handleReset}
+            >
+              Hủy
+            </button>
             <div className="right-actions">
-              <button className="btn-save">Lưu & Ẩn</button>
               <button 
                 className="btn-submit"
-                onClick={() => {
-                  if (validateCurrentTab()) {
-                    // Handle form submission
-                    console.log('Form data:', formData);
-                  }
-                }}
+                onClick={handleSubmit}
               >
-                Lưu & Hiện thị
+                Lưu 
               </button>
             </div>
           </div>

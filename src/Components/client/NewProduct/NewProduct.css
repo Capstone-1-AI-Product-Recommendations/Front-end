@@ -74,17 +74,17 @@
 }
 
 .image-container {
-  width: 100%;
-  height: 150px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  width: 200px; /* Đảm bảo chiều rộng cụ thể */
+  height: 200px; /* Đảm bảo chiều cao cụ thể */
+  overflow: hidden;
+  position: relative;
 }
 
 .product-image {
-  max-width: 100%;
-  max-height: 100%;
-  object-fit: contain;
+  width: 100%;
+  height: 100%;
+  object-fit: contain; /* Đảm bảo ảnh vừa khung */
+  display: block; /* Đảm bảo ảnh hiển thị */
 }
 
 .product-badge {

@@ -1,11 +1,15 @@
 .shipping-settings {
-  max-width: 1000px;
-  margin: 0 auto;
-  padding: 20px;
+  /* max-width: 1440px; */
+  /* margin: 0 auto; */
+  /* padding: 20px; */
 }
 
 .shipping-header {
-  margin-bottom: 24px;
+  padding: 0 90px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: center;
 }
 
 .shipping-header h2 {
@@ -21,6 +25,8 @@
 .shipping-methods {
   background: #fff;
   border-radius: 4px;
+  /* max-width: 800px; */
+  padding: 0 90px;
 }
 
 .method-item {
@@ -28,7 +34,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 16px;
-  border-bottom: 1px solid #f0f0f0;
+  border: 1px solid #f0f0f0;
 }
 
 .method-info h3 {
@@ -104,36 +110,45 @@ input:checked + .slider:before {
   background: #fafafa;
 }
 
-.action-buttons {
-  margin-top: 24px;
+.form-actions-shipping {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  width: 100%; /* Đảm bảo phần chứa bao phủ toàn bộ chiều rộng */
+  margin-top: 32px;
+  padding: 0 90px;
 }
 
-.btn-back, .btn-next {
-  width: 100px;
-  padding: 8px 0;
+.right-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.btn-back,
+.btn-save,
+.btn-next {
+  padding: 8px 36px;
   border-radius: 4px;
-  border: none;
+  border: 1px solid #dee2e6;
   cursor: pointer;
-  font-size: 14px;
-  font-weight: 500;
-  text-align: center;
-  margin: 0; /* Xóa margin thừa nếu có */
+  min-width: 120px;
+  height: 40px;
 }
 
 .btn-back {
-  background: #fff;
-  border: 1px solid #ddd;
+  background-color: #fff;
+}
+
+.btn-save {
+  background-color: #fff;
+  border-color: #0d6efd;
+  color: #0d6efd;
 }
 
 .btn-next {
-  background: #7850bd;
+  background-color: #ee4d2d;
+  border-color: #ee4d2d;
   color: #fff;
 }
 
 .btn-next:hover {
-  background: #673ab7;
+  background-color: #d73211;
 }

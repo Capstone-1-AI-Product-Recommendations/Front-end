@@ -1,0 +1,96 @@
+.search-page {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #f5f5f5;
+  margin-top: 5px;
+}
+
+.search-content {
+  display: flex;
+  gap: 20px;
+}
+
+.search-sidebar {
+  width: 250px; /* Điều chỉnh độ rộng của sidebar nếu cần */
+  flex-shrink: 0;
+}
+
+.search-main {
+  flex: 1;
+  min-width: 0;
+}
+
+.product-search-section {
+  margin-bottom: 20px;
+  background: #fff;
+  border-radius: 2px;
+  margin: 0 15px;
+  border: 10px;
+  /* box-shadow: 0 1px 1px rgba(0,0,0,0.05); */
+}
+
+.search-results-section {
+  background: #fff;
+  border-radius: 2px;
+  /* box-shadow: 0 1px 1px rgba(0,0,0,0.05); */
+}
+
+.shop-section {
+  margin-bottom: 20px;
+  padding: 15px;
+  background: #fff;
+  border-radius: 2px;
+  box-shadow: 0 1px 1px rgba(0,0,0,0.05);
+}
+
+.shop-section h2 {
+  font-size: 16px;
+  margin-bottom: 15px;
+  color: #333;
+}
+
+.shop-results {
+  display: flex;
+  overflow-x: auto;
+  gap: 15px;
+  padding-bottom: 10px;
+}
+
+.search-results-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  /* background: #fff; */
+  margin-bottom: 0px;
+  border-radius: 2px;
+  margin: 0 15px;
+  margin-top: 10px;
+  /* box-shadow: 0 1px 1px rgba(0,0,0,0.05); */
+}
+
+.search-sidebar h3 {
+  font-size: 15px;
+  margin-bottom: 15px;
+  color: #333;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .search-content {
+    flex-direction: column;
+  }
+
+  .search-sidebar {
+    width: 100%;
+  }
+
+  .search-page {
+    padding: 10px;
+  }
+
+  .search-header {
+    padding: 0 10px;
+  }
+}

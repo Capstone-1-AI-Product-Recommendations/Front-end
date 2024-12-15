@@ -1,20 +1,21 @@
 
 /* TaxInformation.css */
 .tax-information {
-  max-width: 1000px;
-  margin: 0 auto;
-  padding: 20px;
+  /* max-width: 1440px; */
+  /* margin: 0 auto; */
+  /* padding: 20px; */
 }
 
 .info-banner {
   background-color: #f8f9fa;
-  border: 1px solid #e9ecef;
+  border: 5px solid #1b7ad9;
   border-radius: 4px;
   padding: 16px;
   margin-bottom: 24px;
   display: flex;
   gap: 12px;
   align-items: flex-start;
+  margin: 0 90px;
 }
 
 .info-icon {
@@ -33,6 +34,7 @@
   background-color: #fff;
   border-radius: 4px;
   padding: 20px;
+  margin: 0 80px;
 }
 
 .form-section {
@@ -129,12 +131,13 @@ label {
 .btn-back,
 .btn-save,
 .btn-next {
-  padding: 8px 16px;
+  padding: 8px 36px;
   border-radius: 4px;
   border: 1px solid #dee2e6;
   cursor: pointer;
+  min-width: 120px;
+  height: 40px;
 }
-
 .btn-back {
   background-color: #fff;
 }

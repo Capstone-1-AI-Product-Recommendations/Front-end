@@ -5,12 +5,11 @@ const API = axios.create({
 });
 
 // API cho "Hàng mới về"
-export const fetchNewProducts = () => API.get('/products/latest-comments/');
+export const fetchNewProducts = () => API.get('/products/trending/');
 
 // API cho "Sản phẩm nổi bật"
 export const fetchFeaturedProducts = () => API.get('/products/random/');
 
 // API cho "Bán chạy nhất"
-export const fetchBestSellingProducts = () => API.get('/products/trending/');
-
+export const fetchBestSellingProducts = () => API.get('/recommendations/recommended/');
 

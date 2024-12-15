@@ -6,18 +6,18 @@ import "./Footer.css";
 import { FaPhone, FaEnvelope, FaMapMarkerAlt } from "react-icons/fa";
 
 // Import các biểu tượng
-import paymentMomo from "../../../img/sapo-logo.png";
-import paymentVnpay from "../../../img/sapo-logo.png";
-import paymentVisa from "../../../img/sapo-logo.png";
-import paymentZalopay from "../../../img/sapo-logo.png";
+import paymentMomo from "../../../img/momo-pay.png";
+import paymentVnpay from "../../../img/vn-pay.png";
+import paymentVisa from "../../../img/visa-pay.png";
+import paymentZalopay from "../../../img/zalo-pay.png";
 
-import shippingGhn from "../../../img/sapo-logo.png";
-import shippingGhtk from "../../../img/sapo-logo.png";
-import shippingNinja from "../../../img/sapo-logo.png";
-import shippingJnt from "../../../img/sapo-logo.png";
+import shippingGhn from "../../../img/GHN.png";
+import shippingGhtk from "../../../img/GHTK.png";
+import shippingNinja from "../../../img/ninjavan.png";
+import shippingJnt from "../../../img/J&T.png";
 
-import appStore from "../../../img/sapo-logo.png";
-import googlePlay from "../../../img/sapo-logo.png";
+import appStore from "../../../img/appStore.png";
+import googlePlay from "../../../img/googlePlay.png";
 
 import phoneIcon from "../../../img/sapo-logo.png";
 import emailIcon from "../../../img/sapo-logo.png";

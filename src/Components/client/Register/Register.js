@@ -1,10 +1,12 @@
+//Register.js
+
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Register.css";
 import { GoogleLogin } from "@react-oauth/google";
 import { registerUser } from "../../../services/apiLogin";
 
-const Register = ({ onClose, onLoginClick }) => {
+const Register = ({ onClose, onLoginClick }) => { 
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     username: '',
@@ -152,8 +154,8 @@ export default Register;
 
 //     try {
 //       const response = await registerUser(formData);
-//       // Nếu đăng ký thành công, chuyển đến trang đăng ký seller
-//       navigate('/register-seller');
+//       // Nếu đăng ký thành công, chuyển đến trang đăng ký homepage
+//       navigate('/');
 //       if (onClose) onClose();
 //     } catch (error) {
 //       setErrorMessage(

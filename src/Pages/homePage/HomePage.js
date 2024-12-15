@@ -21,6 +21,7 @@ const HomePage = ({ userRole }) => {
     const getNewProducts = async () => {
       try {
         const response = await fetchNewProducts();
+        console.log(response.data)
         setNewProducts(response.data);
         console.log(response.data);
       } catch (error) {

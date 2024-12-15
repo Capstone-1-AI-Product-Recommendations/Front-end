@@ -14,7 +14,8 @@ import menuItems from "../../../data/menuItems";
 const HeaderNoLogin = ({ onLoginSuccess }) => {
   const [showLogin, setShowLogin] = useState(false);
   const [showRegister, setShowRegister] = useState(false);
-  const [hoveredCategory, setHoveredCategory] = useState(null); // Add this line
+  const [hoveredCategory, setHoveredCategory] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
 
   const handleLoginClick = () => {
     setShowLogin(true);
@@ -50,6 +51,12 @@ const HeaderNoLogin = ({ onLoginSuccess }) => {
   const navigate = useNavigate();
   const handleHomeClick = () => {
     navigate("/");
+  };
+
+  const handleSearch = () => {
+    if (searchTerm.trim()) {
+      navigate(`/search?keyword=${encodeURIComponent(searchTerm)}`);
+    }
   };
 
   return (
@@ -104,8 +111,18 @@ const HeaderNoLogin = ({ onLoginSuccess }) => {
               </div>
             </div>
             <div className="search-bar">
-              <input type="text" placeholder="Tìm kiếm sản phẩm..." />
-              <button>🔍</button>
+              <input 
+                type="text"
+                placeholder="Tìm kiếm sản phẩm..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                onKeyPress={(e) => {
+                  if (e.key === 'Enter') {
+                    handleSearch();
+                  }
+                }}
+              />
+              <button onClick={handleSearch}>🔍</button>
             </div>
             <div className="account-section">
               <div className="user-account">

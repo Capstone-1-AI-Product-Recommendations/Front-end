@@ -14,6 +14,7 @@ import "./HeaderAfterLogin.css";
 
 const HeaderAfterLogin = ({ onLogout, userRole }) => {
   const navigate = useNavigate();
+  const [searchTerm, setSearchTerm] = useState(""); // State for search term
 
   // ** State Management **
   const [showLogin, setShowLogin] = useState(false); // Control Login Modal visibility
@@ -59,6 +60,12 @@ const HeaderAfterLogin = ({ onLogout, userRole }) => {
   //     navigate("/register-seller");
   //   }
   // };
+
+  const handleSearch = () => {
+    if (searchTerm.trim()) {
+      navigate(`/search?keyword=${encodeURIComponent(searchTerm)}`);
+    }
+  };
 
   return (
     <>
@@ -132,8 +139,18 @@ const HeaderAfterLogin = ({ onLogout, userRole }) => {
 
             {/* Search Bar */}
             <div className="search-bar">
-              <input type="text" placeholder="Tìm kiếm sản phẩm..." />
-              <button>🔍</button>
+              <input
+                type="text"
+                placeholder="Tìm kiếm sản phẩm..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                onKeyPress={(e) => {
+                  if (e.key === 'Enter') {
+                    handleSearch();
+                  }
+                }}
+              />
+              <button onClick={handleSearch}>🔍</button>
             </div>
 
             {/* Account, Notifications, and Cart */}

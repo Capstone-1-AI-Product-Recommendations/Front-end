@@ -1,19 +1,13 @@
-// <<<<<<< HEAD
-// import React, { useState, useEffect } from "react";
-// =======
-// <<<<<<< HEAD
-// // src/App.js
-// import React from "react";
-// import { CartProvider } from "./Components/Cart/CartContext"; // Đường dẫn tới CartContext
-// import Header from "./Components/Header/Header";
-// import Footer from "./Components/Footer/Footer";
+//App.js
+
 import React, { useState, useEffect } from "react";
-import { useNavigate,useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { CartProvider } from "./Components/client/Cart/CartContext";
 import Footer from "./Components/client/Footer/Footer";
 import RouterCustom from "./Router";
 import HeaderNoLogin from "./Components/client/Header/HeaderNoLogin";
 import HeaderAfterLogin from "./Components/client/Header/HeaderAfterLogin";
+import SearchResults from './Components/client/Search/SearchResults/SearchResults';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -21,40 +15,52 @@ function App() {
   const location = useLocation();
   const navigate = useNavigate();
 
-  // Kiểm tra trạng thái đăng nhập khi component mount
+  // Kiểm tra trạng thái đăng nhập từ localStorage
   useEffect(() => {
-    const loggedInStatus = localStorage.getItem("isLoggedIn");
-    const savedUserRole = localStorage.getItem("userRole");
+    const token = localStorage.getItem("token");
+    const user = JSON.parse(localStorage.getItem("user"));
     
-    if (loggedInStatus === "true" && savedUserRole) {
+    if (token && user) {
       setIsLoggedIn(true);
-      setUserRole(savedUserRole);
+      setUserRole(user.role);
     }
   }, []);
 
   const handleLoginSuccess = (role) => {
     setIsLoggedIn(true);
     setUserRole(role);
-    // Lưu trạng thái vào localStorage
     localStorage.setItem("isLoggedIn", "true");
     localStorage.setItem("userRole", role);
-    navigate("/");
+    localStorage.setItem("user", JSON.stringify({ role })); // Lưu thông tin người dùng
+    navigate("/"); // Ch
   };
+
+  // Theo dõi sự thay đổi của isLoggedIn
+  useEffect(() => {
+    if (isLoggedIn) {
+      navigate("/"); // Điều hướng đến HeaderAfterLogin khi đăng nhập thành công
+    }
+  }, [isLoggedIn]);
 
   const handleLogout = () => {
     setIsLoggedIn(false);
     setUserRole("");
-    // Xóa trạng thái khỏi localStorage
     localStorage.removeItem("isLoggedIn");
     localStorage.removeItem("userRole");
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
     navigate("/");
   };
 
-
-  
   const shouldShowHeader = !location.pathname.startsWith('/admin') && 
                           !location.pathname.startsWith('/seller-dashboard') && 
-                          !location.pathname.startsWith('/seller');
+                          !location.pathname.startsWith('/seller') &&
+                          !location.pathname.startsWith('/register-seller') &&
+                          !location.pathname.startsWith('/shipping-setting') &&
+                          !location.pathname.startsWith('/tax-information') &&
+                          !location.pathname.startsWith('/identity-information') &&
+                          !location.pathname.startsWith('/check-registration') &&
+                          !location.pathname.startsWith('/product-form');
 
   return (
     <CartProvider>

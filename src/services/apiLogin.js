@@ -1,44 +1,17 @@
-// import axios from 'axios';
-
-// const API = axios.create({
-//   baseURL: 'http://127.0.0.1:8000/api',
-// });
-
-// // API đăng ký người dùng
-// export const registerUser = (userData) => API.post('/register/', userData);
-
-// // API đăng nhập người dùng
-// export const loginUser = (userData) => API.post('/login/', userData);
-
-// // API đăng xuất người dùng
-// export const logoutUser = () => API.post('/logout/');
-
-// // API đăng nhập với Google
-// export const loginWithGoogle = (googleData) => API.post('/auth/login/google/', googleData);
-
-// // API đăng ký với Google
-// export const registerWithGoogle = (googleData) => API.post('/auth/registration/google/', googleData);
-
-// // API lấy chi tiết sản phẩm
-// export const fetchProductDetail = (productId) => API.get(`/products/${productId}/`);
-
-
-
-
-
-
+//apiLogin.js
 
 import axios from 'axios';
+// import {handleLoginSuccess} from "../Router";
 
 const API = axios.create({
   baseURL: 'http://127.0.0.1:8000/api',
-  withCredentials: true, // Cho phép gửi cookies
+  withCredentials: true, // Allow sending cookies
   headers: {
     'Content-Type': 'application/json',
   }
 });
 
-// Interceptor để xử lý token
+// Interceptor to handle token
 API.interceptors.request.use((config) => {
   const token = localStorage.getItem('token');
   if (token) {
@@ -47,64 +20,38 @@ API.interceptors.request.use((config) => {
   return config;
 });
 
-// API đăng nhập thông thường
+// API for user login
 export const loginUser = async (userData) => {
   try {
     const response = await API.post('/login/', userData);
     if (response.data.token) {
+      // Lưu token vào localStorage
       localStorage.setItem('token', response.data.token);
+      
+      // Nếu có thông tin user, lưu thêm
+      if (response.data.user) {
+        localStorage.setItem('user', JSON.stringify(response.data.user));
+        // handleLoginSuccess(userData.role);
+      }
+      
+      console.log('Token saved:', response.data.token);
     }
     return response.data;
   } catch (error) {
+    console.error('API login error:', error);
     throw error.response?.data || { message: 'Đăng nhập thất bại' };
   }
 };
 
-// API đăng ký thông thường
+
+// API for user registration
 export const registerUser = async (userData) => {
   try {
     const response = await API.post('/register/', userData);
     console.log(response.data);
     return response.data;
   } catch (error) {
+    console.error('Error registering user:', error);
     throw error.response?.data || { message: 'Đăng ký thất bại' };
-  }
-};
-
-// API đăng nhập với Google
-export const loginWithGoogle = async (googleData) => {
-  try {
-    const response = await API.post('/auth/google/login/', {
-      token: googleData.credential
-    });
-    if (response.data.token) {
-      localStorage.setItem('token', response.data.token);
-    }
-    return response.data;
-  } catch (error) {
-    throw error.response?.data || { message: 'Đăng nhập Google thất bại' };
-  }
-};
-
-// API đăng ký với Google
-export const registerWithGoogle = async (googleData) => {
-  try {
-    const response = await API.post('/auth/google/register/', {
-      token: googleData.credential
-    });
-    return response.data;
-  } catch (error) {
-    throw error.response?.data || { message: 'Đăng ký Google thất bại' };
-  }
-};
-
-// API đăng xuất
-export const logoutUser = async () => {
-  try {
-    const response = await API.post('/logout/');
-    localStorage.removeItem('token');
-    return response.data;
-  } catch (error) {
-    throw error.response?.data || { message: 'Đăng xuất thất bại' };
   }
 };
