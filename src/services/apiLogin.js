@@ -20,21 +20,15 @@ API.interceptors.request.use((config) => {
 // API for user login
 export const loginUser = async (userData) => {
   try {
+    // Log để debug
+    console.log('API sending data:', userData);
+    
     const response = await API.post('/login/', userData);
-    if (response.data.token) {
-      // Lưu token vào localStorage
-      localStorage.setItem('token', response.data.token);
-      
-      // Nếu có thông tin user, lưu thêm
-      if (response.data.user) {
-        localStorage.setItem('user', JSON.stringify(response.data.user));
-      }
-      
-      console.log('Token saved:', response.data.token);
-    }
+    console.log('API response:', response.data);
+    
     return response.data;
   } catch (error) {
-    console.error('API login error:', error);
+    console.error('API login error:', error.response?.data || error);
     throw error.response?.data || { message: 'Đăng nhập thất bại' };
   }
 };

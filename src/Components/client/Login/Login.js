@@ -31,26 +31,29 @@ const Login = ({ onClose, onLoginSuccess, onRegisterClick }) => {
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    // Log để debug
+    console.log('Sending login data:', formData);
+    
     try {
       const data = await loginUser(formData);
-      console.log('Login response:', data); // Giữ lại để debug
+      console.log('Login response:', data);
 
-      // Kiểm tra response có token không
       if (data?.token) {
-        // Lưu token vào localStorage (đã được xử lý trong apiLogin.js)
+        // Lưu token vào localStorage
+        localStorage.setItem('token', data.token);
+        if (data.user) {
+          localStorage.setItem('user', JSON.stringify(data.user));
+        }
         
-        // Thực hiện các bước sau khi login thành công
+        // Thông báo thành công
         if (data.role) {
           onLoginSuccess(data.role);
         }
         
-        // Đóng modal
+        // Đóng modal và chuyển hướng
         onClose();
-        
-        // Chuyển hướng về trang home
         navigate('/');
-      } else {
-        setErrorMessage('Đăng nhập thất bại: Không nhận được token');
       }
     } catch (error) {
       console.error('Login error:', error);

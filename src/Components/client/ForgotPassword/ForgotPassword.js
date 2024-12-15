@@ -1,47 +1,46 @@
 import React, { useState } from "react";
 import "./ForgotPassword.css";
-import ForgotPasswordData from "../../../data/ForgotPasswordData";
+import { requestPasswordReset, verifyResetCode, resetPassword } from '../../../services/apiForgotPassword';
 
 const ForgotPassword = ({ onClose }) => {
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
-  const [isSubmitted, setIsSubmitted] = useState(false);
   const [step, setStep] = useState(1);
   const [verificationCode, setVerificationCode] = useState([]);
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    const account = ForgotPasswordData.accounts.find(acc => acc.email === email);
-    
-    if (account) {
-      setMessage(ForgotPasswordData.successMessages.codeSent);
+    try {
+      const response = await requestPasswordReset(email);
+      setMessage(response.message || 'Mã xác thực đã được gửi đến email của bạn');
       setStep(2);
-    } else {
-      setMessage(ForgotPasswordData.errorMessages.emailNotFound);
+    } catch (error) {
+      setMessage(error.message || 'Email không tồn tại trong hệ thống');
     }
   };
 
-  const handleVerifyCode = (e) => {
+  const handleVerifyCode = async (e) => {
     e.preventDefault();
-    const account = ForgotPasswordData.accounts.find(acc => acc.email === email);
     const enteredCode = verificationCode.join("");
+    console.log('Sending verification:', { email, code: enteredCode });
     
-    if (account && enteredCode === account.verificationCode) {
+    try {
+      await verifyResetCode(email, enteredCode);
       setMessage("");
       setStep(4);
-    } else {
-      setMessage(ForgotPasswordData.errorMessages.invalidCode);
+    } catch (error) {
+      console.error('Verification error:', error);
+      setMessage(error.message || 'Mã xác thực không hợp lệ');
     }
   };
 
-  const handlePasswordSubmit = (e) => {
+  const handlePasswordSubmit = async (e) => {
     e.preventDefault();
     
     if (newPassword !== confirmPassword) {
-      setMessage(ForgotPasswordData.errorMessages.passwordMismatch);
+      setMessage('Mật khẩu không khớp');
       return;
     }
 
@@ -50,19 +49,19 @@ const ForgotPassword = ({ onClose }) => {
     const hasLowerCase = /[a-z]/.test(newPassword);
     const hasNumbers = /\d/.test(newPassword);
     const hasSpecialChars = /[!@#$%^&*(),.?":{}|<>]/.test(newPassword);
-    const isLongEnough = newPassword.length >= ForgotPasswordData.passwordRules.minLength;
+    const isLongEnough = newPassword.length >= 8;
 
     if (!(hasUpperCase && hasLowerCase && hasNumbers && hasSpecialChars && isLongEnough)) {
-      setMessage(ForgotPasswordData.errorMessages.weakPassword);
+      setMessage('Mật khẩu phải có ít nhất 8 ký tự, bao gồm chữ hoa, chữ thường, số và ký tự đặc biệt');
       return;
     }
 
-    // Cập nhật mật khẩu trong data (trong thực tế sẽ gọi API)
-    const account = ForgotPasswordData.accounts.find(acc => acc.email === email);
-    if (account) {
-      account.password = newPassword;
-      setMessage(ForgotPasswordData.successMessages.passwordReset);
+    try {  
+      await resetPassword(email, newPassword, confirmPassword);
+      setMessage('Đặt lại mật khẩu thành công');
       setStep(3);
+    } catch (error) {
+      setMessage(error.message || 'Không thể đặt lại mật khẩu');
     }
   };
 
@@ -202,4 +201,4 @@ const ForgotPassword = ({ onClose }) => {
   );
 };
 
-export default ForgotPassword; 
+export default ForgotPassword;
