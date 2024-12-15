@@ -4,7 +4,7 @@
   width: calc(
     100% - 240px
   ); /* Trừ đi tổng khoảng cách lề hai bên là 240px (120px + 120px) */
-  background-color: rgb(251, 251, 251); /* Màu nền xám nhạt */
+  background-color: #F5F5F5; /* Màu nền xám nhạt */
   padding: 20px 0; /* Khoảng cách trên và dưới */
   margin: 0 120px; /* Đặt khoảng cách lề trên và dưới là 0, trái và phải là 120px */
   box-sizing: border-box; /* Đảm bảo kích thước bao gồm cả padding và border nếu có */

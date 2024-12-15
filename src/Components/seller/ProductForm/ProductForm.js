@@ -250,6 +250,24 @@ const ProductForm = () => {
     localStorage.removeItem('productFormDraft');
   };
 
+  // Giả định hàm để cập nhật vai trò người dùng
+  const updateUserRole = (role) => {
+    // Logic để cập nhật vai trò người dùng
+    console.log(`Cập nhật vai trò người dùng thành: ${role}`);
+  };
+
+  const handleSubmit = () => {
+    if (validateCurrentTab()) {
+      // Cập nhật vai trò từ user thành seller
+      updateUserRole('seller'); // Giả sử bạn có một hàm để cập nhật vai trò người dùng
+
+      // Xóa draft sau khi lưu thành công
+      localStorage.removeItem('productFormDraft');
+      // Chuyển hướng đến trang seller dashboard
+      navigate('/seller-dashboard');
+    }
+  };
+
   return (
     <div className="product-form-container">
       {/* Navigation Breadcrumb */}
@@ -288,7 +306,7 @@ const ProductForm = () => {
                 onDragOver={handleDragOver}
                 onDrop={handleDrop}
               >
-                <h3>Hình ảnh sản phẩm</h3>
+                <h3>Hình ảnh sản ph��m</h3>
                 <div className="image-grid">
                   {imagePreview.map((url, index) => (
                     <div key={index} className="image-preview">
@@ -406,14 +424,7 @@ const ProductForm = () => {
             <div className="right-actions">
               <button 
                 className="btn-submit"
-                onClick={() => {
-                  if (validateCurrentTab()) {
-                    // Xóa draft sau khi lưu thành công
-                    localStorage.removeItem('productFormDraft');
-                    // Chuyển hướng đến trang seller dashboard
-                    navigate('/seller-dashboard');
-                  }
-                }}
+                onClick={handleSubmit}
               >
                 Lưu 
               </button>

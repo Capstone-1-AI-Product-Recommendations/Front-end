@@ -13,7 +13,7 @@ import {
       id: "dashboard",
       icon: FaUser,
       label: "Dashboard",
-      path: "/seller-dashboard/dashboard",
+      path: "/seller-dashboard",
       subItems: []
     },
     {

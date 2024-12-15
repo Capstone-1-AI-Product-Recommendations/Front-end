@@ -1,3 +1,5 @@
+//Register.js
+
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Register.css";
@@ -25,8 +27,8 @@ const Register = ({ onClose, onLoginClick }) => {
     try {
       const data = await registerUser(formData);
       console.log('User registered successfully:', data);
-      navigate('/login');
-      // Handle successful registration (e.g., redirect to login page)
+      onLoginClick();
+      // Handle successful registration (e.g., open login modal)
     } catch (error) {
       console.error('Error registering user:', error);
       // Handle registration error (e.g., show error message)
