@@ -114,15 +114,15 @@ const Profile = () => {
               </p>
               <div className="form-group">
                 <label className="form-label">Tên đăng nhập</label>
-                <input className="form-input" type="text" value="kiet_boy" readOnly />
+                <input className="form-input" type="text" value="user" readOnly />
               </div>
               <div className="form-group">
                 <label className="form-label">Tên</label>
-                <input className="form-input" type="text" placeholder="Trần Anh Kiệt" />
+                <input className="form-input" type="text" placeholder="Trần Thị Mỹ Duyên" />
               </div>
               <div className="form-group">
                 <label className="form-label">Email</label>
-                <input className="form-input" type="email" value="ki******@gmail.com" readOnly />
+                <input className="form-input" type="email" value="tr******@gmail.com" readOnly />
               </div>
               <div className="form-group">
                 <label className="form-label">Số điện thoại</label>
