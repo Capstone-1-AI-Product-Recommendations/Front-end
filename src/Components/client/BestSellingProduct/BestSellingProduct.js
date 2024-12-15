@@ -121,7 +121,7 @@ const BestSellingProduct = ({ products }) => {
     <div className='best-product-container'>
       <div className='d-flex justify-content-between align-items-center mb-1'>
         <h4 className='mb-0'>
-          Bán chạy nhất
+         Đề xuất
           <span className='text-muted'>
             {" "}
             - Đừng bỏ lỡ cơ hội giảm giá đặc biệt chỉ có trong tuần này.
@@ -152,12 +152,12 @@ const BestSellingProduct = ({ products }) => {
                       ? product.altImages[currentImageIndex]
                       : product.imageUrl
                   }
-                  alt={product.title}
+                  alt={product.name}
                   className='product-image'
                 />
               </div>
-              <span className='product-badge'>{product.badge}</span>
-              <h6 className='product-title'>{product.title}</h6>
+              {/* <span className='product-badge'>{product.badge}</span> */}
+              <h6 className='product-title'>{product.name}</h6>
               <div className='rating'>
                 {Array.from({ length: 5 }, (_, i) => {
                   const starValue = i + 1;
@@ -176,7 +176,7 @@ const BestSellingProduct = ({ products }) => {
                 })}
               </div>
               <p className='price'>
-                <strong className='price-new '>{product.price}</strong>
+                <strong className='price-new '>{product.price}VND</strong>
                 <span className='price-old'>
                   <del>{product.originalPrice}</del>
                 </span>

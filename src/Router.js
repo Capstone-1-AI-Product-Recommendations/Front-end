@@ -95,6 +95,7 @@ const RouterCustom = () => {
       <Route path="/contact" element={<Contact />} />
       <Route path="/cart" element={<Cart />} />
       <Route path="/products" element={<ProductList />} />
+      <Route path="/ProductDetail/:id" element={<ProductDetail />} />
       <Route path="/checkout" element={<Checkout />} />
       <Route path="/order-summary" element={<OrderSummary />} />
       <Route path="/payment" element={<PaymentQRCode />} />
@@ -103,7 +104,6 @@ const RouterCustom = () => {
       <Route path="/search" element={<Search />} />
       <Route path="/ADSmartCart" element={<ADSmartCart />} />
       <Route path="/profile" element={<AccountManagement />} />
-
 
       {/* Nếu người dùng đã đăng nhập */}
       {isLoggedIn ? (
@@ -159,10 +159,7 @@ const RouterCustom = () => {
         <>
           {/* Các route cho người dùng chưa đăng nhập */}
           <Route path="/signup" element={<Register />} />
-          <Route
-            path="/login"
-            element={<Login onLoginSuccess={handleLoginSuccess} />}
-          />
+          <Route path="/login" element={<Login onLoginSuccess={handleLoginSuccess} />} />
         </>
       )}
 

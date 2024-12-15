@@ -52,6 +52,7 @@ const Login = ({ onClose, onLoginSuccess, onRegisterClick }) => {
         // Chuyển hướng về trang home
         navigate('/');
 
+        // Chuyển hướng về trang home
       } else {
         setErrorMessage('Đăng nhập thất bại: Không nhận được token');
       }
