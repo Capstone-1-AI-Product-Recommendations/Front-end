@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './UserManagement.css';
 import { MdEditNote } from 'react-icons/md';
 import { FaTrash } from 'react-icons/fa';
@@ -7,25 +7,13 @@ import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import { IoMdNotifications } from 'react-icons/io';
 import SellerRequestManagement from './SellerRequestManagement';
+import adminService from '../../../../services/adminService';
 
 const UserManagement = () => {
-  const [users, setUsers] = useState(
-    Array.from({ length: 50 }, (_, index) => ({
-      id: index + 1,
-      username: `user${index + 1}`,
-      email: `user${index + 1}@example.com`,
-      fullname: `Người dùng ${index + 1}`,
-      role: index % 3 === 0 ? 'admin' : (index % 3 === 1 ? 'seller' : 'user'),
-      status: index % 2 === 0 ? 1 : 0,
-      permissions: {
-        search: true,
-        tourManagement: index % 3 !== 2,
-        revenueStats: index % 3 !== 2,
-        permissions: index % 3 === 0
-      }
-    }))
-  );
-
+  const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  
   const [currentPage, setCurrentPage] = useState(1);
   const [usersPerPage] = useState(10);
   const [searchTerm, setSearchTerm] = useState('');
@@ -39,14 +27,41 @@ const UserManagement = () => {
   const [showSellerManagement, setShowSellerManagement] = useState(false);
   const [notificationCount, setNotificationCount] = useState(0);
 
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const data = await adminService.getUsers();
+        setUsers(data);
+        setLoading(false);
+      } catch (err) {
+        setError('Failed to fetch users');
+        setLoading(false);
+      }
+    };
+
+    fetchUsers();
+  }, []);
+
+  // Reset page when filter changes
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [roleFilter]);
+
+  // Filter users first
   const filteredUsers = users.filter(user => {
-    const matchesRole = roleFilter === 'all' || user.role === roleFilter;
-    const matchesSearch = user.username.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         user.fullname.toLowerCase().includes(searchTerm.toLowerCase());
+    const searchTermLower = searchTerm.toLowerCase();
+    const matchesRole = roleFilter === 'all' || user.role_name?.toLowerCase() === roleFilter.toLowerCase();
+    
+    const matchesSearch = searchTerm === '' || [
+      user.username,
+      user.email,
+      user.full_name
+    ].some(field => field?.toLowerCase()?.includes(searchTermLower));
+
     return matchesRole && matchesSearch;
   });
 
+  // Then paginate filtered results
   const indexOfLastUser = currentPage * usersPerPage;
   const indexOfFirstUser = indexOfLastUser - usersPerPage;
   const currentUsers = filteredUsers.slice(indexOfFirstUser, indexOfLastUser);
@@ -101,9 +116,73 @@ const UserManagement = () => {
     });
   };
 
+  const renderPagination = () => {
+    const range = [];
+    const showPages = 5; // Number of pages to show before and after current page
+  
+    // Always add first page
+    range.push(1);
+  
+    // Add pages around current page
+    for (let i = Math.max(2, currentPage - showPages); i <= Math.min(totalPages - 1, currentPage + showPages); i++) {
+      if (i === 2 && currentPage - showPages > 2) {
+        range.push('...');
+      }
+      
+      if (!range.includes(i)) {
+        range.push(i);
+      }
+      
+      if (i === currentPage + showPages && currentPage + showPages < totalPages - 1) {
+        range.push('...');
+      }
+    }
+  
+    // Always add last page if not already included
+    if (totalPages > 1 && !range.includes(totalPages)) {
+      range.push(totalPages);
+    }
+  
+    return (
+      <div className="pagination">
+        <button 
+          onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+          disabled={currentPage === 1}
+        >
+          Trước
+        </button>
+        
+        {range.map((page, index) => (
+          page === '...' ? (
+            <span key={`ellipsis-${index}`} className="ellipsis">...</span>
+          ) : (
+            <button
+              key={page}
+              onClick={() => setCurrentPage(page)}
+              className={currentPage === page ? 'active' : ''}
+            >
+              {page}
+            </button>
+          )
+        ))}
+  
+        <button
+          onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+          disabled={currentPage === totalPages}
+        >
+          Sau
+        </button>
+      </div>
+    );
+  };
+
   return (
-    <div className="permission-container">
-      {!showSellerManagement ? (
+    <div className="user-management">
+      {loading ? (
+        <div>Loading...</div>
+      ) : error ? (
+        <div>{error}</div>
+      ) : (
         <>
           <div className="d-flex justify-content-between align-items-center mb-3">
             <h4>Quản lý người dùng</h4>
@@ -114,16 +193,22 @@ const UserManagement = () => {
                 <input
                   type="text"
                   className="form-control"
-                  placeholder="Tìm kiếm"
+                  placeholder="Tìm kiếm theo tên, email, họ tên..."
                   value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
+                  onChange={(e) => {
+                    setSearchTerm(e.target.value);
+                    setCurrentPage(1); // Reset to first page when searching
+                  }}
                 />
               </div>
               <div className="role-filter">
                 <select 
                   className="form-select" 
                   value={roleFilter}
-                  onChange={(e) => setRoleFilter(e.target.value)}
+                  onChange={(e) => {
+                    setRoleFilter(e.target.value);
+                    setCurrentPage(1); // Reset to first page when filter changes
+                  }}
                 >
                   <option value="all">Tất cả</option>
                   <option value="admin">Admin</option>
@@ -159,11 +244,11 @@ const UserManagement = () => {
             </thead>
             <tbody>
               {currentUsers.map(user => (
-                <tr key={user.id}>
+                <tr key={user.user_id}>
                   <td>{user.username}</td>
                   <td>{user.email}</td>
-                  <td>{user.fullname}</td>
-                  <td>{user.role}</td>
+                  <td>{user.full_name}</td>
+                  <td>{user.role_name}</td>
                   <td className="action-buttons-admin">
                     <MdEditNote className="edit-icon-admin me-4 ms-3  " />
                     <FaTrash className="delete-icon-admin md-2" />
@@ -173,29 +258,7 @@ const UserManagement = () => {
             </tbody>
           </table>
 
-          <div className="pagination">
-            <button 
-              onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-              disabled={currentPage === 1}
-            >
-              Trước
-            </button>
-            {[...Array(totalPages)].map((_, index) => (
-              <button
-                key={index + 1}
-                onClick={() => setCurrentPage(index + 1)}
-                className={currentPage === index + 1 ? 'active' : ''}
-              >
-                {index + 1}
-              </button>
-            ))}
-            <button
-              onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
-              disabled={currentPage === totalPages}
-            >
-              Sau
-            </button>
-          </div>
+          {renderPagination()}
 
           <Modal show={showModal} onHide={handleClose}>
             <Modal.Header>
@@ -241,16 +304,9 @@ const UserManagement = () => {
             </Modal.Footer>
           </Modal>
         </>
-      ) : (
-        <div className="seller-request-view">
-          <SellerRequestManagement 
-            onPendingCountChange={setNotificationCount}
-            toggleManagementView={toggleManagementView}
-          />
-        </div>
       )}
     </div>
   );
 };
 
-export default UserManagement; 
+export default UserManagement;

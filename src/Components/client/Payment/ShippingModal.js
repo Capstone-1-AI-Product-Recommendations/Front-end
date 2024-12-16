@@ -13,7 +13,7 @@ const ShippingModal = ({ isOpen, onClose, shippingMethods, onSelectShipping, sel
         </div>
 
         <div className="shipping-methods-list">
-          <h4>PHƯƠNG THỨC VẬN CHUYỂN LIÊN KẾT VỚI SHOPEE</h4>
+          <h4>PHƯƠNG THỨC VẬN CHUYỂN</h4>
 
           {shippingMethods.map((method) => (
             <div

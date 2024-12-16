@@ -165,26 +165,29 @@
 .quantityControl {
     display: flex;
     align-items: center;
-    border: 1px solid #ddd;
-    border-radius: 2px;
-    width: fit-content;
+    gap: 8px;
 }
 
-.quantityControl button {
-    width: 25px;
-    height: 25px;
-    border: none;
+.quantityButton {
+    width: 30px;
+    height: 30px;
+    border: 1px solid #ddd;
     background: #fff;
     cursor: pointer;
+    border-radius: 4px;
 }
 
-.quantityControl input {
-    width: 35px;
-    height: 25px;
-    border: none;
-    border-left: 1px solid #ddd;
-    border-right: 1px solid #ddd;
+.quantityButton:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.quantityDisplay {
+    min-width: 30px;
     text-align: center;
+    padding: 0 8px;
+    font-size: 14px;
+    user-select: none;
 }
 
 .cartFooter {

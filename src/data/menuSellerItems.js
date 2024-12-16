@@ -73,7 +73,7 @@ import {
     {
       id: "logout",
       icon: FaSignOutAlt,
-      label: "Đăng xuất",
+      label: "Thoát",
       path: "/",
       subItems: []
     }

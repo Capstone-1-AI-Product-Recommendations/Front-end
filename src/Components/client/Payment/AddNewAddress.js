@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './AddNewAddress.css';
-
+import addressService from '../../../services/addressService';
 const AddNewAddress = ({ onClose, onSave, editAddress = null }) => {
   const [formData, setFormData] = useState({
     name: '',
@@ -15,18 +15,33 @@ const AddNewAddress = ({ onClose, onSave, editAddress = null }) => {
     if (editAddress) {
       setFormData({
         name: editAddress.name || '',
-        phone: editAddress.phone || '',
-        province: editAddress.province || '',
-        address: editAddress.address || '',
-        addressType: editAddress.addressType || 'home',
+        phone: editAddress.phone || '',       
+        address: editAddress.address || '' + editAddress.province || '',        
         isDefault: editAddress.isDefault || false
       });
     }
   }, [editAddress]);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    onSave(formData);
+    const userId = JSON.parse(localStorage.getItem('user'))?.user_id;
+
+    const addressData = {
+      recipient_name: formData.name,
+      recipient_phone: formData.phone,
+      recipient_address: `${formData.address}, ${formData.province}`,
+      is_default: formData.isDefault
+    };
+
+    try {
+      await addressService.addUserAddress(userId, addressData);
+      if (onSave) {
+        onSave(); // This will trigger the parent's update
+      }
+      onClose();
+    } catch (error) {
+      console.error('Error adding address:', error);
+    }
   };
 
   return (
@@ -73,7 +88,7 @@ const AddNewAddress = ({ onClose, onSave, editAddress = null }) => {
             />
           </div>
 
-          <div className="address-type">
+          {/* <div className="address-type">
             <label>Loại địa chỉ:</label>
             <div className="type-options">
               <div 
@@ -89,7 +104,7 @@ const AddNewAddress = ({ onClose, onSave, editAddress = null }) => {
                 Văn Phòng
               </div>
             </div>
-          </div>
+          </div> */}
 
           <div className="form-actions">
             <button type="button" className="btn btn-back" onClick={onClose}>
@@ -105,4 +120,4 @@ const AddNewAddress = ({ onClose, onSave, editAddress = null }) => {
   );
 };
 
-export default AddNewAddress; 
+export default AddNewAddress;

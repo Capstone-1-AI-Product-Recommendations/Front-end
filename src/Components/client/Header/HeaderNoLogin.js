@@ -1,21 +1,46 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { BsCart2 } from "react-icons/bs";
 import { IoMdNotificationsOutline } from "react-icons/io";
 import { IoSearchOutline } from "react-icons/io5";
 import logo from "../../../assets/logo.png";
 import { FaUser, FaCaretDown } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { NavLink } from "react-router-dom";
 import Login from "../Login/Login";
 import Register from "../../client/Register/Register";
 import "./HeaderNoLogin.css";
 import menuItems from "../../../data/menuItems";
+import {registerUser} from "../../../services/apiLogin";
+import PropTypes from 'prop-types';
 
 const HeaderNoLogin = ({ onLoginSuccess }) => {
   const [showLogin, setShowLogin] = useState(false);
   const [showRegister, setShowRegister] = useState(false);
   const [hoveredCategory, setHoveredCategory] = useState(null);
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState(""); // State for search term
+  const [showSearchResults, setShowSearchResults] = useState(false); // State to control search results visibility
+  const [suggestions, setSuggestions] = useState([]); // State for search suggestions
+
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    // Clear search input when navigating away from SearchResults page
+    if (location.pathname !== "/search") {
+      setSearchTerm("");
+      setShowSearchResults(false);
+    }
+  }, [location]);
+
+  useEffect(() => {
+    // Retrieve search suggestions from localStorage
+    const userBehavior = JSON.parse(localStorage.getItem("userBehavior")) || [];
+    const searchKeywords = userBehavior
+      .filter((behavior) => behavior.source === "searched_product")
+      .map((behavior) => behavior.keyword);
+    const uniqueKeywords = [...new Set(searchKeywords)]; // Remove duplicates
+    setSuggestions(uniqueKeywords);
+  }, []);
 
   const handleLoginClick = () => {
     setShowLogin(true);
@@ -23,8 +48,8 @@ const HeaderNoLogin = ({ onLoginSuccess }) => {
   };
 
   const handleRegisterClick = () => {
-    setShowRegister(true);
     setShowLogin(false);
+    setShowRegister(true);
   };
 
   const handleCloseModals = () => {
@@ -32,12 +57,21 @@ const HeaderNoLogin = ({ onLoginSuccess }) => {
     setShowRegister(false);
   };
 
-  const handleLoginSuccess = (role) => {
-    onLoginSuccess(role);
-    handleCloseModals();
-    // if (role === 'user') {
-    //   navigate('/register-seller');
-    // }
+  const handleLoginSuccess = (userData) => {
+    try {
+      // Store user data
+      localStorage.setItem('user', JSON.stringify(userData));
+      
+      // Close login modal
+      setShowLogin(false);
+      
+      // Call parent callback
+      if (onLoginSuccess) {
+        onLoginSuccess(userData);
+      }
+    } catch (error) {
+      console.error('Error handling login success:', error);
+    }
   };
   
   const handleMouseEnter = (categoryName) => {
@@ -48,14 +82,50 @@ const HeaderNoLogin = ({ onLoginSuccess }) => {
     setHoveredCategory(null);
   };
 
-  const navigate = useNavigate();
   const handleHomeClick = () => {
     navigate("/");
   };
 
   const handleSearch = () => {
     if (searchTerm.trim()) {
+      setShowSearchResults(true); // Show search results
       navigate(`/search?keyword=${encodeURIComponent(searchTerm)}`);
+      trackUserBehavior({
+        keyword: searchTerm,
+        timestamp: Date.now(),
+        source: "searched_product"
+      });
+    }
+  };
+
+  const trackUserBehavior = (behavior) => {
+    const userBehavior = JSON.parse(localStorage.getItem("userBehavior")) || [];
+    userBehavior.push(behavior);
+    localStorage.setItem("userBehavior", JSON.stringify(userBehavior));
+  };
+
+  const handleInputChange = (e) => {
+    const value = e.target.value;
+    setSearchTerm(value);
+
+    // Filter suggestions based on the input value
+    const filteredSuggestions = suggestions.filter((suggestion) =>
+      suggestion.toLowerCase().includes(value.toLowerCase())
+    );
+    setSuggestions(filteredSuggestions);
+  };
+
+  const handleRegisterSubmit = async (userData) => {
+    try {
+      const response = await registerUser(userData);
+      if (response.message.includes('successfully')) {
+        setShowRegister(false);
+        setShowLogin(true);
+        // Optional: Show success message
+        alert('Đăng ký thành công! Vui lòng đăng nhập.');
+      }
+    } catch (error) {
+      console.error('Registration error:', error);
     }
   };
 
@@ -115,7 +185,7 @@ const HeaderNoLogin = ({ onLoginSuccess }) => {
                 type="text"
                 placeholder="Tìm kiếm sản phẩm..."
                 value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
+                onChange={handleInputChange}
                 onKeyPress={(e) => {
                   if (e.key === 'Enter') {
                     handleSearch();
@@ -123,6 +193,22 @@ const HeaderNoLogin = ({ onLoginSuccess }) => {
                 }}
               />
               <button onClick={handleSearch}>🔍</button>
+              {searchTerm && (
+                <div className="suggestions">
+                  {suggestions.map((suggestion, index) => (
+                    <div
+                      key={index}
+                      className="suggestion-item"
+                      onClick={() => {
+                        setSearchTerm(suggestion);
+                        handleSearch();
+                      }}
+                    >
+                      {suggestion}
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
             <div className="account-section">
               <div className="user-account">
@@ -175,10 +261,22 @@ const HeaderNoLogin = ({ onLoginSuccess }) => {
         />
       )}
       {showRegister && (
-        <Register show={showRegister} onClose={handleCloseModals} />
+        <Register 
+          show={showRegister}
+          onClose={() => setShowRegister(false)}
+          onRegister={handleRegisterSubmit}
+          onLoginClick={() => {
+            setShowRegister(false);
+            setShowLogin(true);
+          }}
+        />
       )}
     </>
   );
+};
+
+HeaderNoLogin.propTypes = {
+  onLoginSuccess: PropTypes.func
 };
 
 export default HeaderNoLogin;

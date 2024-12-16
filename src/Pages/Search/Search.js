@@ -1,7 +1,6 @@
 import React from "react";
 import { useSearchParams } from "react-router-dom";
 import Filter from "../../Components/client/Search/Filter/Filter";
-import ProductSearch from "../../Components/client/Search/ProductSearch/ProductSearch";
 import SearchResults from "../../Components/client/Search/SearchResults/SearchResults";
 import "./Search.css";
 
@@ -21,7 +20,7 @@ const Search = () => {
         {/* Right side with search results and product search */}
         <div className="search-main">
           <div className="product-search-section">
-            <ProductSearch />
+            <SearchResults keyword={keyword} />
           </div>
 
           <div className="search-results-header">
@@ -32,7 +31,7 @@ const Search = () => {
           </div>
 
           <div className="search-results-section">
-            <SearchResults keyword={keyword} />
+            {/* Nếu bạn muốn hiển thị thêm thông tin ở đây, có thể thêm */}
           </div>
         </div>
       </div>

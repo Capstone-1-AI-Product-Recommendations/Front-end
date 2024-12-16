@@ -2,30 +2,47 @@ import { useNavigate } from "react-router-dom";
 import "./AddressForm.css";
 import React, { useState, useEffect } from 'react';
 import './AddressForm.css';
+import addressService from '../../../services/addressService';
 
-const AddressForm = ({ address, onClose, isEdit }) => {
+const AddressForm = ({ address, onClose, isEdit, onSave }) => {
   const [formData, setFormData] = useState({
-    name: '',
-    phone: '',
-    address: '',
-    isDefault: false
+    id: '',
+    recipient_name: '',
+    recipient_phone: '',
+    recipient_address: '',
+    is_default: false
   });
   const navigate = useNavigate();
 
 
   useEffect(() => {
     if (address && isEdit) {
-      setFormData(address);
+      setFormData({
+        id: address.id,
+        recipient_name: address.recipient_name || '',
+        recipient_phone: address.recipient_phone || '',
+        recipient_address: address.recipient_address || '',
+        is_default: address.is_default || false
+      });
     }
   }, [address, isEdit]);
 
 
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Address form submitted:", formData);
-    // Điều hướng đến trang đặt hàng thành công sau khi hoàn tất
-    navigate("/order-success");
+    const userId = JSON.parse(localStorage.getItem('user'))?.user_id;
+    
+    try {
+      await addressService.updateUserAddress(userId, formData);
+      if (onSave) {
+        onSave(); // Trigger parent update
+      }
+      onClose();
+      // Optionally refresh addresses in parent
+    } catch (error) {
+      console.error('Error updating address:', error);
+    }
   };
 
   const handleBack = () => {
@@ -46,8 +63,8 @@ const AddressForm = ({ address, onClose, isEdit }) => {
           <label>Họ và tên</label>
           <input
             type="text"
-            value={formData.name}
-            onChange={(e) => setFormData({...formData, name: e.target.value})}
+            value={formData.recipient_name}
+            onChange={(e) => setFormData({...formData, recipient_name: e.target.value})}
             required
           />
         </div>
@@ -56,8 +73,8 @@ const AddressForm = ({ address, onClose, isEdit }) => {
           <label>Số điện thoại</label>
           <input
             type="tel"
-            value={formData.phone}
-            onChange={(e) => setFormData({...formData, phone: e.target.value})}
+            value={formData.recipient_phone}
+            onChange={(e) => setFormData({...formData, recipient_phone: e.target.value})}
             required
           />
         </div>
@@ -65,28 +82,16 @@ const AddressForm = ({ address, onClose, isEdit }) => {
         <div className="form-group">
           <label>Địa chỉ</label>
           <textarea
-            value={formData.address}
-            onChange={(e) => setFormData({...formData, address: e.target.value})}
+            value={formData.recipient_address}
+            onChange={(e) => setFormData({...formData, recipient_address: e.target.value})}
             required
           />
         </div>
-
-{/* <<<<<<< HEAD
-        <div className="form-buttons">
-          <button type="button" className="btn-add">
-            Thêm vị trí <span className="ms-1">+</span>
-          </button>
-          <button type="button" className="btn-back" onClick={handleBack}>
-            Trở lại
-          </button>
-          <button type="submit" className="btn-submit">
-            Hoàn thành
-======= */}
         <div className="form-group checkbox">
           <input
             type="checkbox"
-            checked={formData.isDefault}
-            onChange={(e) => setFormData({...formData, isDefault: e.target.checked})}
+            checked={formData.is_default}
+            onChange={(e) => setFormData({...formData, is_default: e.target.checked})}
           />
           <label>Đặt làm địa chỉ mặc định</label>
         </div>

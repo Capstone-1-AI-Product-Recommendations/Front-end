@@ -1,16 +1,22 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { FaSearch, FaPlus } from 'react-icons/fa';
 import './SellerProducts.css';
 
 const SellerProducts = () => {
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
+
+  const handleAddProduct = () => {
+    navigate('/seller-dashboard/product-form');
+  };
 
   const tabs = [
     { id: 'all', label: 'Tất cả', count: 0 },
     { id: 'active', label: 'Đang hoạt động', count: 0 },
     { id: 'violation', label: 'Vi phạm', count: 0 },
-    { id: 'pending', label: 'Chờ duyệt bởi Shopee', count: 0 },
+    // { id: 'pending', label: 'Chờ duyệt bởi Shopee', count: 0 },
     { id: 'unpublished', label: 'Chưa được đăng', count: 0 }
   ];
 
@@ -18,7 +24,7 @@ const SellerProducts = () => {
     <div className="seller-products">
       <div className="products-header">
         <h2>Sản phẩm</h2>
-        <button className="add-product-btn">
+        <button className="add-product-btn" onClick={handleAddProduct}>
           <FaPlus /> Thêm 1 sản phẩm mới
         </button>
       </div>
@@ -88,4 +94,4 @@ const SellerProducts = () => {
   );
 };
 
-export default SellerProducts; 
+export default SellerProducts;

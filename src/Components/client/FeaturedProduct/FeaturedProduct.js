@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./FeaturedProduct.css";
 import { FaHeart } from "react-icons/fa";
+import { useNavigate } from "react-router-dom"; // Add this import
 
 const PRODUCTS_PER_PAGE = 36;
 
@@ -9,6 +10,7 @@ const FeaturedProduct = ({ products }) => {
   const [hoveredProduct, setHoveredProduct] = useState(null);
   const [currentImageIndex, setCurrentImageIndex] = useState({});
   const [currentPage, setCurrentPage] = useState(1);
+  const navigate = useNavigate(); // Add this line
 
   const totalPages = Math.ceil(products.length / PRODUCTS_PER_PAGE);
 
@@ -98,6 +100,9 @@ const FeaturedProduct = ({ products }) => {
     currentPage * PRODUCTS_PER_PAGE
   );
 
+  const handleProductClick = (productId) => {
+    navigate(`/product-detail/${productId}`);
+  };
 
   return (
     <div className="featured-product-container">
@@ -120,6 +125,8 @@ const FeaturedProduct = ({ products }) => {
               className="card product-card h-100 border-0"
               onMouseEnter={() => handleMouseEnter(index)}
               onMouseLeave={handleMouseLeave}
+              onClick={() => handleProductClick(product.product_id)} // Add this line
+              style={{ cursor: 'pointer' }} // Add this line
             >
               <div className="row g-0">
                 <div className="col-6 position-relative">
@@ -185,7 +192,7 @@ const FeaturedProduct = ({ products }) => {
       </div>
 
       {/* Pagination */}
-      <div className="pagination">
+      {/* <div className="pagination">
         <button
           className="pagination-btn"
           onClick={goToFirstPage}
@@ -229,7 +236,7 @@ const FeaturedProduct = ({ products }) => {
         >
           &raquo;
         </button>
-      </div>
+      </div> */}
     </div>
   );
 };

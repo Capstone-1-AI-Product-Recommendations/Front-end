@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react"; // Import useState and useEffect
 import { Routes, Route, Navigate } from "react-router-dom"; // Import Navigate
-import { useNavigate } from "react-router-dom"; // Import useNavigate
+import { useNavigate, useLocation } from "react-router-dom"; // Import useNavigate and useLocation
 
 // Các trang cơ bản
 import HomePage from "./Pages/homePage/HomePage";
@@ -13,13 +13,10 @@ import OrderSummary from "./Components/client/Payment/OrderSummary";
 import PaymentQRCode from "./Components/client/Payment/PaymentQRCode";
 import OrderConfirmation from "./Components/client/Payment/OderConfirmation";
 import Checkout from "./Components/client/Payment/Checkout";
-import ADSmartCart from "./Components/client/ADShop/ADSmartCart";
 import Contact from "./Components/client/Contact/Contact";
 import Filter from "./Components/client/Search/Filter/Filter";
 import Search from "./Pages/Search/Search";
 import AccountManagement from "./Components/client/AccountManagement/AccountManagement";
-
-
 
 // Trang dành cho seller
 import Register from "./Components/client/Register/Register";
@@ -49,6 +46,7 @@ const RouterCustom = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userRole, setUserRole] = useState(""); // State cho vai trò người dùng
   const navigate = useNavigate(); // Sử dụng navigate để điều hướng
+  const location = useLocation(); // Sử dụng useLocation để lấy đường dẫn hiện tại
 
   // Hàm xử lý đăng nhập thành công
   const handleLoginSuccess = (role) => {
@@ -66,7 +64,6 @@ const RouterCustom = () => {
   // Kiểm tra xem người dùng đã đăng nhập chưa
   useEffect(() => {
     const userRoleStorage = localStorage.getItem("user");
-    console.log("Đăng nhập với user: ", userRoleStorage);
 
     // Check if userRoleStorage is not null before parsing
     if (userRoleStorage) {
@@ -74,7 +71,6 @@ const RouterCustom = () => {
 
       // Check if parsedUser is not null and has a role property
       if (parsedUser && parsedUser.role) {
-        console.log("Đã đăng nhập với quyền: ", parsedUser.role);
         setIsLoggedIn(true);
         setUserRole(parsedUser.role);
       } else {
@@ -85,85 +81,87 @@ const RouterCustom = () => {
     }
   }, []);
 
-  console.log("User role: ", userRole);
-  console.log("Is login: ", isLoggedIn);
+  // Lưu đường dẫn hiện tại vào localStorage
+  useEffect(() => {
+    localStorage.setItem('lastPath', location.pathname);
+  }, [location]);
+
+  // Kiểm tra quyền truy cập và điều hướng đến đường dẫn cuối cùng
+  useEffect(() => {
+    const lastPath = localStorage.getItem('lastPath');
+    const user = JSON.parse(localStorage.getItem('user'));
+    const token = localStorage.getItem('token');
+
+    if (user && token && lastPath) {
+      const isSellerRoute = lastPath.includes('/seller-dashboard');
+      const isAdminRoute = lastPath.includes('/admin');
+
+      if (
+        (isSellerRoute && user.role === 'seller') ||
+        (isAdminRoute && user.role === 'admin') ||
+        (!isSellerRoute && !isAdminRoute)
+      ) {
+        navigate(lastPath);
+      }
+    }
+  }, [navigate]);
 
   return (
     <Routes>
-      {/* Các route chung cho tất cả người dùng */}
+      {/* Public routes */}
       <Route path="/" element={<HomePage userRole={userRole} />} />
       <Route path="/contact" element={<Contact />} />
-      <Route path="/cart" element={<Cart />} />
       <Route path="/products" element={<ProductList />} />
-      <Route path="/ProductDetail/:id" element={<ProductDetail />} />
-      <Route path="/checkout" element={<Checkout />} />
-      <Route path="/order-summary" element={<OrderSummary />} />
-      <Route path="/payment" element={<PaymentQRCode />} />
-      <Route path="/confirmation" element={<OrderConfirmation />} />
+      <Route path="/product-detail/:id" element={<ProductDetail />} />
       <Route path="/filter" element={<Filter />} />
       <Route path="/search" element={<Search />} />
-      <Route path="/ADSmartCart" element={<ADSmartCart />} />
-      <Route path="/profile" element={<AccountManagement />} />
+      {/* Cart route - đặt ngoài điều kiện isLoggedIn */}
+      <Route path="/cart" element={<Cart />} />
 
-      {/* Nếu người dùng đã đăng nhập */}
-      {isLoggedIn ? (
+      {/* Auth routes */}
+      {!isLoggedIn && (
         <>
-          {/* Điều hướng người dùng theo vai trò */}
-          {userRole === "user" ? (
-            <>
-              <Route path="/product-list" element={<ProductList />} />
-      <Route path="/ProductDetail/:id" element={<ProductDetail />} />
-      <Route path="/profile" element={<AccountManagement />} />
+          <Route path="/signup" element={<Register />} />
+          <Route path="/login" element={<Login onLoginSuccess={handleLoginSuccess} />} />
+        </>
+      )}
 
-              <Route path="/product-detail" element={<ProductDetail />} />
-              <Route path="/order-summary" element={<OrderSummary />} />
-              <Route path="/QRCode" element={<PaymentQRCode />} />
-              <Route path="/confirmation" element={<OrderConfirmation />} />
-              <Route path="/register-seller" element={<RegisterSeller />} />
-              <Route path="/shipping-setting" element={<ShippingSetting />} />
-              <Route path="/tax-information" element={<TaxInformation />} />
-              <Route
-                path="/identity-information"
-                element={<IdentityInformation />}
-              />
-              <Route
-                path="/check-registration"
-                element={<SuccessRegistration />}
-              />
-              <Route path="/product-form" element={<ProductForm />} />
-            </>
-          ) : null}
+      {/* Protected routes */}
+      {isLoggedIn && (
+        <>
+          <Route path="/profile" element={<AccountManagement />} />
+          <Route path="/checkout" element={<Checkout />} />
+          <Route path="/order-summary" element={<OrderSummary />} />
+          <Route path="/payment" element={<PaymentQRCode />} />
+          <Route path="/confirmation" element={<OrderConfirmation />} />
 
-          {userRole === "admin" ? (
-            <Route path="/admin" element={<AdminLayout />}>
+          {/* Seller routes */}
+          {userRole === "seller" && (
+            <Route path="/seller-dashboard/*" element={<SellerLayout />}>
+              <Route index element={<SellerProducts />} />
+              <Route path="products" element={<SellerProducts />} />
+              <Route path="inventory" element={<Inventory />} />
+              <Route path="chatbox" element={<Chatbox />} />
+              <Route path="statistics" element={<Statistics />} />
+              <Route path="order" element={<Order />} />
+              <Route path="product-form" element={<ProductForm />} />
+            </Route>
+          )}
+
+          {/* Admin routes */}
+          {userRole === "admin" && (
+            <Route path="/admin/*" element={<AdminLayout />}>
               <Route index element={<PublicLayout />} />
               <Route path="dashboard" element={<PublicLayout />} />
               <Route path="permissions" element={<Permission />} />
               <Route path="products" element={<AdminProductManagement />} />
               <Route path="users" element={<UserManagement />} />
             </Route>
-          ) : null}
-
-          {userRole === "seller" ? (
-            <Route path="/seller-dashboard" element={<SellerLayout />}>
-              <Route path="users" element={<UserManagement />} />
-              <Route path="products" element={<SellerProducts />} />
-              <Route path="inventory" element={<Inventory />} />
-              <Route path="chatbox" element={<Chatbox />} />
-              <Route path="statistics" element={<Statistics />} />
-              <Route path="order" element={<Order />} />
-            </Route>
-          ) : null}
-        </>
-      ) : (
-        <>
-          {/* Các route cho người dùng chưa đăng nhập */}
-          <Route path="/signup" element={<Register />} />
-          <Route path="/login" element={<Login onLoginSuccess={handleLoginSuccess} />} />
+          )}
         </>
       )}
 
-      {/* Điều hướng đến trang chủ cho các route không xác định */}
+      {/* Fallback route */}
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );

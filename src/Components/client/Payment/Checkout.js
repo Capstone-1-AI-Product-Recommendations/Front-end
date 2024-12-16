@@ -1,21 +1,63 @@
 /** @format */
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { CheckoutData, formatPrice } from "../../../data/CheckoutData";
 import AddressModal from "./AddressModal";
 import ShippingModal from './ShippingModal';
 import { ShippingData } from '../../../data/ShippingData';
+import addressService from '../../../services/addressService';
 import "./Checkout.css";
 
 const Checkout = () => {
   const navigate = useNavigate();
-  const { addressData, products, shippingData } = CheckoutData;
+  const { addressData, shippingData } = CheckoutData;
   const [showAddressModal, setShowAddressModal] = useState(false);
-  const [selectedAddress, setSelectedAddress] = useState(addressData[0]);
+  const [selectedAddress, setSelectedAddress] = useState(null);
   const [showShippingModal, setShowShippingModal] = useState(false);
   const [selectedShipping, setSelectedShipping] = useState(ShippingData[0]);
   const [selectedPayment, setSelectedPayment] = useState('cod');
+  const [addresses, setAddresses] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const userId = JSON.parse(localStorage.getItem('user'))?.user_id;
+
+  useEffect(() => {
+    const fetchAddresses = async () => {
+      try {
+        const response = await addressService.getUserAddresses(userId);        
+        setAddresses(response.addresses);
+        
+        // Save addresses to localStorage
+        localStorage.setItem('userAddresses', JSON.stringify(response.addresses));
+        
+        // Set default address if exists
+        const defaultAddress = response.addresses.find(addr => addr.is_default);
+        if (defaultAddress) {
+          setSelectedAddress(defaultAddress);
+          localStorage.setItem('selectedAddress', JSON.stringify(defaultAddress));
+        }
+        setLoading(false);
+      } catch (error) {
+        console.error('Error fetching addresses:', error);
+        setLoading(false);
+      }
+    };
+
+    // Try to get addresses from localStorage first
+    const cachedAddresses = localStorage.getItem('userAddresses');
+    const cachedSelectedAddress = localStorage.getItem('selectedAddress');
+    
+    if (cachedAddresses && cachedSelectedAddress) {
+      setAddresses(JSON.parse(cachedAddresses));
+      setSelectedAddress(JSON.parse(cachedSelectedAddress));
+      setLoading(false);
+    } else if (userId) {
+      fetchAddresses();
+    }
+  }, [userId]);
+
+  // Get products from localStorage
+  const checkoutProducts = JSON.parse(localStorage.getItem('checkoutProducts') || '[]');
 
   const handleAddressChange = (newAddress) => {
     setSelectedAddress(newAddress);
@@ -31,25 +73,43 @@ const Checkout = () => {
     navigate('/payment'); // Chuyển hướng đến trang thanh toán
   };
 
+  const calculateTotal = () => {
+    return checkoutProducts.reduce((total, item) => 
+      total + (item.product_price * item.quantity), 0
+    );
+  };
+
+  const calculateSubTotal = () => {
+    return checkoutProducts.reduce((total, item) => 
+      total + (item.product_price * item.quantity), 0
+    );
+  };
+
   return (
     <div className="checkout-container">
       {/* Left Column */}
       <div className="checkout-left">
         <div className="delivery-address">
           <h3>Địa Chỉ Nhận Hàng</h3>
-          <div className="address-info">
-            <div className="user-details">
-              <span className="name">{selectedAddress?.name}</span>
-              <span className="phone">({selectedAddress?.phone})</span>
+          {loading ? (
+            <div>Đang tải...</div>
+          ) : (
+            <div className="address-info">
+              <div className="user-details">
+                <span className="name">{selectedAddress?.recipient_name}</span>
+                <span className="phone">({selectedAddress?.recipient_phone})</span>
+              </div>
+              <div className="address-text">
+                {selectedAddress?.recipient_address}
+              </div>
+              <button 
+                className="change-btn"
+                onClick={() => setShowAddressModal(true)}
+              >
+                Thay Đổi
+              </button>
             </div>
-            <div className="address-text">{selectedAddress?.address}</div>
-            <button 
-              className="change-btn"
-              onClick={() => setShowAddressModal(true)}
-            >
-              Thay Đổi
-            </button>
-          </div>
+          )}
         </div>
 
         <AddressModal
@@ -70,18 +130,17 @@ const Checkout = () => {
             <span>Thành tiền</span>
           </div>
 
-          {products.map(item => (
-            <div key={item.id} className="product-item">
+          {checkoutProducts.map(item => (
+            <div key={item.cart_item_id} className="product-item">
               <div className="product-info">
-                <img src={item.image} alt={item.name} />
+                <img src={item.product_images[0]?.file} alt={item.product_name} />
                 <div className="product-details">
-                  <span className="product-name">{item.name}</span>
-                  <span className="product-variant">Loại: {item.variant}</span>
+                  <span className="product-name">{item.product_name}</span>
                 </div>
               </div>
-              <div className="product-price">₫{formatPrice(item.price)}</div>
+              <div className="product-price">{formatPrice(item.product_price)}₫</div>
               <div className="product-quantity">{item.quantity}</div>
-              <div className="product-total">₫{formatPrice(item.price * item.quantity)}</div>
+              <div className="product-total">{formatPrice(item.product_price * item.quantity)}₫</div>
             </div>
           ))}
 
@@ -101,7 +160,7 @@ const Checkout = () => {
             <div className="shipping-info">
               <div className="shipping-name">
                 <span>{selectedShipping.name}</span>
-                <span className="shipping-price">₫{selectedShipping.price.toLocaleString()}</span>
+                <span className="shipping-price">{selectedShipping.price.toLocaleString()}₫</span>
               </div>
               <div className="delivery-time">
                 Nhận hàng vào {selectedShipping.estimatedDelivery}
@@ -145,15 +204,17 @@ const Checkout = () => {
         <div className="order-summary">
           <div className="summary-row">
             <span>Tổng tiền hàng</span>
-            <span>₫{formatPrice(CheckoutData.calculations.subtotal)}</span>
+            <span>₫{formatPrice(calculateSubTotal())}</span>
           </div>
           <div className="summary-row">
             <span>Tổng tiền phí vận chuyển</span>
-            <span>₫{formatPrice(shippingData.fee)}</span>
+            <span>₫{selectedShipping?.price?.toLocaleString() || 0}</span>
           </div>
           <div className="summary-row total">
             <span>Tổng thanh toán</span>
-            <span className="total-amount">₫{formatPrice(CheckoutData.calculations.total)}</span>
+            <span className="total-amount">
+              ₫{formatPrice(calculateSubTotal() + (selectedShipping?.price || 0))}
+            </span>
           </div>
         </div>
 

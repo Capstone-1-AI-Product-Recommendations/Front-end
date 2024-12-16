@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { CartContext } from "../Cart/CartContext";
+import { CartContext } from '../../../context/CartContext';
 import "./BestSellingProduct.css";
 
 const PRODUCTS_PER_PAGE = 36;
@@ -40,7 +40,7 @@ const BestSellingProduct = ({ products }) => {
   }, [hoveredProduct, isHoverTimerActive, products]);
 
   const handleProductClick = (productId) => {
-    navigate(`/product/${productId}`);
+    navigate(`/product-detail/${productId}`);
   };
 
   const handleAddToCart = (e, product) => {
@@ -121,7 +121,7 @@ const BestSellingProduct = ({ products }) => {
     <div className='best-product-container'>
       <div className='d-flex justify-content-between align-items-center mb-1'>
         <h4 className='mb-0'>
-         Đề xuất
+          Đề xuất
           <span className='text-muted'>
             {" "}
             - Đừng bỏ lỡ cơ hội giảm giá đặc biệt chỉ có trong tuần này.
@@ -135,11 +135,12 @@ const BestSellingProduct = ({ products }) => {
       <div className='product-grid'>
         {currentProducts.map((product, index) => (
           <div
-            key={product.id}
+            key={product.product_id}
             className='product-card-container'
-            onClick={() => handleProductClick(product.id)}
+            onClick={() => handleProductClick(product.product_id)}
             onMouseEnter={() => handleMouseEnter(index)}
             onMouseLeave={handleMouseLeave}
+            style={{ cursor: 'pointer' }}
           >
             <div className='product-card'>
               <span className='discount-badge'>{product.discount}</span>
@@ -147,8 +148,8 @@ const BestSellingProduct = ({ products }) => {
                 <img
                   src={
                     hoveredProduct === index &&
-                    product.altImages &&
-                    product.altImages.length > 0
+                      product.altImages &&
+                      product.altImages.length > 0
                       ? product.altImages[currentImageIndex]
                       : product.imageUrl
                   }
@@ -162,7 +163,7 @@ const BestSellingProduct = ({ products }) => {
                 {Array.from({ length: 5 }, (_, i) => {
                   const starValue = i + 1;
                   const ratingValue = product.rating;
-                  
+
                   // Xử lý sao đầy
                   if (starValue <= Math.floor(ratingValue)) {
                     return <span key={i} className="star filled">★</span>;
@@ -192,8 +193,7 @@ const BestSellingProduct = ({ products }) => {
         ))}
       </div>
 
-      {/* Pagination */}
-      <div className="pagination">
+      {/* <div className="pagination">
         <button
           className="pagination-btn"
           onClick={goToFirstPage}
@@ -214,9 +214,8 @@ const BestSellingProduct = ({ products }) => {
           ) : (
             <button
               key={page}
-              className={`pagination-btn ${
-                currentPage === page ? "active" : ""
-              }`}
+              className={`pagination-btn ${currentPage === page ? "active" : ""
+                }`}
               onClick={() => changePage(page)}
             >
               {page}
@@ -237,7 +236,7 @@ const BestSellingProduct = ({ products }) => {
         >
           &raquo;
         </button>
-      </div>
+      </div> */}
     </div>
   );
 };

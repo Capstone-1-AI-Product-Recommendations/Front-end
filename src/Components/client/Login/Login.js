@@ -33,16 +33,13 @@ const Login = ({ onClose, onLoginSuccess, onRegisterClick }) => {
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    // Log để debug
-    console.log('Sending login data:', formData);
-    
     try {
       const data = await loginUser(formData);
-      console.log('Login response:', data);
+      console.log('Login response:', data); // Log the response to inspect it
 
       if (data?.token) {
         // Lưu token vào localStorage
+        console.log('Lưu Token vào localstorage:', data.token);
         localStorage.setItem('token', data.token);
         if (data.user) {
           localStorage.setItem('user', JSON.stringify(data.user));
@@ -56,9 +53,11 @@ const Login = ({ onClose, onLoginSuccess, onRegisterClick }) => {
         // Đóng modal và chuyển hướng
         onClose();
         navigate('/');
+      } else {
+        setErrorMessage('Đăng nhập thất bại.');
       }
     } catch (error) {
-      console.error('Login error:', error);
+      console.error('Login error:', error); // Log the error for debugging
       setErrorMessage(error.message || 'Tên đăng nhập hoặc mật khẩu không chính xác.');
     }
   };

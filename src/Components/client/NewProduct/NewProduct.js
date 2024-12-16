@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { CartContext } from "../../client/Cart/CartContext";
+import { CartContext } from '../../../context/CartContext';
 import "./NewProduct.css";
 import { fetchNewProducts } from "../../../services/apiHomePage"; // Import the API function
 
@@ -35,21 +35,8 @@ const NewProduct = ({ products }) => {
     return () => clearInterval(interval);
   }, [hoveredProduct, isHoverTimerActive, products]);
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       const response = await fetchNewProducts(); // Use the imported API function
-  //       setProducts(response.data); // Assuming response.data contains the product array
-  //     } catch (error) {
-  //       console.error("Error fetching data:", error);
-  //     }
-  //   };
-
-  //   fetchData();
-  // }, []); // Run once when the component mounts
-
   const handleProductClick = (productId) => {
-    navigate(`/product/${productId}`);
+    navigate(`/product-detail/${productId}`);
   };
 
   const handleAddToCart = (e, product) => {
@@ -149,6 +136,7 @@ const NewProduct = ({ products }) => {
             onClick={() => handleProductClick(product.product_id)}
             onMouseEnter={() => handleMouseEnter(index)}
             onMouseLeave={handleMouseLeave}
+            style={{ cursor: 'pointer' }}
           >
             <div className="product-card">
               <span className="discount-badge">{product.discount}</span>
@@ -201,7 +189,7 @@ const NewProduct = ({ products }) => {
       </div>
 
       {/* Pagination */}
-      <div className="pagination">
+      {/* <div className="pagination">
         <button
           className="pagination-btn"
           onClick={goToFirstPage}
@@ -243,7 +231,7 @@ const NewProduct = ({ products }) => {
         >
           &raquo;
         </button>
-      </div>
+      </div> */}
     </div>
   );
 };

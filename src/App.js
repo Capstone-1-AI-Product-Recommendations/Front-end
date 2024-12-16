@@ -1,8 +1,8 @@
 //App.js
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { CartProvider } from "./Components/client/Cart/CartContext";
+import { CartProvider } from './context/CartContext';
 import Footer from "./Components/client/Footer/Footer";
 import RouterCustom from "./Router";
 import HeaderNoLogin from "./Components/client/Header/HeaderNoLogin";
@@ -14,15 +14,21 @@ function App() {
   const [userRole, setUserRole] = useState("");
   const location = useLocation();
   const navigate = useNavigate();
+  const hasReloaded = useRef(false);
 
   // Kiểm tra trạng thái đăng nhập từ localStorage
   useEffect(() => {
     const token = localStorage.getItem("token");
     const user = JSON.parse(localStorage.getItem("user"));
-    
+    const currentPath = location.pathname;
+
     if (token && user) {
       setIsLoggedIn(true);
       setUserRole(user.role);
+      // Don't navigate if already on a valid path
+      if (currentPath === '/') {
+        navigate(currentPath);
+      }
     }
   }, []);
 
@@ -32,15 +38,14 @@ function App() {
     localStorage.setItem("isLoggedIn", "true");
     localStorage.setItem("userRole", role);
     localStorage.setItem("user", JSON.stringify({ role })); // Lưu thông tin người dùng
-    navigate("/"); // Ch
   };
 
   // Theo dõi sự thay đổi của isLoggedIn
-  useEffect(() => {
-    if (isLoggedIn) {
-      navigate("/"); // Điều hướng đến HeaderAfterLogin khi đăng nhập thành công
-    }
-  }, [isLoggedIn]);
+  // useEffect(() => {
+  //   if (isLoggedIn) {
+  //     navigate("/"); 
+  //   }
+  // }, [isLoggedIn]);
 
   const handleLogout = () => {
     setIsLoggedIn(false);
@@ -49,34 +54,37 @@ function App() {
     localStorage.removeItem("userRole");
     localStorage.removeItem("token");
     localStorage.removeItem("user");
+    localStorage.removeItem("cartData");
     navigate("/");
   };
 
-  const shouldShowHeader = !location.pathname.startsWith('/admin') && 
-                          !location.pathname.startsWith('/seller-dashboard') && 
-                          !location.pathname.startsWith('/seller') &&
-                          !location.pathname.startsWith('/register-seller') &&
-                          !location.pathname.startsWith('/shipping-setting') &&
-                          !location.pathname.startsWith('/tax-information') &&
-                          !location.pathname.startsWith('/identity-information') &&
-                          !location.pathname.startsWith('/check-registration') &&
-                          !location.pathname.startsWith('/product-form');
+  const shouldShowHeader = !location.pathname.startsWith('/admin') &&
+    !location.pathname.startsWith('/seller-dashboard') &&
+    !location.pathname.startsWith('/seller') &&
+    !location.pathname.startsWith('/register-seller') &&
+    !location.pathname.startsWith('/shipping-setting') &&
+    !location.pathname.startsWith('/tax-information') &&
+    !location.pathname.startsWith('/identity-information') &&
+    !location.pathname.startsWith('/check-registration') &&
+    !location.pathname.startsWith('/product-form');
 
   return (
     <CartProvider>
-      {shouldShowHeader && (
-        isLoggedIn ? (
-          <HeaderAfterLogin onLogout={handleLogout} userRole={userRole} />
-        ) : (
-          <HeaderNoLogin onLoginSuccess={handleLoginSuccess} />
-        )
-      )}
-      <RouterCustom 
-        isLoggedIn={isLoggedIn} 
-        userRole={userRole} 
-        onLoginSuccess={handleLoginSuccess} 
-      />
-      {shouldShowHeader && <Footer />}
+      <div className="App">
+        {shouldShowHeader && (
+          isLoggedIn ? (
+            <HeaderAfterLogin onLogout={handleLogout} userRole={userRole} />
+          ) : (
+            <HeaderNoLogin onLoginSuccess={handleLoginSuccess} />
+          )
+        )}
+        <RouterCustom
+          isLoggedIn={isLoggedIn}
+          userRole={userRole}
+          onLoginSuccess={handleLoginSuccess}
+        />
+        {shouldShowHeader && <Footer />}
+      </div>
     </CartProvider>
   );
 }

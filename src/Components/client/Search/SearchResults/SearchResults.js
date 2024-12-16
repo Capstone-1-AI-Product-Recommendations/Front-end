@@ -1,55 +1,44 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import productService from '../../../../services/productService';
 import "./SearchResults.css";
 import productImg from "../../../../img/Product/cake.png";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import { useNavigate } from 'react-router-dom';
 
-const SearchResults = () => {
+const SearchResults = ({ keyword }) => {
   const sortOptions = ["Liên Quan", "Mới Nhất", "Bán Chạy", "Giá"];
   const [activeSort, setActiveSort] = useState(0);
-
-  const generateProducts = () =>
-    Array.from({ length: 5000 }, (_, index) => {
-      const randomPrice = Math.floor(Math.random() * (500000 - 10000) + 10000);
-      const randomRating = (Math.random() * (5 - 3) + 3).toFixed(1);
-      const randomSoldCount = Math.floor(Math.random() * 10000);
-      const soldCountDisplay = randomSoldCount > 1000 ? (randomSoldCount/1000).toFixed(1) + 'k' : randomSoldCount;
-      const cities = ['TP Hồ Chí Minh', 'Hà Nội', 'Đà Nẵng', 'Cần Thơ', 'Hải Phòng'];
-      const randomCity = cities[Math.floor(Math.random() * cities.length)];
-      const deliveryDays = Math.floor(Math.random() * 5) + 1;
-      const randomDiscount = Math.floor(Math.random() * 70) + 10;
-      const productNames = [
-        "Bánh đậu kem mix 4 vị đặc biệt",
-        "Combo bánh bông lan trứng muối", 
-        "Bánh mì phô mai tan chảy",
-        "Set bánh ngọt hộp quà tặng",
-        "Bánh cookie chocolate chip"
-      ];
-      const randomName = productNames[Math.floor(Math.random() * productNames.length)];
-      const randomDate = new Date(Date.now() - Math.floor(Math.random() * 10000000000));
-      
-      return {
-        id: index + 1,
-        name: randomName,
-        price: randomPrice,
-        priceDisplay: randomPrice.toLocaleString(),
-        rating: parseFloat(randomRating),
-        soldCount: randomSoldCount,
-        soldCountDisplay: soldCountDisplay,
-        location: randomCity,
-        deliveryTime: `${deliveryDays} - ${deliveryDays + 1} ngày`,
-        isLiked: Math.random() > 0.5,
-        image: productImg,
-        label: Math.random() > 0.7 ? "Sale" : null,
-        originalPrice: Math.random() > 0.3,
-        discount: Math.random() > 0.3 ? `-${randomDiscount}%` : null,
-        dateAdded: randomDate
-      };
-    });
-
-  const [products, setProducts] = useState(generateProducts());
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const productsPerPage = 40;
+  const productsPerPage = 20;
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        setLoading(true);
+        const data = await productService.searchProducts(keyword);
+        setProducts(data.products);
+        setError(null);
+      } catch (err) {
+        setError('Không thể tìm thấy sản phẩm');
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (keyword) {
+      fetchProducts();
+    }
+  }, [keyword]);
+
   const totalPages = Math.ceil(products.length / productsPerPage);
+  const indexOfLastProduct = currentPage * productsPerPage;
+  const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
+  const currentProducts = products.slice(indexOfFirstProduct, indexOfLastProduct);
 
   const sortProducts = (sortType) => {
     let sortedProducts = [...products];
@@ -71,13 +60,6 @@ const SearchResults = () => {
     setProducts(sortedProducts);
     setCurrentPage(1);
   };
-
-  const indexOfLastProduct = currentPage * productsPerPage;
-  const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
-  const currentProducts = products.slice(
-    indexOfFirstProduct,
-    indexOfLastProduct
-  );
 
   const renderPageNumbers = () => {
     const pages = [];
@@ -121,12 +103,9 @@ const SearchResults = () => {
       {renderPageNumbers().map((number, index) => (
         <button
           key={index}
-          className={`page-number ${
-            currentPage === number ? "active" : ""
-          } ${number === "..." ? "dots" : ""}`}
+          className={`page-number ${currentPage === number ? "active" : ""} ${number === "..." ? "dots" : ""}`}
           onClick={() => number !== "..." && setCurrentPage(number)}
-          disabled={number === "..."}
-        >
+          disabled={number === "..."}>
           {number}
         </button>
       ))}
@@ -141,11 +120,24 @@ const SearchResults = () => {
     </div>
   );
 
+  const handleProductClick = (productId) => {
+    navigate(`/product-detail/${productId}`);
+  };
+
+  const trackUserBehavior = (behavior) => {
+    const userBehavior = JSON.parse(localStorage.getItem("userBehavior")) || [];
+    userBehavior.push(behavior);
+    localStorage.setItem("userBehavior", JSON.stringify(userBehavior));
+  };
+
+  if (loading) return <div>Đang tải...</div>;
+  if (error) return <div>Lỗi: {error}</div>;
+
   return (
     <div className="search-results">
       <div className="search-info">
         {/* <span className="search-term">
-          Kết quả tìm kiếm cho từ khoá 'bánh ngọt'
+          Kết quả tìm kiếm cho từ khoá '{keyword}'
         </span> */}
       </div>
 
@@ -171,11 +163,11 @@ const SearchResults = () => {
         {renderPagination()}
       </div>
 
-      <div className="products-grid">
+      <div className="products-grid-search">
         {currentProducts.map((product) => (
-          <div key={product.id} className="product-card-search">
+          <div key={product.product_id} className="product-card-search" onClick={() => handleProductClick(product.product_id)} style={{ cursor: 'pointer' }}>
             <div className="product-image">
-              <img src={product.image} alt={product.name} />
+              <img src={product.images[0]} alt={product.name} />
               {product.label && (
                 <div className="sale-label">{product.label}</div>
               )}
@@ -185,7 +177,7 @@ const SearchResults = () => {
             <div className="product-info">
               <h3 className="product-name">{product.name}</h3>
               <div className="price-section">
-                <span className="price">₫{product.priceDisplay}</span>
+                <span className="price">{product.price}đ</span>
                 {product.discount && (
                   <span className="discount">{product.discount}</span>
                 )}
@@ -194,7 +186,7 @@ const SearchResults = () => {
               <div className="product-stats">
                 <div className="rating-search">
                   <span className="stars">⭐ {product.rating}</span>
-                  <span className="sold">Đã bán {product.soldCountDisplay}</span>
+                  <span className="sold">Đã bán {product.sales_strategy}</span>
                 </div>
                 <div className="location-info">
                   <span className="delivery-time">{product.deliveryTime}</span>

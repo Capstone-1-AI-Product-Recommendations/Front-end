@@ -1,75 +1,57 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import productService from '../../../../services/productService';
 import './ProductSearch.css';
-import productImg from '../../../../img/Product/cake.png';
 
-const ProductSearch = () => {
-  const shops = [
-    {
-      id: 1,
-      name: "Bánh Ngọt Homemade",
-      rating: 4.8,
-      followers: "46.5k",
-      shopImage: productImg
-    },
-    {
-      id: 2, 
-      name: "Tiệm Bánh Ngọt Healthy",
-      rating: 4.9,
-      followers: "38.2k",
-      shopImage: productImg
-    },
-    {
-      id: 3,
-      name: "Sweet Bakery House",
-      rating: 4.7,
-      followers: "25.1k", 
-      shopImage: productImg
-    },
-    {
-      id: 4,
-      name: "Bánh Ngọt Handmade",
-      rating: 4.6,
-      followers: "15.3k",
-      shopImage: productImg
-    },
-    {
-      id: 5,
-      name: "Bánh Ngọt Handmade",
-      rating: 4.6,
-      followers: "15.3k",
-      shopImage: productImg
+const ProductSearch = ({ searchTerm }) => {
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        setLoading(true);
+        const data = await productService.searchProducts(searchTerm);
+        setProducts(data.products);
+        setError(null);
+      } catch (err) {
+        setError('Không thể tìm thấy sản phẩm');
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (searchTerm) {
+      fetchProducts();
     }
-  ];
+  }, [searchTerm]);
+
+  if (loading) return <div>Đang tải...</div>;
+  if (error) return <div>Lỗi: {error}</div>;
 
   return (
     <div className="product-search">
       <div className="search-header">
-        <h2>SHOP LIÊN QUAN ĐẾN "BÁNH NGỌT"</h2>
-        <a href="#" className="more-results">Thêm Kết Quả &gt;</a>
+        <h2>Kết quả tìm kiếm cho "{searchTerm}"</h2>
       </div>
-
       <div className="products-container">
-        {shops.map(shop => (
-          <div key={shop.id} className="shop-card">
-            <img src={shop.shopImage} alt="Shop" className="shop-avatar" />
-            <div className="shop-info">
-              <h3>{shop.name}</h3>
-              <div className="shop-stats">
-                <span className="rating">⭐ {shop.rating}</span>
-                <span className="followers">{shop.followers} Followers</span>
+        {products.length > 0 ? (
+          products.map(product => (
+            <div key={product.product_id} className="shop-card">
+              <img src={product.images[0]} alt={product.name} className="shop-avatar" />
+              <div className="shop-info">
+                <h3>{product.name}</h3>
+                <div className="shop-stats">
+                  <span className="price">₫{product.price.toLocaleString()}</span>
+                </div>
+                <button className="view-shop">Xem sản phẩm</button>
               </div>
-              <button className="view-shop">Xem Shop</button>
             </div>
-          </div>
-        ))}
-
-        {/* <div className="promo-card">
-          <div className="promo-content">
-            <span className="promo-text">Giảm ₫10k</span>
-            <span className="promo-condition">Đơn tối thiểu ₫119k</span>
-            <button className="save-button">Lưu</button>
-          </div>
-        </div> */}
+          ))
+        ) : (
+          <p>Không tìm thấy sản phẩm nào.</p>
+        )}
       </div>
     </div>
   );

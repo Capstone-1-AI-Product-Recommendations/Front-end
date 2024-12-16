@@ -24,6 +24,10 @@
 }
 
 .product-card {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
   border: none;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -53,10 +57,19 @@
 }
 
 .product-image {
+  width: 100%;
+  height: 200px; /* Fixed height */
+  object-fit: cover; /* Maintain aspect ratio and cover container */
+  object-position: center;
+  transition: transform 0.3s ease;
   max-width: 100%;
   max-height: 100%;
   object-fit: contain;
   transition: transform 0.3s ease;
+}
+
+.product-card:hover .product-image {
+  transform: scale(1.05);
 }
 
 .image-indicator {

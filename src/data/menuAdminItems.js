@@ -36,29 +36,29 @@ const menuAdminItems = [
     path: "/admin/users",
     subItems: []
   },
-  {
-    id: "statistics",
-    icon: FaChartBar,
-    label: "Thống kê",
-    subItems: [
-      {
-        label: "Doanh thu",
-        path: "/admin/statistics/revenue"
-      },
-      {
-        label: "Sản phẩm",
-        path: "/admin/statistics/products"
-      },
-      {
-        label: "Người dùng",
-        path: "/admin/statistics/users"
-      }
-    ]
-  },
+  // {
+  //   id: "statistics",
+  //   icon: FaChartBar,
+  //   label: "Thống kê",
+  //   subItems: [
+  //     {
+  //       label: "Doanh thu",
+  //       path: "/admin/statistics/revenue"
+  //     },
+  //     {
+  //       label: "Sản phẩm",
+  //       path: "/admin/statistics/products"
+  //     },
+  //     {
+  //       label: "Người dùng",
+  //       path: "/admin/statistics/users"
+  //     }
+  //   ]
+  // },
   {
     id: "logout",
     icon: FaSignOutAlt,
-    label: "Đăng xuất",
+    label: "Thoát",
     path: "/",
     subItems: []
   }

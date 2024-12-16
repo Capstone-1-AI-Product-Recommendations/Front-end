@@ -1,15 +1,82 @@
 // src/Components/Cart/Cart.js
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { cartData } from '../../../data/cartData';
+import cartService from '../../../services/cartService';
 import styles from './Cart.module.css';
 
 const Cart = () => {
   const navigate = useNavigate();
-  const [cartItems, setCartItems] = useState(cartData);
+  const [cartData, setCartData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [selectedItems, setSelectedItems] = useState([]);
+  const userId = JSON.parse(localStorage.getItem('user'))?.user_id;
 
-  // Format giá tiền
+  useEffect(() => {
+    const fetchCartData = async () => {
+      try {
+        setLoading(true);
+        const response = await cartService.getCart(userId);
+        // Transform API response to match expected structure
+        const transformedData = (response?.items || []).map(shop => ({
+          shop_name: shop.shop_name,
+          products: shop.items || [] // Ensure items array exists
+        }));
+        console.log('Transformed cart data:', transformedData);
+        setCartData(transformedData);
+      } catch (err) {
+        setError('Không thể tải giỏ hàng');
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (userId) {
+      fetchCartData();
+    }
+  }, [userId]);
+
+  const handleQuantityUpdate = async (cartItemId, newQuantity) => {
+    if (newQuantity < 1) return;
+    
+    // Store previous state for rollback
+    const previousCartData = [...cartData];
+    
+    // Optimistic update
+    setCartData(currentCart => 
+      currentCart.map(shop => ({
+        ...shop,
+        products: shop.products.map(product => 
+          product.cart_item_id === cartItemId
+            ? { ...product, quantity: newQuantity }
+            : product
+        )
+      }))
+    );
+
+    try {
+      // Make API call
+      await cartService.updateItemInCart(userId, {
+        cart_item_id: cartItemId,
+        quantity: newQuantity
+      });
+
+      // Get fresh data in background
+      const response = await cartService.getCart(userId);
+      const transformedData = (response?.items || []).map(shop => ({
+        shop_name: shop.shop_name,
+        products: shop.items || []
+      }));
+      setCartData(transformedData);
+
+    } catch (error) {
+      console.error('Error updating quantity:', error);
+      // Revert to previous state on error
+      setCartData(previousCartData);
+    }
+  };
+
   const formatPrice = (price) => {
     return new Intl.NumberFormat('vi-VN', {
       style: 'currency',
@@ -17,25 +84,24 @@ const Cart = () => {
     }).format(price);
   };
 
-  // Tính tổng số sản phẩm được chọn
   const getSelectedCount = () => {
     return selectedItems.length;
   };
 
-  // Tính tổng tiền các sản phẩm được chọn
   const calculateTotal = () => {
     return selectedItems.reduce((total, itemId) => {
-      const product = cartItems.flatMap(shop => shop.products)
-        .find(product => product.id === itemId);
-      return total + (product ? product.price * product.quantity : 0);
+      const product = cartData
+        .flatMap(shop => shop.products)
+        .find(product => product.cart_item_id === itemId);
+        console.log('Product:', product); // Debug log
+      return total + (product ? parseFloat(product.product_price) * product.quantity : 0);
     }, 0);
   };
 
-  // Xử lý chọn/bỏ chọn tất cả
   const handleSelectAll = (e) => {
     if (e.target.checked) {
-      const allProductIds = cartItems.flatMap(shop => 
-        shop.products.map(product => product.id)
+      const allProductIds = cartData.flatMap(shop => 
+        (shop.products || []).map(product => product.cart_item_id)
       );
       setSelectedItems(allProductIds);
     } else {
@@ -43,7 +109,6 @@ const Cart = () => {
     }
   };
 
-  // Xử lý chọn/bỏ chọn từng sản phẩm
   const handleSelectItem = (productId) => {
     if (selectedItems.includes(productId)) {
       setSelectedItems(selectedItems.filter(id => id !== productId));
@@ -52,55 +117,41 @@ const Cart = () => {
     }
   };
 
-  // Xử lý cập nhật số lượng
-  const handleUpdateQuantity = (shopId, productId, newQuantity) => {
-    if (newQuantity < 1) return;
-    
-    setCartItems(cartItems.map(shop => {
-      if (shop.id === shopId) {
-        return {
-          ...shop,
-          products: shop.products.map(product => {
-            if (product.id === productId) {
-              return { ...product, quantity: newQuantity };
-            }
-            return product;
-          })
-        };
-      }
-      return shop;
-    }));
-  };
-
-  // Xử lý xóa sản phẩm
-  const handleRemoveProduct = (shopId, productId) => {
-    setCartItems(cartItems.map(shop => {
-      if (shop.id === shopId) {
-        return {
-          ...shop,
-          products: shop.products.filter(product => product.id !== productId)
-        };
-      }
-      return shop;
-    }).filter(shop => shop.products.length > 0));
-    setSelectedItems(selectedItems.filter(id => id !== productId));
-  };
-
-  // Thêm hàm xử lý chuyển trang
-  const handleCheckout = () => {
-    if (selectedItems.length === 0) {
-      alert('Vui lòng chọn ít nhất một sản phẩm để mua hàng');
-      return;
+  const handleRemoveProduct = async (productId) => {
+    try {
+      await cartService.removeItemFromCart(userId, productId);
+      setCartData(prevCartData =>
+        prevCartData
+          .map(shop => ({
+            ...shop,
+            products: shop.products.filter(product => product.cart_item_id !== productId),
+          }))
+          .filter(shop => shop.products.length > 0)
+      );
+      setSelectedItems(selectedItems.filter(id => id !== productId));
+    } catch (error) {
+      console.error('Error removing product:', error);
     }
-    navigate('/checkout', { 
-      state: { 
-        selectedItems: cartItems
-          .flatMap(shop => shop.products)
-          .filter(product => selectedItems.includes(product.id))
-      }
-    });
   };
 
+  const handleCheckout = () => {
+    const selectedProducts = cartData.flatMap(shop => 
+      shop.products.filter(product => 
+        selectedItems.includes(product.cart_item_id)
+      )
+    );
+    
+    localStorage.setItem('checkoutProducts', JSON.stringify(selectedProducts));
+    navigate('/checkout');
+  };
+
+  if (loading) {
+    return <div>Đang tải giỏ hàng...</div>;
+  }
+
+  if (error) {
+    return <div>{error}</div>;
+  }
 
   return (
     <div className={styles.cartContainer}>
@@ -108,7 +159,10 @@ const Cart = () => {
         <div className={styles.headerItem}>
           <input
             type="checkbox"
-            checked={selectedItems.length === cartItems.flatMap(shop => shop.products).length}
+            checked={
+              selectedItems.length ===
+              cartData.flatMap(shop => shop.products).length
+            }
             onChange={handleSelectAll}
           />
           <span>Sản Phẩm</span>
@@ -121,85 +175,78 @@ const Cart = () => {
         </div>
       </div>
 
-      {cartItems.map(shop => (
-        <div key={shop.id} className={styles.shopSection}>
+      {cartData.map((shop, index) => (
+        <div key={index} className={styles.shopSection}>
           <div className={styles.shopHeader}>
             <input
               type="checkbox"
-              checked={shop.products.every(product => 
-                selectedItems.includes(product.id)
+              checked={(shop.products || []).every(product =>
+                selectedItems.includes(product.cart_item_id)
               )}
               onChange={(e) => {
-                const shopProductIds = shop.products.map(product => product.id);
+                const shopProductIds = (shop.products || [])
+                  .map(product => product.cart_item_id);
                 if (e.target.checked) {
                   setSelectedItems([...selectedItems, ...shopProductIds]);
                 } else {
-                  setSelectedItems(selectedItems.filter(id => 
+                  setSelectedItems(selectedItems.filter(id =>
                     !shopProductIds.includes(id)
                   ));
                 }
               }}
             />
             <div className={styles.shopInfo}>
-              <img src={shop.shopIcon} alt={shop.shopName} className={styles.shopIcon} />
-              <span className={styles.shopName}>{shop.shopName}</span>
-              {shop.isOfficial && <span className={styles.officialBadge}>Mall</span>}
+              <span className={styles.shopName}>{shop.shop_name}</span>
             </div>
           </div>
 
-          {shop.products.map(product => (
-            <div key={product.id} className={styles.cartItem}>
+          {(shop.products || []).map(product => (
+            <div key={product.cart_item_id} className={styles.cartItem}>
               <div className={styles.itemCheckbox}>
                 <input
                   type="checkbox"
-                  checked={selectedItems.includes(product.id)}
-                  onChange={() => handleSelectItem(product.id)}
+                  checked={selectedItems.includes(product.cart_item_id)}
+                  onChange={() => handleSelectItem(product.cart_item_id)}
                 />
               </div>
               <div className={styles.itemInfo}>
-                <img src={product.image} alt={product.name} className={styles.itemImage} />
+                <img
+                  src={product.product_images[0].file}
+                  alt={product.product_name}
+                  className={styles.itemImage}
+                />
                 <div className={styles.itemDetails}>
-                  <h3>{product.name}</h3>
-                  <div className={styles.itemVariant}>
-                    <span>Phân Loại: {product.variant}</span>
-                  </div>
-                  {product.badge && (
-                    <span className={styles.badge}>{product.badge}</span>
-                  )}
+                  <h3>{product.product_name}</h3>
                 </div>
               </div>
               <div className={styles.priceSection}>
-                <span className={styles.originalPrice}>
-                  {formatPrice(product.originalPrice)}
-                </span>
                 <span className={styles.currentPrice}>
-                  {formatPrice(product.price)}
+                  {formatPrice(product.product_price)}
                 </span>
               </div>
               <div className={styles.quantityControl}>
-                <button 
-                  onClick={() => handleUpdateQuantity(shop.id, product.id, product.quantity - 1)}
+                <button
+                  onClick={() => handleQuantityUpdate(product.cart_item_id, product.quantity - 1)}
                   disabled={product.quantity <= 1}
                 >
                   -
                 </button>
-                <input 
-                  type="number" 
-                  value={product.quantity}
-                  onChange={(e) => handleUpdateQuantity(shop.id, product.id, parseInt(e.target.value) || 1)}
-                  min="1"
-                />
-                <button 
-                  onClick={() => handleUpdateQuantity(shop.id, product.id, product.quantity + 1)}
+                <span className={styles.quantityDisplay}>
+                  {product.quantity}
+                </span>
+                <button
+                  onClick={() => handleQuantityUpdate(product.cart_item_id, product.quantity + 1)}
                 >
                   +
                 </button>
               </div>
               <div className={styles.itemTotal}>
-                ₫{(product.price * product.quantity).toLocaleString()}
+                {formatPrice(parseFloat(product.product_price) * product.quantity)}
               </div>
               <div className={styles.itemActions}>
-                <button onClick={() => handleRemoveProduct(shop.id, product.id)}>Xóa</button>
+                <button onClick={() => handleRemoveProduct(product.cart_item_id)}>
+                  Xóa
+                </button>
               </div>
             </div>
           ))}
@@ -210,23 +257,32 @@ const Cart = () => {
         <div className={styles.footerLeft}>
           <input
             type="checkbox"
-            checked={selectedItems.length === cartItems.flatMap(shop => shop.products).length}
+            checked={
+              selectedItems.length ===
+              cartData.flatMap(shop => shop.products).length
+            }
             onChange={handleSelectAll}
           />
-          <span>Chọn Tất Cả ({cartItems.flatMap(shop => shop.products).length})</span>
+          <span>
+            Chọn Tất Cả ({cartData.flatMap(shop => shop.products).length})
+          </span>
           <button className={styles.deleteButton}>Xóa</button>
         </div>
         <div className={styles.footerRight}>
           <div className={styles.totalSection}>
-            <span>Tổng thanh toán ({getSelectedCount()} Sản phẩm):</span>
-            <span className={styles.totalPrice}>₫{calculateTotal().toLocaleString()}</span>
+            <span>
+              Tổng thanh toán ({getSelectedCount()} Sản phẩm):
+            </span>
+            <span className={styles.totalPrice}>
+              {formatPrice(calculateTotal())}
+            </span>
           </div>
-          <button 
-            className={styles.checkoutButton} 
+          <button
+            className={styles.checkoutButton}
             onClick={handleCheckout}
             disabled={selectedItems.length === 0}
           >
-            Mua Hàng
+            Mua Hàng ({selectedItems.length})
           </button>
         </div>
       </div>

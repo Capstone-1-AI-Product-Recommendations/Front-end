@@ -1,20 +1,57 @@
 /** @format */
-import React, { useState } from "react";
+import React, { useState, useEffect, useContext, useCallback } from "react";
 import { BsCart2 } from "react-icons/bs";
 import { IoMdNotificationsOutline } from "react-icons/io";
 import logo from "../../../assets/logo.png";
 import { FaUser, FaCaretDown } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import Login from "../Login/Login";
 import CartDropdown from "../Cart/CartDropdown";
 import { NavLink } from "react-router-dom";
-import cartItems from "../../../data/cartItems";
+// import cartItems from "../../../data/cartItems";
 import menuItems from "../../../data/menuItems";
 import "./HeaderAfterLogin.css";
+import { CartContext } from '../../../context/CartContext';
 
 const HeaderAfterLogin = ({ onLogout, userRole }) => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const [cartCount, setCartCount] = useState(0);
+  const [cartItems, setCartItems] = useState([]);
+
+  const calculateCartCount = useCallback((items) => {
+    return items.reduce((sum, shop) => sum + shop.items.length, 0);
+  }, []);
+
+  const loadCartData = useCallback(() => {
+    try {
+      const cartData = JSON.parse(localStorage.getItem('cartData'));
+      if (cartData && cartData.items) {
+        setCartItems(cartData.items);
+        const total = calculateCartCount(cartData.items);
+        setCartCount(prevCount => prevCount !== total ? total : prevCount);
+      }
+    } catch (error) {
+      console.error('Error loading cart data:', error);
+    }
+  }, [calculateCartCount]);
+
+  useEffect(() => {
+    loadCartData();
+    window.addEventListener('cartUpdated', loadCartData);
+    return () => window.removeEventListener('cartUpdated', loadCartData);
+  }, [loadCartData]);
+
   const [searchTerm, setSearchTerm] = useState(""); // State for search term
+  const [showSearchResults, setShowSearchResults] = useState(false); // State to control search results visibility
+
+  useEffect(() => {
+    // Clear search input when navigating away from SearchResults page
+    if (location.pathname !== "/search") {
+      setSearchTerm("");
+      setShowSearchResults(false);
+    }
+  }, [location]);
 
   // ** State Management **
   const [showLogin, setShowLogin] = useState(false); // Control Login Modal visibility
@@ -34,16 +71,6 @@ const HeaderAfterLogin = ({ onLogout, userRole }) => {
     setHoveredCategory(null);
   };
 
-  // Navigate based on user role
-  // const handleRoleNavigation = () => {
-  //   if (userRole === "user") {
-  //     navigate("/register-seller");
-  //   } else if (userRole === "seller") {
-  //     navigate("/manage-store");
-  //   } else if (userRole === "admin") {
-  //     navigate("/admin");
-  //   }
-  // };
   const handleLogout = () => {
     if (typeof onLogout === "function") {
       onLogout();
@@ -53,19 +80,24 @@ const HeaderAfterLogin = ({ onLogout, userRole }) => {
     }
   };
 
-  // const handleStoreManagement = () => {
-  //   if (userRole === "seller") {
-  //     navigate("/seller-dashboard");
-  //   } else if (userRole === "user") {
-  //     navigate("/register-seller");
-  //   }
-  // };
-
   const handleSearch = () => {
     if (searchTerm.trim()) {
+      setShowSearchResults(true); // Show search results
       navigate(`/search?keyword=${encodeURIComponent(searchTerm)}`);
+      trackUserBehavior({
+        keyword: searchTerm,
+        timestamp: Date.now(),
+        source: "searched_product"
+      });
     }
   };
+
+  const trackUserBehavior = (behavior) => {
+    const userBehavior = JSON.parse(localStorage.getItem("userBehavior")) || [];
+    userBehavior.push(behavior);
+    localStorage.setItem("userBehavior", JSON.stringify(userBehavior));
+  };
+  
 
   return (
     <>
@@ -107,7 +139,7 @@ const HeaderAfterLogin = ({ onLogout, userRole }) => {
                 </span>
               ) : userRole === "admin" ? (
                 <span
-                  className="nav-link" 
+                  className="nav-link"
                   onClick={() => navigate("/admin")}
                 >
                   Quản lý hệ thống
@@ -173,10 +205,13 @@ const HeaderAfterLogin = ({ onLogout, userRole }) => {
                 className="cart"
                 onMouseEnter={() => setShowCartDropdown(true)}
                 onMouseLeave={() => setShowCartDropdown(false)}
+                onClick={() => navigate('/cart')}
+                style={{ cursor: 'pointer' }}
               >
                 <BsCart2 className="icon" />
-                <span className="badge">{cartItems.length}</span>
-                {showCartDropdown && <CartDropdown items={cartItems} />}
+
+                <span className="badge">{cartCount}</span>
+                {showCartDropdown && <CartDropdown />}
               </div>
             </div>
           </div>

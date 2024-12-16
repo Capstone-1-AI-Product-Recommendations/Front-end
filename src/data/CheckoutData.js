@@ -1,3 +1,23 @@
+const getDeliveryDates = (shippingType) => {
+  const today = new Date();
+  const startDate = new Date(today);
+  const endDate = new Date(today);
+  
+  if (shippingType === "Nhanh") {
+    startDate.setDate(today.getDate() + 3);
+    endDate.setDate(today.getDate() + 5);
+  } else {
+    startDate.setDate(today.getDate() + 5);
+    endDate.setDate(today.getDate() + 7);
+  }
+
+  const formatDate = (date) => {
+    return `${date.getDate()} Tháng ${date.getMonth() + 1}`;
+  };
+
+  return `${formatDate(startDate)} - ${formatDate(endDate)}`;
+};
+
 export const CheckoutData = {
   // Thông tin địa chỉ
   addressData: [
@@ -61,19 +81,19 @@ export const CheckoutData = {
   shippingData: {
     method: "Nhanh",
     fee: 16500,
-    estimatedDelivery: "26 Tháng 11 - 30 Tháng 11",
+    estimatedDelivery: getDeliveryDates("Nhanh"),
     options: [
       {
         id: 1,
         name: "Nhanh",
         price: 16500,
-        time: "26 Tháng 11 - 30 Tháng 11"
+        time: getDeliveryDates("Nhanh")
       },
       {
         id: 2,
         name: "Tiết kiệm",
         price: 12000,
-        time: "28 Tháng 11 - 2 Tháng 12"
+        time: getDeliveryDates("Tiết kiệm")
       }
     ]
   },
@@ -140,4 +160,4 @@ export const formatPrice = (price) => {
 export const calculateTotal = (products, shippingFee, discount = 0) => {
   const subtotal = products.reduce((total, item) => total + (item.price * item.quantity), 0);
   return subtotal + shippingFee - discount;
-}; 
+};
