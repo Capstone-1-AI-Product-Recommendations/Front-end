@@ -153,7 +153,7 @@ const SellerRequestManagement = ({ toggleManagementView }) => {
           onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
           disabled={currentPage === 1}
         >
-          Trước
+        Trước 
         </button>
         {[...Array(totalPages)].map((_, index) => (
           <button

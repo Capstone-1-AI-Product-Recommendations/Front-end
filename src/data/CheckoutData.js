@@ -1,3 +1,7 @@
+import imgProduct from "../img/nike-shoes.png";
+import imgProduct1 from "../img/nike-panda.png";
+
+
 export const CheckoutData = {
   // Thông tin địa chỉ
   addressData: [
@@ -33,7 +37,7 @@ export const CheckoutData = {
       price: 448000,
       originalPrice: 500000,
       quantity: 1,
-      image: "https://down-vn.img.susercontent.com/file/sg-11134201-22110-e9lxg3h8ggjv91",
+      image: imgProduct,
       shop: {
         id: 1,
         name: "Nike Official Store",
@@ -47,7 +51,7 @@ export const CheckoutData = {
       price: 550000,
       originalPrice: 650000,
       quantity: 1,
-      image: "https://down-vn.img.susercontent.com/file/vn-11134207-7qukw-lf6q3f96cqhx15",
+      image: imgProduct1,
       shop: {
         id: 1,
         name: "Nike Official Store",

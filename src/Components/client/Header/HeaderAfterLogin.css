@@ -121,6 +121,12 @@
   cursor: pointer;
 }
 
+.user-avatar {
+  width: 40px; /* Độ rộng ảnh */
+  height: 40px; /* Chiều cao ảnh */
+  border-radius: 50%; /* Làm tròn ảnh */
+  object-fit: cover; /* Đảm bảo ảnh không bị méo */
+}
 .account-text {
   display: flex;
   flex-direction: column;
@@ -149,8 +155,8 @@
 
 .badge {
   position: absolute;
-  top: -8px;
-  right: -8px;
+  top: -6px;
+  right: -12px;
   background: red;
   color: white;
   font-size: 12px;
@@ -161,6 +167,22 @@
   align-items: center;
   justify-content: center;
 }
+.badge-warning {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  background: #fbc02d; /* Màu vàng */
+  color: white;
+  font-size: 12px;
+  min-width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+}
+
 
 
 /* Cart Dropdown Styles */

@@ -9,7 +9,7 @@ const Orders = () => {
   const [paymentStatus, setPaymentStatus] = useState('all');
   const [paymentSource, setPaymentSource] = useState('all');
   const [currentPage, setCurrentPage] = useState(1);
-  const [ordersPerPage, setOrdersPerPage] = useState(10);
+  const [ordersPerPage, setOrdersPerPage] = useState(5);
 
   const generateRandomOrders = () => {
     const randomOrders = [];
@@ -63,6 +63,67 @@ const Orders = () => {
 
   const paginatedOrders = orders.slice((currentPage - 1) * ordersPerPage, currentPage * ordersPerPage);
 
+  const totalPages = Math.ceil(orders.length / ordersPerPage);
+
+  const renderPagination = () => {
+    const paginationItems = [];
+    const maxVisiblePages = 5; // Maximum number of visible page buttons
+    let startPage, endPage;
+
+    if (totalPages <= maxVisiblePages) {
+        startPage = 1;
+        endPage = totalPages;
+    } else {
+        const middlePage = Math.ceil(maxVisiblePages / 2);
+        if (currentPage <= middlePage) {
+            startPage = 1;
+            endPage = maxVisiblePages;
+        } else if (currentPage + middlePage - 1 >= totalPages) {
+            startPage = totalPages - maxVisiblePages + 1;
+            endPage = totalPages;
+        } else {
+            startPage = currentPage - middlePage + 1;
+            endPage = currentPage + middlePage - 1;
+        }
+    }
+
+    // Add previous button
+    if (currentPage > 1) {
+        paginationItems.push(
+            <button key="prev" onClick={() => handlePageChange(currentPage - 1)} className="pagination-nav">
+                &lt;
+            </button>
+        );
+    }
+
+    for (let i = startPage; i <= endPage; i++) {
+        paginationItems.push(
+            <button key={i} onClick={() => handlePageChange(i)} className={`pagination-button ${currentPage === i ? 'active' : ''}`}>
+                {i}
+            </button>
+        );
+    }
+
+    // Add ellipsis
+    if (startPage > 1) {
+        paginationItems.unshift(<span className="ellipsis" key="ellipsis-start">...</span>);
+    }
+    if (endPage < totalPages) {
+        paginationItems.push(<span className="ellipsis" key="ellipsis-end">...</span>);
+    }
+
+    // Add next button
+    if (currentPage < totalPages) {
+        paginationItems.push(
+            <button key="next" onClick={() => handlePageChange(currentPage + 1)} className="pagination-nav">
+                &gt;
+            </button>
+        );
+    }
+
+    return paginationItems;
+  };
+
   return (
     <div className="orders-container">
       <div className="orders-header">
@@ -80,8 +141,9 @@ const Orders = () => {
       <div className="order-stats">
         {orderStats.map((stat, index) => (
           <div key={index} className="stat-card">
-            <div className="stat-value">{stat.value}</div>
             <div className="stat-label">{stat.label}</div>
+            <div className="stat-value">{stat.value}</div>
+
           </div>
         ))}
       </div>
@@ -150,11 +212,7 @@ const Orders = () => {
 
       {/* Pagination */}
       <div className="pagination">
-        {Array.from({ length: Math.ceil(orders.length / ordersPerPage) }, (_, i) => (
-          <button key={i} onClick={() => handlePageChange(i + 1)} className={`pagination-button ${currentPage === i + 1 ? 'active' : ''}`}>
-            {i + 1}
-          </button>
-        ))}
+        {renderPagination()}
       </div>
     </div>
   );

@@ -137,7 +137,7 @@ const ForgotPassword = ({ onClose }) => {
                     />
                   ))}
                 </div>
-                {message && <div className="message">{message}</div>}
+                {message && <div className="message-forgot">{message}</div>}
                 <button type="submit" className="submit-btn">
                   Xác thực
                 </button>
@@ -174,7 +174,7 @@ const ForgotPassword = ({ onClose }) => {
                     required
                   />
                 </div>
-                {message && <div className="message">{message}</div>}
+                {message && <div className="message-forgot">{message}</div>}
                 <button type="submit" className="submit-btn">
                   Đặt lại mật khẩu
                 </button>

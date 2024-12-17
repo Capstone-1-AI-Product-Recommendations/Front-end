@@ -1,31 +1,47 @@
-/** @format */
-import React, { useState } from "react";
-import { BsCart2 } from "react-icons/bs";
-import { IoMdNotificationsOutline } from "react-icons/io";
-import logo from "../../../assets/logo.png";
-import { FaUser, FaCaretDown } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
-import Login from "../Login/Login";
-import CartDropdown from "../Cart/CartDropdown";
-import { NavLink } from "react-router-dom";
-import cartItems from "../../../data/cartItems";
-import menuItems from "../../../data/menuItems";
-import "./HeaderAfterLogin.css";
+import React, { useState, useEffect } from 'react';
+import { BsCart2 } from 'react-icons/bs';
+import { IoMdNotificationsOutline } from 'react-icons/io';
+import { FaUser, FaCaretDown } from 'react-icons/fa';
+import { FiMapPin } from 'react-icons/fi';
+import { NavLink, useNavigate } from 'react-router-dom';
+import logo from '../../../assets/logo.png';
+import CartDropdown from '../Cart/CartDropdown';
+import NotificationsDropdown from '../NotificationsDropdown/NotificationsDropdown';
+import userImage from '../../../img/people.png';
+import menuItems from '../../../data/menuItems';
+import './HeaderAfterLogin.css';
 
 const HeaderAfterLogin = ({ onLogout, userRole }) => {
   const navigate = useNavigate();
-  const [searchTerm, setSearchTerm] = useState(""); // State for search term
 
-  // ** State Management **
-  const [showLogin, setShowLogin] = useState(false); // Control Login Modal visibility
-  const [showCartDropdown, setShowCartDropdown] = useState(false); // Control Cart Dropdown visibility
-  const [hoveredCategory, setHoveredCategory] = useState(null); // Track hovered category
+  const [searchTerm, setSearchTerm] = useState('');
+  const [showCartDropdown, setShowCartDropdown] = useState(false);
+  const [showNotificationsDropdown, setShowNotificationsDropdown] = useState(false);
+  const [location, setLocation] = useState('Tất cả');
+  const [hoveredCategory, setHoveredCategory] = useState(null);
 
-  // ** Event Handlers **
+  useEffect(() => {
+    fetch('https://api.example.com/user-location')
+      .then((res) => res.json())
+      .then((data) =>
+        setLocation(data.address || 'Q. Hải Châu, P. Hải Châu I, Đà Nẵng')
+      )
+      .catch(() => setLocation('Q. Hải Châu, P. Hải Châu I, Đà Nẵng'));
+  }, []);
 
-  // Handle logout and navigate to the home page
+  const handleSearch = () => {
+    if (searchTerm.trim()) {
+      navigate(`/search?keyword=${encodeURIComponent(searchTerm)}`);
+    }
+  };
 
-  // Handle hover actions on categories
+  const handleLogout = () => {
+    if (onLogout) {
+      onLogout();
+      navigate('/');
+    }
+  };
+
   const handleMouseEnter = (categoryName) => {
     setHoveredCategory(categoryName);
   };
@@ -34,181 +50,103 @@ const HeaderAfterLogin = ({ onLogout, userRole }) => {
     setHoveredCategory(null);
   };
 
-  // Navigate based on user role
-  // const handleRoleNavigation = () => {
-  //   if (userRole === "user") {
-  //     navigate("/register-seller");
-  //   } else if (userRole === "seller") {
-  //     navigate("/manage-store");
-  //   } else if (userRole === "admin") {
-  //     navigate("/admin");
-  //   }
-  // };
-  const handleLogout = () => {
-    if (typeof onLogout === "function") {
-      onLogout();
-      navigate("/");
-    } else {
-      console.error("onLogout is not a function");
-    }
-  };
-
-  // const handleStoreManagement = () => {
-  //   if (userRole === "seller") {
-  //     navigate("/seller-dashboard");
-  //   } else if (userRole === "user") {
-  //     navigate("/register-seller");
-  //   }
-  // };
-
-  const handleSearch = () => {
-    if (searchTerm.trim()) {
-      navigate(`/search?keyword=${encodeURIComponent(searchTerm)}`);
-    }
-  };
-
   return (
-    <>
-      {/* ** Header Container ** */}
-      <div className="menu-container">
-        <header className="header-user">
-          {/* ** Top Bar ** */}
-          <div className="top-bar">
-            <div className="top-links">
-              <NavLink
+    <div className="menu-container">
+      <header className="header-user">
+        {/* Top Bar */}
+        <div className="top-bar">
+          <div className="top-links">
+            <NavLink className="nav-link" to="/about-us">
+              Về chúng tôi
+            </NavLink>
+            <NavLink className="nav-link" to="/my-account">
+              Tài khoản của tôi
+            </NavLink>
+            <NavLink className="nav-link" to="/wishlist">
+              Danh sách mong muốn
+            </NavLink>
+            {userRole === 'seller' && (
+              <NavLink className="nav-link" to="/seller-dashboard">
+                Quản lý cửa hàng
+              </NavLink>
+            )}
+            {userRole === 'user' && (
+              <span
                 className="nav-link"
-                to="/about-us"
-                activeClassName="active"
+                onClick={() => navigate('/register-seller')}
               >
-                Về chúng tôi
-              </NavLink>
-              <NavLink
-                className="nav-link"
-                to="/my-account"
-                activeClassName="active"
-              >
-                Tài khoản của tôi
-              </NavLink>
-              <NavLink className="nav-link" to="/wishlist">
-                Danh sách mong muốn
-              </NavLink>
+                Trở thành người bán
+              </span>
+            )}
+            {userRole === 'admin' && (
+              <span className="nav-link" onClick={() => navigate('/admin')}>
+                Quản lý hệ thống
+              </span>
+            )}
+            <NavLink className="nav-link" to="/contact">
+              Hỗ trợ
+            </NavLink>
+          </div>
+        </div>
 
+        {/* Main Header */}
+        <div className="main-header">
+          <div className="logo" onClick={() => navigate('/')}>
+            <img src={logo} alt="ADSmart Logo" />
+            <span>ADSmart</span>
+          </div>
 
-              {userRole === "seller" ? (
-                <NavLink className="nav-link" to="/seller-dashboard">
-                  Quản lý cửa hàng
-                </NavLink>
-              ) : userRole === "user" ? (
-                <span
-                  className="nav-link"
-                  onClick={() => navigate("/register-seller")}
-                >
-                  Trở thành người bán
-                </span>
-              ) : userRole === "admin" ? (
-                <span
-                  className="nav-link" 
-                  onClick={() => navigate("/admin")}
-                >
-                  Quản lý hệ thống
-                </span>
-              ) : null}
-
-
-              <NavLink className="nav-link" to="/contact">
-                Hỗ trợ
-              </NavLink>
+          <div className="location-wrapper">
+            <span>Giao đến:</span>
+            <div className="location">
+              <FiMapPin className="icon" />
+              <span className="address">{location}</span>
+              <FaCaretDown />
             </div>
           </div>
 
-          {/* ** Main Header ** */}
-          <div className="main-header">
-            {/* Logo Section */}
-            <div className="logo" onClick={() => navigate("/")}>
-              <img src={logo} alt="ADSmart Logo" />
-              <span>ADSmart</span>
-            </div>
-
-            {/* Delivery Location */}
-            <div className="location-wrapper">
-              <span>Giao hàng đến</span>
-              <div className="location">
-                tất cả <FaCaretDown />
-              </div>
-            </div>
-
-            {/* Search Bar */}
-            <div className="search-bar">
-              <input
-                type="text"
-                placeholder="Tìm kiếm sản phẩm..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                onKeyPress={(e) => {
-                  if (e.key === 'Enter') {
-                    handleSearch();
-                  }
-                }}
-              />
-              <button onClick={handleSearch}>🔍</button>
-            </div>
-
-            {/* Account, Notifications, and Cart */}
-            <div className="account-section">
-              {/* User Account Section */}
-              <div className="user-account">
-                <FaUser className="icon" />
-                <div className="account-text">
-                  <span onClick={handleLogout}>Đăng xuất</span>
-                </div>
-              </div>
-
-              {/* Notifications */}
-              <div className="notification">
-                <IoMdNotificationsOutline className="icon" />
-              </div>
-
-              {/* Cart Section */}
-              <div
-                className="cart"
-                onMouseEnter={() => setShowCartDropdown(true)}
-                onMouseLeave={() => setShowCartDropdown(false)}
-              >
-                <BsCart2 className="icon" />
-                <span className="badge">{cartItems.length}</span>
-                {showCartDropdown && <CartDropdown items={cartItems} />}
-              </div>
-            </div>
+          <div className="search-bar">
+            <input
+              type="text"
+              placeholder="Tìm kiếm sản phẩm..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
+            />
+            <button onClick={handleSearch}>🔍</button>
           </div>
 
-          {/* ** Category Menu ** */}
-          <nav className="category-menu">
-            <div className="category-grid">
-              {menuItems.categories.map((item, index) => (
-                <div
-                  key={index}
-                  className="category-item"
-                  onMouseEnter={() => handleMouseEnter(item.name)}
-                  onMouseLeave={handleMouseLeave}
-                >
-                  <div className="category-icon">{item.icon}</div>
-                  <div className="category-name">{item.name}</div>
-                  {hoveredCategory === item.name && (
-                    <div className="dropdown-menu">
-                      {item.subItems.map((subItem, subIndex) => (
-                        <div key={subIndex} className="dropdown-item">
-                          {subItem}
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              ))}
+          <div className="account-section">
+            <div className="user-account" onClick={handleLogout}>
+              <img src={userImage} alt="User Avatar" className="user-avatar" />
+              <span>Đăng xuất</span>
             </div>
-          </nav>
-        </header>
-      </div>
-    </>
+
+            {/* Notification Dropdown */}
+            <div
+              className="notification"
+              onMouseEnter={() => setShowNotificationsDropdown(true)}
+              onMouseLeave={() => setShowNotificationsDropdown(false)}
+            >
+              <IoMdNotificationsOutline className="icon" />
+              <span className="badge-warning">5</span>
+              {showNotificationsDropdown && <NotificationsDropdown />}
+            </div>
+
+            {/* Cart Dropdown */}
+            <div
+              className="cart"
+              onMouseEnter={() => setShowCartDropdown(true)}
+              onMouseLeave={() => setShowCartDropdown(false)}
+            >
+              <BsCart2 className="icon" />
+              <span className="badge">3</span>
+              {showCartDropdown && <CartDropdown />}
+            </div>
+          </div>
+        </div>
+      </header>
+    </div>
   );
 };
 

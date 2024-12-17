@@ -173,7 +173,7 @@ const UserManagement = () => {
             </tbody>
           </table>
 
-          <div className="pagination">
+          <div className="pagination-user">
             <button 
               onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
               disabled={currentPage === 1}

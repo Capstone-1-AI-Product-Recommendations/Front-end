@@ -85,9 +85,9 @@
 }
 
 .page-number.active {
-  background: #ee4d2d;
+  background: #673AB7;
   color: white;
-  border-color: #ee4d2d;
+  border-color: #673AB7;
 }
 
 .page-number.dots {
@@ -95,7 +95,7 @@
   color: #999;
 }
 
-.products-grid {
+.products-grid-search {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   gap: 10px;
@@ -106,12 +106,14 @@
   border-radius: 2px;
   overflow: hidden;
   position: relative;
+  display: flex;
+  flex-direction: column;
 }
 
 .product-image {
-  position: relative;
   width: 100%;
   padding-top: 100%;
+  position: relative;
 }
 
 .product-image img {
@@ -147,6 +149,7 @@
 
 .product-info {
   padding: 8px;
+  flex: 1;
 }
 
 .product-name {

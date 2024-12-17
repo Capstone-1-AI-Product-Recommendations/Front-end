@@ -1,9 +1,32 @@
-// Inventory.js
 import React, { useState } from 'react';
 import './Inventory.css';
 import productImg from "../../../../img/Product/newProduct.png";
 
+// Hàm tạo dữ liệu giả
+const generateProducts = (count) => {
+  return Array.from({ length: count }, (_, index) => ({
+    sku: `SP${String(index + 1).padStart(4, '0')}`,
+    image: productImg,
+    name: `Sản phẩm ${index + 1}`,
+    description: `Mô tả cho sản phẩm ${index + 1}`,
+    cost: Math.floor(Math.random() * 500000) + 100000,
+    stock: Math.floor(Math.random() * 10),
+    totalValue: Math.floor(Math.random() * 5000000),
+  }));
+};
+
 const Inventory = () => {
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10; // Số sản phẩm trên mỗi trang
+
+  const inventoryItems = generateProducts(20); // Tạo 20 sản phẩm giả lập
+
+  // Tính toán phân trang
+  const totalPages = Math.ceil(inventoryItems.length / itemsPerPage);
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = inventoryItems.slice(indexOfFirstItem, indexOfLastItem);
+
   const [activeTab, setActiveTab] = useState('kho-hang');
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
@@ -23,59 +46,19 @@ const Inventory = () => {
     { label: 'Chưa bắt tồn kho', value: '8' },
   ];
 
-  const inventoryItems = [
-    {
-      sku: 'SP0013-1',
-      image: productImg,
-      name: 'Hươu hà nội',
-      description: 'Lên tường màu hồng',
-      cost: 130000,
-      stock: 1,
-      totalValue: 130000,
-    },
-    {
-      sku: 'SP0008',
-      image: productImg,
-      name: 'Gấu Misa',
-      description: '',
-      cost: 300000,
-      stock: 6,
-      totalValue: 1800000,
-      warning: true,
-    },
-    {
-      sku: 'SP0023-11',
-      image: productImg,
-      name: 'MINI',
-      description: 'Hồng Xanh',
-      cost: 200000,
-      stock: 0,
-      totalValue: 0,
-    },
-    {
-      sku: 'SP0037',
-      image: productImg,
-      name: 'Dior flowers',
-      description: '',
-      cost: 500000,
-      stock: 0,
-      totalValue: 0,
-    },
-    {
-      sku: 'SP0013-2',
-      image: productImg,
-      name: 'Hươu hà nội',
-      description: 'Lên tường màu xanh',
-      cost: 130000,
-      stock: 2,
-      totalValue: 260000,
-    },
-  ];
+  // Xử lý chuyển trang
+  const handleNext = () => {
+    if (currentPage < totalPages) setCurrentPage(currentPage + 1);
+  };
+
+  const handlePrev = () => {
+    if (currentPage > 1) setCurrentPage(currentPage - 1);
+  };
 
   return (
     <div className="inventory-container">
-      {/* Tab Menu */}
-      <div className="inventory-tabs">
+         {/* Tab Menu */}
+         <div className="inventory-tabs">
         {inventoryTabs.map((tab) => (
           <button
             key={tab.id}
@@ -92,14 +75,14 @@ const Inventory = () => {
       <div className="inventory-stats">
         {inventoryStats.map((stat, index) => (
           <div key={index} className="stat-card">
+          <div className="stat-label">{stat.label}</div>
             <div className="stat-value">{stat.value}</div>
-            <div className="stat-label">{stat.label}</div>
           </div>
         ))}
       </div>
-
-      {/* Search and Filter */}
-      <div className="inventory-controls">
+      {/* Inventory Table */}
+            {/* Search and Filter */}
+            <div className="inventory-controls">
         <div className="search-box">
           <input
             type="text"
@@ -119,8 +102,6 @@ const Inventory = () => {
         </div>
         <button className="create-transaction">Tạo giao dịch</button>
       </div>
-
-      {/* Inventory Table */}
       <div className="inventory-table">
         <table>
           <thead>
@@ -130,32 +111,40 @@ const Inventory = () => {
               <th>GIÁ VỐN</th>
               <th>TỒN KHO</th>
               <th>GIÁ TRỊ TỒN</th>
-              <th></th>
             </tr>
           </thead>
           <tbody>
-            {inventoryItems.map((item) => (
+            {currentItems.map((item) => (
               <tr key={item.sku}>
                 <td>{item.sku}</td>
                 <td className="product-cell">
                   <img src={item.image} alt={item.name} />
-                  <div className="product-info">
+                  <div className="product-info-inventory">
                     <div className="product-name">{item.name}</div>
                     <div className="product-description">{item.description}</div>
                   </div>
                 </td>
                 <td>{item.cost.toLocaleString()}</td>
-                <td className={item.warning ? 'warning' : ''}>
-                  {item.stock}
-                </td>
+                <td>{item.stock}</td>
                 <td>{item.totalValue.toLocaleString()}</td>
-                <td>
-                  <button className="action-button">⋮</button>
-                </td>
               </tr>
             ))}
           </tbody>
         </table>
+      </div>
+      
+
+      {/* Pagination */}
+      <div className="pagination">
+        <button className="pagination-btn-inventory" onClick={handlePrev} disabled={currentPage === 1}>
+          Trước
+        </button>
+        <span>
+          Trang {currentPage} / {totalPages}
+        </span>
+        <button className="pagination-btn-inventory" onClick={handleNext} disabled={currentPage === totalPages}>
+          Sau
+        </button>
       </div>
     </div>
   );

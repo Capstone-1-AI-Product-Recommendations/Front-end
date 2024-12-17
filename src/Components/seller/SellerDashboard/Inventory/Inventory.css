@@ -120,13 +120,14 @@
     gap: 12px;
   }
   
-  .product-image img {
-    max-width: 100%;
-    max-height: 100%;
-    object-fit: cover;
-  }
+  .product-cell img {
+    width: 50px; /* Điều chỉnh kích thước chiều rộng */
+    height: 50px; /* Điều chỉnh kích thước chiều cao */
+    object-fit: cover; /* Đảm bảo hình ảnh không bị méo */
+    border-radius: 4px; /* Làm bo tròn các góc (tuỳ chọn) */
+}
   
-  .product-info {
+  .product-info-inventory {
     display: flex;
     flex-direction: column;
   }
@@ -198,5 +199,33 @@
     .inventory-table th, .inventory-table td {
       font-size: 12px;
     }
+  }
+  
+  .pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-top: 20px;
+  }
+  
+  .pagination-btn-inventory {
+    padding: 8px 12px;
+    background: #1a73e8;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+  }
+  
+  .pagination-btn:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+  }
+  
+  .pagination span {
+    font-size: 14px;
+    color: #333;
   }
   

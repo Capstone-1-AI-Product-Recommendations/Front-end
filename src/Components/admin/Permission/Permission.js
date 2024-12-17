@@ -153,7 +153,7 @@ const Permisson = () => {
             <tr>
               <th>Chức năng</th>
               <th>Quản trị viên</th>
-              <th>Nhân viên</th>
+              <th>Người bán hàng</th>
               <th>Khách hàng</th>
             </tr>
           </thead>

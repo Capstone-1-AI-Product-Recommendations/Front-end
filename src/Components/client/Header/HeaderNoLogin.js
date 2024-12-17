@@ -39,7 +39,7 @@ const HeaderNoLogin = ({ onLoginSuccess }) => {
     //   navigate('/register-seller');
     // }
   };
-  
+
   const handleMouseEnter = (categoryName) => {
     setHoveredCategory(categoryName);
   };
@@ -111,13 +111,13 @@ const HeaderNoLogin = ({ onLoginSuccess }) => {
               </div>
             </div>
             <div className="search-bar">
-              <input 
+              <input
                 type="text"
                 placeholder="Tìm kiếm sản phẩm..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 onKeyPress={(e) => {
-                  if (e.key === 'Enter') {
+                  if (e.key === "Enter") {
                     handleSearch();
                   }
                 }}

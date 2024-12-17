@@ -21,7 +21,7 @@ const Search = () => {
         {/* Right side with search results and product search */}
         <div className="search-main">
           <div className="product-search-section">
-            <ProductSearch />
+            {/* <ProductSearch /> */}
           </div>
 
           <div className="search-results-header">

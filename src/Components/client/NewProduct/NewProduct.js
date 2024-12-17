@@ -35,18 +35,25 @@ const NewProduct = ({ products }) => {
     return () => clearInterval(interval);
   }, [hoveredProduct, isHoverTimerActive, products]);
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       const response = await fetchNewProducts(); // Use the imported API function
-  //       setProducts(response.data); // Assuming response.data contains the product array
-  //     } catch (error) {
-  //       console.error("Error fetching data:", error);
-  //     }
-  //   };
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetchNewProducts(); // Use the imported API function
+        // Assuming response.data contains the product array with images
+        // Update the products state with the fetched data
+        // For example, if the API returns an array of products with images
+        // const updatedProducts = response.data.map(product => ({
+        //   ...product,
+        //   image: product.image || "/default-image.png", // Default image if not provided
+        // }));
+        // setProducts(updatedProducts); // Assuming setProducts is a function to update the products state
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
 
-  //   fetchData();
-  // }, []); // Run once when the component mounts
+    fetchData();
+  }, []); // Run once when the component mounts
 
   const handleProductClick = (productId) => {
     navigate(`/product/${productId}`);

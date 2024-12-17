@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import './IdentityInformation.css';
 import logo from "../../../../img/logo.jpg";
+import FrontCCCD from "../../../../img/FrontCCCD.png";
+import BackCCCD from "../../../../img/BackCCCD.png";
+
 
 const IdentityInformation = () => {
   const [formData, setFormData] = useState({
@@ -163,7 +166,7 @@ const IdentityInformation = () => {
               />
               <label htmlFor="frontImage" className="upload-label">
                 <div className="upload-icon">+</div>
-                <img src={formData.frontImage ? URL.createObjectURL(formData.frontImage) : "/id-card-front.png"} alt="Front ID Preview" className="upload-preview" />
+                <img src={formData.frontImage ? URL.createObjectURL(formData.frontImage) : FrontCCCD} alt="" className="upload-preview" />
               </label>
               <p className="upload-hint">Vui lòng cung cấp ảnh chụp mặt trước CMND/CCCD/Hộ chiếu của bạn</p>
             </div>
@@ -177,7 +180,7 @@ const IdentityInformation = () => {
               />
               <label htmlFor="backImage" className="upload-label">
                 <div className="upload-icon">+</div>
-                <img src={formData.backImage ? URL.createObjectURL(formData.backImage) : "/id-card-back.png"} alt="Back ID Preview" className="upload-preview" />
+                <img src={formData.backImage ? URL.createObjectURL(formData.backImage) : BackCCCD} alt="" className="upload-preview" />
               </label>
               <p className="upload-hint">Vui lòng cung cấp ảnh chụp mặt sau CMND/CCCD/Hộ chiếu của bạn</p>
             </div>
@@ -194,7 +197,7 @@ const IdentityInformation = () => {
           />
           <label htmlFor="agreement">
             Tôi xác nhận tất cả dữ liệu tôi cung cấp là chính xác và trung thực. Tôi đã đọc và đồng ý với 
-            <a href="#" className="privacy-link">Chính Sách Bảo Mật</a> của Shopee.
+            <a href="#" className="privacy-link">Chính Sách Bảo Mật</a>
           </label>
         </div>
 

@@ -13,11 +13,10 @@ import OrderSummary from "./Components/client/Payment/OrderSummary";
 import PaymentQRCode from "./Components/client/Payment/PaymentQRCode";
 import OrderConfirmation from "./Components/client/Payment/OderConfirmation";
 import Checkout from "./Components/client/Payment/Checkout";
-import ADSmartCart from "./Components/client/ADShop/ADSmartCart";
 import Contact from "./Components/client/Contact/Contact";
 import Filter from "./Components/client/Search/Filter/Filter";
 import Search from "./Pages/Search/Search";
-import AccountManagement from "./Components/client/AccountManagement/AccountManagement";
+// import AccountManagement from "./Components/client/AccountManagement/AccountManagement";
 
 
 
@@ -102,8 +101,9 @@ const RouterCustom = () => {
       <Route path="/confirmation" element={<OrderConfirmation />} />
       <Route path="/filter" element={<Filter />} />
       <Route path="/search" element={<Search />} />
-      <Route path="/ADSmartCart" element={<ADSmartCart />} />
-      <Route path="/profile" element={<AccountManagement />} />
+      <Route path="/product-detail" element={<ProductDetail />} />
+
+      {/* <Route path="/profile" element={<AccountManagement />} /> */}
 
       {/* Nếu người dùng đã đăng nhập */}
       {isLoggedIn ? (
@@ -113,7 +113,7 @@ const RouterCustom = () => {
             <>
               <Route path="/product-list" element={<ProductList />} />
       <Route path="/ProductDetail/:id" element={<ProductDetail />} />
-      <Route path="/profile" element={<AccountManagement />} />
+      {/* <Route path="/profile" element={<AccountManagement />} /> */}
 
               <Route path="/product-detail" element={<ProductDetail />} />
               <Route path="/order-summary" element={<OrderSummary />} />
@@ -146,7 +146,6 @@ const RouterCustom = () => {
 
           {userRole === "seller" ? (
             <Route path="/seller-dashboard" element={<SellerLayout />}>
-              <Route path="users" element={<UserManagement />} />
               <Route path="products" element={<SellerProducts />} />
               <Route path="inventory" element={<Inventory />} />
               <Route path="chatbox" element={<Chatbox />} />

@@ -138,3 +138,49 @@
     height: 120px;
     opacity: 0.5;
   }
+  
+  /* Pagination Styles */
+  .pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Căn giữa các nút phân trang */
+    margin-top: 20px; /* Khoảng cách phía trên */
+  }
+  
+  .nav-button-prev,
+  .nav-button-next {
+    background: #673AB7; /* Màu nền cho nút */
+    color: white; /* Màu chữ */
+    border: none; /* Không có viền */
+    padding: 8px 12px; /* Padding cho nút */
+    border-radius: 4px; /* Bo tròn góc */
+    cursor: pointer; /* Con trỏ chuột khi hover */
+    margin: 0 5px; /* Khoảng cách giữa các nút */
+  }
+  
+  .nav-button-prev:disabled,
+  .nav-button-next:disabled {
+    background: #ddd; /* Màu nền cho nút bị vô hiệu hóa */
+    cursor: not-allowed; /* Con trỏ không cho phép */
+  }
+  
+  .page-number {
+    background: white; /* Màu nền cho nút số trang */
+    color: #673AB7; /* Màu chữ */
+    border: 1px solid #ddd; /* Viền cho nút */
+    padding: 8px 12px; /* Padding cho nút */
+    border-radius: 4px; /* Bo tròn góc */
+    margin: 0 5px; /* Khoảng cách giữa các nút */
+    cursor: pointer; /* Con trỏ chuột khi hover */
+  }
+  
+  .page-number.active {
+    background: #673AB7; /* Màu nền cho nút đang hoạt động */
+    color: white; /* Màu chữ cho nút đang hoạt động */
+  }
+  
+  .bottom-pagination {
+    margin-top: 20px; /* Khoảng cách phía trên cho phân trang dưới cùng */
+    display: flex;
+    justify-content: center; /* Căn giữa phân trang dưới cùng */
+  }

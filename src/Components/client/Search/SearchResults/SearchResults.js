@@ -48,7 +48,7 @@ const SearchResults = () => {
 
   const [products, setProducts] = useState(generateProducts());
   const [currentPage, setCurrentPage] = useState(1);
-  const productsPerPage = 40;
+  const productsPerPage = 50;
   const totalPages = Math.ceil(products.length / productsPerPage);
 
   const sortProducts = (sortType) => {
@@ -171,7 +171,7 @@ const SearchResults = () => {
         {renderPagination()}
       </div>
 
-      <div className="products-grid">
+      <div className="products-grid-search">
         {currentProducts.map((product) => (
           <div key={product.id} className="product-card-search">
             <div className="product-image">
@@ -185,7 +185,7 @@ const SearchResults = () => {
             <div className="product-info">
               <h3 className="product-name">{product.name}</h3>
               <div className="price-section">
-                <span className="price">₫{product.priceDisplay}</span>
+                <span className="price">{product.priceDisplay}đ</span>
                 {product.discount && (
                   <span className="discount">{product.discount}</span>
                 )}
