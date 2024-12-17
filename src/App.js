@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import NotificationBanner from './Components/client/Header/NotificationBanner'; // Import component NotificationBanner
 import { CartProvider } from './Components/client/Cart/CartContext';
 import { NotificationsProvider } from './Components/client/NotificationsDropdown/NotificationsContext';
 import Footer from './Components/client/Footer/Footer';
@@ -76,9 +75,6 @@ function App() {
             <HeaderNoLogin onLoginSuccess={handleLoginSuccess} />
           )
         )}
-        
-        {/* Hiển thị bảng thông báo nếu là seller */}
-        {showSuccessMessage && <NotificationBanner />}
         
         <RouterCustom 
           isLoggedIn={isLoggedIn} 

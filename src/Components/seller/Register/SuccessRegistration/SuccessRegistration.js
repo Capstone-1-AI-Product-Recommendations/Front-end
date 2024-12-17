@@ -20,7 +20,7 @@ const SuccessRegistration = () => {
   }, []);
 
   const handleAddProduct = () => {
-    navigate('/product-form'); // Điều hướng đến trang thêm sản phẩm (thay '/add-product' bằng route bạn muốn)
+    navigate('/'); // Điều hướng đến trang thêm sản phẩm (thay '/add-product' bằng route bạn muốn)
   };
 
   const handleBack = () => {
@@ -79,7 +79,7 @@ const SuccessRegistration = () => {
 
         {isApproved && (
           <button onClick={handleAddProduct} className="add-product-seller-btn">
-            Thêm sản phẩm
+            Về trang chủ
           </button>
         )}
       </div>
