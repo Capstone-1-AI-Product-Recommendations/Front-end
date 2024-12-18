@@ -31,18 +31,18 @@ export const loginUser = async (userData) => {
     const userBehavior = getUserBehavior();
     const requestData = userBehavior ? { ...userData, userBehavior } : userData;
     const response = await API.post('/login/', requestData);
-    
+
     // Save token and user data
     localStorage.setItem('token', response.data.token);
     localStorage.setItem('user', JSON.stringify(response.data.user));
-    
+
     // Initialize cart after successful login using user.user_id
-    const userId = response.data.user.user_id;    
-    
+    const userId = response.data.user.user_id;
+
     if (userId) {
       await cartService.getCart(userId);
     }
-    
+
     return response.data;
   } catch (error) {
     console.error('Login error:', error);
@@ -58,15 +58,38 @@ export const registerUser = async (userData, onSuccess) => {
     console.log('Request data:', requestData);
     const response = await API.post('/register/', requestData);
     console.log(response.data);
-    
+
     // Call success callback if provided
     if (onSuccess) {
       onSuccess();
     }
-    
+
     return response.data;
   } catch (error) {
     console.error('Error registering user:', error);
     throw error.response?.data || { message: 'Đăng ký thất bại' };
+  }
+};
+
+// API to fetch user notifications
+export const fetchUserNotifications = async (userId) => {
+  try {
+    const response = await API.get(`/user/${userId}/notifications`);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching notifications:', error);
+    throw error;
+  }
+};
+
+// API to update notification status
+export const updateNotificationStatus = async (userId, notificationId) => {
+  try {
+    console.log('Notification status updated:', notificationId);
+    const response = await API.put(`/user/${userId}/notifications/update/`, { notification_id: notificationId });
+    return response.data;
+  } catch (error) {
+    console.error('Error updating notification status:', error);
+    throw error;
   }
 };

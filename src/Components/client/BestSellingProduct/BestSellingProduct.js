@@ -1,13 +1,14 @@
 /** @format */
 
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { CartContext } from '../../../context/CartContext';
+import cartService from '../../../services/cartService';
 import "./BestSellingProduct.css";
 
 const PRODUCTS_PER_PAGE = 36;
 
-const BestSellingProduct = ({ products }) => {
+const BestSellingProduct = ({ products, updateCartCount }) => {
   const [hoveredProduct, setHoveredProduct] = useState(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isHoverTimerActive, setIsHoverTimerActive] = useState(false);
@@ -43,10 +44,24 @@ const BestSellingProduct = ({ products }) => {
     navigate(`/product-detail/${productId}`);
   };
 
-  const handleAddToCart = (e, product) => {
+  const handleAddToCart = async (e, product) => {
     e.stopPropagation();
-    addToCart(product);
-
+    try {
+      const user = JSON.parse(localStorage.getItem('user')); // Assuming user object is stored in localStorage
+      const userId = user ? user.user_id : null;
+      if (!userId) {
+        alert('User not logged in.');
+        return;
+      }
+      const productData = { product_id: product.product_id, quantity: 1 };
+      const newCartData = await cartService.addToCart(userId, productData);
+      alert('Product added to cart successfully!');
+      // Update cart count
+      updateCartCount(newCartData);
+    } catch (error) {
+      console.error('Error adding product to cart:', error);
+      alert('Failed to add product to cart.');
+    }
   };
 
   const handleMouseEnter = (index) => {
@@ -112,10 +127,12 @@ const BestSellingProduct = ({ products }) => {
     return pageNumbers;
   };
 
-  const currentProducts = products.slice(
-    (currentPage - 1) * PRODUCTS_PER_PAGE,
-    currentPage * PRODUCTS_PER_PAGE
-  );
+  const currentProducts = useMemo(() => {
+    return products.slice(
+      (currentPage - 1) * PRODUCTS_PER_PAGE,
+      currentPage * PRODUCTS_PER_PAGE
+    );
+  }, [products, currentPage]);
 
   return (
     <div className='best-product-container'>
@@ -155,6 +172,7 @@ const BestSellingProduct = ({ products }) => {
                   }
                   alt={product.name}
                   className='product-image'
+                  loading="lazy"
                 />
               </div>
               {/* <span className='product-badge'>{product.badge}</span> */}
@@ -193,50 +211,6 @@ const BestSellingProduct = ({ products }) => {
         ))}
       </div>
 
-      {/* <div className="pagination">
-        <button
-          className="pagination-btn"
-          onClick={goToFirstPage}
-          disabled={currentPage === 1}
-        >
-          &laquo;
-        </button>
-        <button
-          className="pagination-btn"
-          onClick={previousPage}
-          disabled={currentPage === 1}
-        >
-          &lt;
-        </button>
-        {getPageNumbers().map((page, index) =>
-          page === "..." ? (
-            <span key={index} className="pagination-ellipsis">...</span>
-          ) : (
-            <button
-              key={page}
-              className={`pagination-btn ${currentPage === page ? "active" : ""
-                }`}
-              onClick={() => changePage(page)}
-            >
-              {page}
-            </button>
-          )
-        )}
-        <button
-          className="pagination-btn"
-          onClick={nextPage}
-          disabled={currentPage === totalPages}
-        >
-          &gt;
-        </button>
-        <button
-          className="pagination-btn"
-          onClick={goToLastPage}
-          disabled={currentPage === totalPages}
-        >
-          &raquo;
-        </button>
-      </div> */}
     </div>
   );
 };

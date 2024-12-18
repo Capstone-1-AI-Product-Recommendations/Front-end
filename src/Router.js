@@ -73,13 +73,24 @@ const RouterCustom = () => {
       if (parsedUser && parsedUser.role) {
         setIsLoggedIn(true);
         setUserRole(parsedUser.role);
+
+        // Check access permissions for current route
+        const isSellerRoute = location.pathname.includes('/seller-dashboard');
+        const isAdminRoute = location.pathname.includes('/admin');
+
+        if (
+          (isSellerRoute && parsedUser.role !== 'seller') ||
+          (isAdminRoute && parsedUser.role !== 'admin')
+        ) {
+          navigate('/');
+        }
       } else {
         console.log("Parsed user is null or does not have a role property");
       }
     } else {
       console.log("No user found in localStorage");
     }
-  }, []);
+  }, [location.pathname]);
 
   // Lưu đường dẫn hiện tại vào localStorage
   useEffect(() => {
@@ -101,7 +112,7 @@ const RouterCustom = () => {
         (isAdminRoute && user.role === 'admin') ||
         (!isSellerRoute && !isAdminRoute)
       ) {
-        navigate(lastPath);
+        navigate(lastPath, { replace: true }); // Use replace option only when necessary
       }
     }
   }, [navigate]);
@@ -115,6 +126,7 @@ const RouterCustom = () => {
       <Route path="/product-detail/:id" element={<ProductDetail />} />
       <Route path="/filter" element={<Filter />} />
       <Route path="/search" element={<Search />} />
+      <Route path="/search/:subcategory" element={<Search />} /> {/* Add this line */}
       {/* Cart route - đặt ngoài điều kiện isLoggedIn */}
       <Route path="/cart" element={<Cart />} />
 

@@ -1,23 +1,26 @@
 /** @format */
-import React, { useState, useEffect, useContext, useCallback } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { BsCart2 } from "react-icons/bs";
 import { IoMdNotificationsOutline } from "react-icons/io";
 import logo from "../../../assets/logo.png";
 import { FaUser, FaCaretDown } from "react-icons/fa";
 import { useNavigate, useLocation } from "react-router-dom";
-import Login from "../Login/Login";
 import CartDropdown from "../Cart/CartDropdown";
 import { NavLink } from "react-router-dom";
-// import cartItems from "../../../data/cartItems";
-import menuItems from "../../../data/menuItems";
 import "./HeaderAfterLogin.css";
-import { CartContext } from '../../../context/CartContext';
+import productService from '../../../services/productService';
+import { fetchUserNotifications, updateNotificationStatus } from '../../../services/apiLogin'; // Import the new function
+import orderService from '../../../services/orderService'; // Import orderService
 
 const HeaderAfterLogin = ({ onLogout, userRole }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const [cartCount, setCartCount] = useState(0);
   const [cartItems, setCartItems] = useState([]);
+  const [recentSearches, setRecentSearches] = useState([]); // State for recent searches
+  const [notifications, setNotifications] = useState([]);
+  const [showNotificationsDropdown, setShowNotificationsDropdown] = useState(false);
+  const [unreadCount, setUnreadCount] = useState(0); // State for unread notifications count
 
   const calculateCartCount = useCallback((items) => {
     return items.reduce((sum, shop) => sum + shop.items.length, 0);
@@ -36,10 +39,21 @@ const HeaderAfterLogin = ({ onLogout, userRole }) => {
     }
   }, [calculateCartCount]);
 
+  const updateCartCount = (newCartData) => {
+    if (newCartData && newCartData.items) {
+      setCartItems(newCartData.items);
+      const total = calculateCartCount(newCartData.items);
+      setCartCount(total);
+    }
+  };
+
   useEffect(() => {
     loadCartData();
-    window.addEventListener('cartUpdated', loadCartData);
-    return () => window.removeEventListener('cartUpdated', loadCartData);
+    const handleCartUpdated = () => {
+      loadCartData();
+    };
+    window.addEventListener('cartUpdated', handleCartUpdated);
+    return () => window.removeEventListener('cartUpdated', handleCartUpdated);
   }, [loadCartData]);
 
   const [searchTerm, setSearchTerm] = useState(""); // State for search term
@@ -53,36 +67,99 @@ const HeaderAfterLogin = ({ onLogout, userRole }) => {
     }
   }, [location]);
 
+  useEffect(() => {
+    // Load recent searches from local storage
+    const loadRecentSearches = () => {
+      const userBehavior = JSON.parse(localStorage.getItem("userBehavior")) || [];
+      const searches = userBehavior
+        .filter(behavior => behavior.source === "searched_product")
+        .map(behavior => behavior.keyword);
+      const uniqueSearches = [...new Set(searches)]; // Remove duplicates
+      const recentUniqueSearches = uniqueSearches.slice(-5).reverse(); // Get the 5 most recent unique searches
+      setRecentSearches(recentUniqueSearches);
+    };
+
+    loadRecentSearches();
+  }, []);
+
+  const loadNotifications = useCallback(async () => {
+    try {
+      const user = JSON.parse(localStorage.getItem('user'));
+      if (user && user.user_id) {
+        const data = await fetchUserNotifications(user.user_id);
+        setNotifications(data);
+        setUnreadCount(data.filter(notification => notification.is_read === 1).length); // Count unread notifications
+      }
+    } catch (error) {
+      console.error('Error loading notifications:', error);
+    }
+  }, []);
+
+  useEffect(() => {
+    loadNotifications();
+  }, [loadNotifications]);
+
+  const formatTimeAgo = (timestamp) => {
+    if (!timestamp) return 'Unknown time';
+
+    const parsedTimestamp = Date.parse(timestamp);
+    if (isNaN(parsedTimestamp)) return 'Unknown time';
+
+    const now = new Date();
+    const timeDiff = Math.floor((now - parsedTimestamp) / 1000); // in seconds
+
+    if (timeDiff < 60) return `${timeDiff} seconds ago`;
+    if (timeDiff < 3600) return `${Math.floor(timeDiff / 60)} minutes ago`;
+    if (timeDiff < 86400) return `${Math.floor(timeDiff / 3600)} hours ago`;
+    return `${Math.floor(timeDiff / 86400)} days ago`;
+  };
+
   // ** State Management **
-  const [showLogin, setShowLogin] = useState(false); // Control Login Modal visibility
   const [showCartDropdown, setShowCartDropdown] = useState(false); // Control Cart Dropdown visibility
   const [hoveredCategory, setHoveredCategory] = useState(null); // Track hovered category
+  const [categories, setCategories] = useState([]);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await productService.getSubCategories();
+        console.log('Categories:', response);
+        const transformedCategories = response.map(category => ({
+          name: category.category_name,
+          subItems: category.subcategories.map(sub => sub.subcategory_name)
+        }));
+        setCategories(transformedCategories);
+      } catch (error) {
+        console.error('Error fetching categories:', error);
+      }
+    };
+
+    fetchCategories();
+  }, []); // Add an empty dependency array to run only once
 
   // ** Event Handlers **
 
-  // Handle logout and navigate to the home page
-
   // Handle hover actions on categories
-  const handleMouseEnter = (categoryName) => {
+  const handleMouseEnter = useCallback((categoryName) => {
     setHoveredCategory(categoryName);
-  };
+  }, []);
 
-  const handleMouseLeave = () => {
+  const handleMouseLeave = useCallback(() => {
     setHoveredCategory(null);
-  };
+  }, []);
 
-  const handleLogout = () => {
+  const handleLogout = useCallback(() => {
     if (typeof onLogout === "function") {
       onLogout();
-      navigate("/");
+      navigate("/", { replace: true }); // Use replace option only when necessary
     } else {
       console.error("onLogout is not a function");
     }
-  };
+  }, [navigate, onLogout]);
 
-  const handleSearch = () => {
+  const handleSearch = useCallback(() => {
     if (searchTerm.trim()) {
-      setShowSearchResults(true); // Show search results
+      setShowSearchResults(false); // Hide suggestions when searching
       navigate(`/search?keyword=${encodeURIComponent(searchTerm)}`);
       trackUserBehavior({
         keyword: searchTerm,
@@ -90,14 +167,54 @@ const HeaderAfterLogin = ({ onLogout, userRole }) => {
         source: "searched_product"
       });
     }
-  };
+  }, [navigate, searchTerm]);
 
-  const trackUserBehavior = (behavior) => {
+  const trackUserBehavior = useCallback((behavior) => {
     const userBehavior = JSON.parse(localStorage.getItem("userBehavior")) || [];
     userBehavior.push(behavior);
     localStorage.setItem("userBehavior", JSON.stringify(userBehavior));
+  }, []);
+
+  const handleSubcategoryClick = useCallback((subcategory) => {
+    navigate(`/search/${encodeURIComponent(subcategory)}`);
+  }, [navigate]);
+
+  const handleNotificationClick = async (notificationId, isRead) => {
+    if (isRead === 0) {
+      try {
+        const user = JSON.parse(localStorage.getItem('user'));
+        if (user && user.user_id && notificationId) {
+          await updateNotificationStatus(user.user_id, notificationId);
+          // Update the local state to reflect the change
+          setNotifications((prevNotifications) =>
+            prevNotifications.map((notification) =>
+              notification.notification_id === notificationId ? { ...notification, is_read: 0 } : notification
+            )
+          );
+          setUnreadCount(prevCount => prevCount - 1); // Decrease unread count
+        }
+      } catch (error) {
+        console.error('Error updating notification status:', error);
+      }
+    }
   };
-  
+
+  const handleNotificationsDropdownClose = () => {
+    setShowNotificationsDropdown(false);
+    loadNotifications(); // Refresh notifications when the dropdown is closed
+  };
+
+  const handlePaymentSuccess = useCallback(async (userId, orderId, shippingAddressId, amount, paymentMethod) => {
+    try {
+      if (paymentMethod === 'COD') {
+        await orderService.processCODPayment(userId, orderId, shippingAddressId, amount, loadCartData);
+      } else if (paymentMethod === 'PayOS') {
+        await orderService.processPayOSPayment(userId, orderId, shippingAddressId, amount, loadCartData);
+      }
+    } catch (error) {
+      console.error('Error processing payment:', error);
+    }
+  }, [loadCartData]);
 
   return (
     <>
@@ -125,7 +242,6 @@ const HeaderAfterLogin = ({ onLogout, userRole }) => {
                 Danh sách mong muốn
               </NavLink>
 
-
               {userRole === "seller" ? (
                 <NavLink className="nav-link" to="/seller-dashboard">
                   Quản lý cửa hàng
@@ -145,7 +261,6 @@ const HeaderAfterLogin = ({ onLogout, userRole }) => {
                   Quản lý hệ thống
                 </span>
               ) : null}
-
 
               <NavLink className="nav-link" to="/contact">
                 Hỗ trợ
@@ -176,6 +291,8 @@ const HeaderAfterLogin = ({ onLogout, userRole }) => {
                 placeholder="Tìm kiếm sản phẩm..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
+                onFocus={() => setShowSearchResults(true)} // Show recent searches on focus
+                onBlur={() => setTimeout(() => setShowSearchResults(false), 200)} // Hide recent searches on blur with delay
                 onKeyPress={(e) => {
                   if (e.key === 'Enter') {
                     handleSearch();
@@ -183,6 +300,22 @@ const HeaderAfterLogin = ({ onLogout, userRole }) => {
                 }}
               />
               <button onClick={handleSearch}>🔍</button>
+              {showSearchResults && recentSearches.length > 0 && (
+                <div className="search-suggestions">
+                  {recentSearches.map((term, index) => (
+                    <div
+                      key={index}
+                      className="suggestion-item"
+                      onClick={() => {
+                        setSearchTerm(term);
+                        handleSearch();
+                      }}
+                    >
+                      {term}
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
 
             {/* Account, Notifications, and Cart */}
@@ -196,8 +329,28 @@ const HeaderAfterLogin = ({ onLogout, userRole }) => {
               </div>
 
               {/* Notifications */}
-              <div className="notification">
+              <div className="notification"
+                onMouseEnter={() => setShowNotificationsDropdown(true)}
+                onMouseLeave={handleNotificationsDropdownClose}>
                 <IoMdNotificationsOutline className="icon" />
+                {unreadCount > 0 && <span className="badge">{unreadCount}</span>}
+                {showNotificationsDropdown && (
+                  <div className="notifications-dropdown">
+                    {notifications.length > 0 ? (
+                      notifications.map((notification) => (
+                        <div
+                          key={notification.notification_id}
+                          className={`notification-item ${notification.is_read ? 'unread' : 'read'}`}
+                          onClick={() => handleNotificationClick(notification.notification_id, notification.is_read)}
+                        >
+                          {notification.message}
+                        </div>
+                      ))
+                    ) : (
+                      <div className="notification-item">No notifications</div>
+                    )}
+                  </div>
+                )}
               </div>
 
               {/* Cart Section */}
@@ -219,24 +372,29 @@ const HeaderAfterLogin = ({ onLogout, userRole }) => {
           {/* ** Category Menu ** */}
           <nav className="category-menu">
             <div className="category-grid">
-              {menuItems.categories.map((item, index) => (
+              {categories.map((item, index) => (
                 <div
                   key={index}
                   className="category-item"
                   onMouseEnter={() => handleMouseEnter(item.name)}
                   onMouseLeave={handleMouseLeave}
                 >
-                  <div className="category-icon">{item.icon}</div>
-                  <div className="category-name">{item.name}</div>
-                  {hoveredCategory === item.name && (
-                    <div className="dropdown-menu">
-                      {item.subItems.map((subItem, subIndex) => (
-                        <div key={subIndex} className="dropdown-item">
-                          {subItem}
-                        </div>
-                      ))}
-                    </div>
-                  )}
+                  <>
+                    <div className="category-name">{item.name}</div>
+                    {hoveredCategory === item.name && (
+                      <div className="dropdown-menu">
+                        {item.subItems.map((subItem, subIndex) => (
+                          <div
+                            key={subIndex}
+                            className="dropdown-item"
+                            onClick={() => handleSubcategoryClick(subItem)}
+                          >
+                            {subItem}
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </>
                 </div>
               ))}
             </div>
@@ -247,4 +405,4 @@ const HeaderAfterLogin = ({ onLogout, userRole }) => {
   );
 };
 
-export default HeaderAfterLogin;
+export default React.memo(HeaderAfterLogin);

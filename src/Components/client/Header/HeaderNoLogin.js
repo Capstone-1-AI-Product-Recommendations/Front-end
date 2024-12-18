@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { BsCart2 } from "react-icons/bs";
 import { IoMdNotificationsOutline } from "react-icons/io";
-import { IoSearchOutline } from "react-icons/io5";
 import logo from "../../../assets/logo.png";
 import { FaUser, FaCaretDown } from "react-icons/fa";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -9,9 +8,7 @@ import { NavLink } from "react-router-dom";
 import Login from "../Login/Login";
 import Register from "../../client/Register/Register";
 import "./HeaderNoLogin.css";
-import menuItems from "../../../data/menuItems";
-import {registerUser} from "../../../services/apiLogin";
-import PropTypes from 'prop-types';
+import productService from '../../../services/productService';
 
 const HeaderNoLogin = ({ onLoginSuccess }) => {
   const [showLogin, setShowLogin] = useState(false);
@@ -20,6 +17,8 @@ const HeaderNoLogin = ({ onLoginSuccess }) => {
   const [searchTerm, setSearchTerm] = useState(""); // State for search term
   const [showSearchResults, setShowSearchResults] = useState(false); // State to control search results visibility
   const [suggestions, setSuggestions] = useState([]); // State for search suggestions
+  const [categories, setCategories] = useState([]);
+  const [recentSearches, setRecentSearches] = useState([]); // State for recent searches
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -42,6 +41,38 @@ const HeaderNoLogin = ({ onLoginSuccess }) => {
     setSuggestions(uniqueKeywords);
   }, []);
 
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await productService.getSubCategories();
+        const transformedCategories = response.map(category => ({
+          name: category.category_name,
+          subItems: category.subcategories.map(sub => sub.subcategory_name)
+        }));
+        setCategories(transformedCategories);
+      } catch (error) {
+        console.error('Error fetching categories:', error);
+      }
+    };
+
+    fetchCategories();
+  }, []);
+
+  useEffect(() => {
+    // Load recent searches from local storage
+    const loadRecentSearches = () => {
+      const userBehavior = JSON.parse(localStorage.getItem("userBehavior")) || [];
+      const searches = userBehavior
+        .filter(behavior => behavior.source === "searched_product")
+        .map(behavior => behavior.keyword);
+      const uniqueSearches = [...new Set(searches)]; // Remove duplicates
+      const recentUniqueSearches = uniqueSearches.slice(-5).reverse(); // Get the 5 most recent unique searches
+      setRecentSearches(recentUniqueSearches);
+    };
+
+    loadRecentSearches();
+  }, []);
+
   const handleLoginClick = () => {
     setShowLogin(true);
     setShowRegister(false);
@@ -57,23 +88,6 @@ const HeaderNoLogin = ({ onLoginSuccess }) => {
     setShowRegister(false);
   };
 
-  const handleLoginSuccess = (userData) => {
-    try {
-      // Store user data
-      localStorage.setItem('user', JSON.stringify(userData));
-      
-      // Close login modal
-      setShowLogin(false);
-      
-      // Call parent callback
-      if (onLoginSuccess) {
-        onLoginSuccess(userData);
-      }
-    } catch (error) {
-      console.error('Error handling login success:', error);
-    }
-  };
-  
   const handleMouseEnter = (categoryName) => {
     setHoveredCategory(categoryName);
   };
@@ -83,12 +97,12 @@ const HeaderNoLogin = ({ onLoginSuccess }) => {
   };
 
   const handleHomeClick = () => {
-    navigate("/");
+    navigate("/", { replace: true }); // Use replace option only when necessary
   };
 
   const handleSearch = () => {
     if (searchTerm.trim()) {
-      setShowSearchResults(true); // Show search results
+      setShowSearchResults(false); // Hide suggestions when searching
       navigate(`/search?keyword=${encodeURIComponent(searchTerm)}`);
       trackUserBehavior({
         keyword: searchTerm,
@@ -104,29 +118,12 @@ const HeaderNoLogin = ({ onLoginSuccess }) => {
     localStorage.setItem("userBehavior", JSON.stringify(userBehavior));
   };
 
-  const handleInputChange = (e) => {
-    const value = e.target.value;
-    setSearchTerm(value);
-
-    // Filter suggestions based on the input value
-    const filteredSuggestions = suggestions.filter((suggestion) =>
-      suggestion.toLowerCase().includes(value.toLowerCase())
-    );
-    setSuggestions(filteredSuggestions);
+  const handleSubcategoryClick = (subcategory) => {
+    navigate(`/search/${encodeURIComponent(subcategory)}`);
   };
 
-  const handleRegisterSubmit = async (userData) => {
-    try {
-      const response = await registerUser(userData);
-      if (response.message.includes('successfully')) {
-        setShowRegister(false);
-        setShowLogin(true);
-        // Optional: Show success message
-        alert('Đăng ký thành công! Vui lòng đăng nhập.');
-      }
-    } catch (error) {
-      console.error('Registration error:', error);
-    }
+  const handleRegisterSubmit = (userData) => {
+    // Handle register submit logic here
   };
 
   return (
@@ -135,35 +132,19 @@ const HeaderNoLogin = ({ onLoginSuccess }) => {
         <header className="header-user">
           <div className="top-bar">
             <div className="top-links">
-              <NavLink
-                className="nav-link"
-                to="/about-us"
-                activeClassName="active"
-              >
+              <NavLink className="nav-link" to="/about-us" activeClassName="active">
                 Về chúng tôi
               </NavLink>
-              <NavLink
-                className="nav-link"
-                to="/my-account"
-                activeClassName="active"
-              >
+              <NavLink className="nav-link" to="/my-account" activeClassName="active">
                 Tài khoản của tôi
               </NavLink>
-              <NavLink
-                className="nav-link"
-                to="/wishlist"
-                activeClassName="active"
-              >
+              <NavLink className="nav-link" to="/wishlist" activeClassName="active">
                 Danh sách mong muốn
               </NavLink>
               <span className="nav-link" onClick={handleRegisterClick}>
                 Trở thành người bán
               </span>
-              <NavLink
-                className="nav-link"
-                to="/contact"
-                activeClassName="active"
-              >
+              <NavLink className="nav-link" to="/contact" activeClassName="active">
                 Hỗ trợ
               </NavLink>
             </div>
@@ -185,7 +166,9 @@ const HeaderNoLogin = ({ onLoginSuccess }) => {
                 type="text"
                 placeholder="Tìm kiếm sản phẩm..."
                 value={searchTerm}
-                onChange={handleInputChange}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                onFocus={() => setShowSearchResults(true)} // Show recent searches on focus
+                onBlur={() => setTimeout(() => setShowSearchResults(false), 200)} // Hide recent searches on blur with delay
                 onKeyPress={(e) => {
                   if (e.key === 'Enter') {
                     handleSearch();
@@ -193,18 +176,18 @@ const HeaderNoLogin = ({ onLoginSuccess }) => {
                 }}
               />
               <button onClick={handleSearch}>🔍</button>
-              {searchTerm && (
-                <div className="suggestions">
-                  {suggestions.map((suggestion, index) => (
+              {showSearchResults && recentSearches.length > 0 && (
+                <div className="search-suggestions">
+                  {recentSearches.map((term, index) => (
                     <div
                       key={index}
                       className="suggestion-item"
                       onClick={() => {
-                        setSearchTerm(suggestion);
+                        setSearchTerm(term);
                         handleSearch();
                       }}
                     >
-                      {suggestion}
+                      {term}
                     </div>
                   ))}
                 </div>
@@ -228,19 +211,22 @@ const HeaderNoLogin = ({ onLoginSuccess }) => {
           </div>
           <nav className="category-menu">
             <div className="category-grid">
-              {menuItems.categories.map((item, index) => (
+              {categories.map((item, index) => (
                 <div
                   key={index}
                   className="category-item"
                   onMouseEnter={() => handleMouseEnter(item.name)}
                   onMouseLeave={handleMouseLeave}
                 >
-                  <div className="category-icon">{item.icon}</div>
                   <div className="category-name">{item.name}</div>
                   {hoveredCategory === item.name && (
                     <div className="dropdown-menu">
                       {item.subItems.map((subItem, subIndex) => (
-                        <div key={subIndex} className="dropdown-item">
+                        <div
+                          key={subIndex}
+                          className="dropdown-item"
+                          onClick={() => handleSubcategoryClick(subItem)}
+                        >
                           {subItem}
                         </div>
                       ))}
@@ -257,7 +243,7 @@ const HeaderNoLogin = ({ onLoginSuccess }) => {
           show={showLogin}
           onClose={handleCloseModals}
           onRegisterClick={handleRegisterClick}
-          onLoginSuccess={handleLoginSuccess}
+          onLoginSuccess={onLoginSuccess} // Use prop passed from parent
         />
       )}
       {showRegister && (
@@ -273,10 +259,6 @@ const HeaderNoLogin = ({ onLoginSuccess }) => {
       )}
     </>
   );
-};
-
-HeaderNoLogin.propTypes = {
-  onLoginSuccess: PropTypes.func
 };
 
 export default HeaderNoLogin;

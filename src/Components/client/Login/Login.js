@@ -52,7 +52,7 @@ const Login = ({ onClose, onLoginSuccess, onRegisterClick }) => {
         
         // Đóng modal và chuyển hướng
         onClose();
-        navigate('/');
+        navigate('/', { replace: true }); // Use replace option only when necessary
       } else {
         setErrorMessage('Đăng nhập thất bại.');
       }

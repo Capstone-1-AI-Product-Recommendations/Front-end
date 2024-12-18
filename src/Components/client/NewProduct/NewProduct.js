@@ -1,15 +1,14 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useContext, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { CartContext } from '../../../context/CartContext';
 import "./NewProduct.css";
 import { fetchNewProducts } from "../../../services/apiHomePage"; // Import the API function
+import cartService from '../../../services/cartService';
 
 const PRODUCTS_PER_PAGE = 36;
 
-const NewProduct = ({ products }) => {
+const NewProduct = ({ products, updateCartCount }) => {
   const [hoveredProduct, setHoveredProduct] = useState(null);
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const [isHoverTimerActive, setIsHoverTimerActive] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
 
   const navigate = useNavigate();
@@ -17,43 +16,36 @@ const NewProduct = ({ products }) => {
 
   const totalPages = Math.ceil(products.length / PRODUCTS_PER_PAGE);
 
-  useEffect(() => {
-    let interval;
-    if (hoveredProduct !== null && products[hoveredProduct]?.altImages && isHoverTimerActive) {
-      interval = setInterval(() => {
-        setCurrentImageIndex((prevIndex) =>
-          prevIndex >= products[hoveredProduct].altImages.length - 1 ? 0 : prevIndex + 1
-
-        );
-        console.log("Số lượng ảnh:", products[hoveredProduct].altImages[0]);
-
-      }, 1000);
-    } else {
-      setCurrentImageIndex(0);
-    }
-
-    return () => clearInterval(interval);
-  }, [hoveredProduct, isHoverTimerActive, products]);
-
   const handleProductClick = (productId) => {
     navigate(`/product-detail/${productId}`);
   };
 
-  const handleAddToCart = (e, product) => {
+  const handleAddToCart = async (e, product) => {
     e.stopPropagation();
-    addToCart(product);
+    try {
+      const user = JSON.parse(localStorage.getItem('user')); // Assuming user object is stored in localStorage
+      const userId = user ? user.user_id : null;
+      if (!userId) {
+        alert('User not logged in.');
+        return;
+      }
+      const productData = { product_id: product.product_id, quantity: 1 };
+      const newCartData = await cartService.addToCart(userId, productData);
+      alert('Product added to cart successfully!');
+      // Update cart count
+      updateCartCount(newCartData);
+    } catch (error) {
+      console.error('Error adding product to cart:', error);
+      alert('Failed to add product to cart.');
+    }
   };
 
   const handleMouseEnter = (index) => {
     setHoveredProduct(index);
-    setTimeout(() => {
-      setIsHoverTimerActive(true);
-    }, 200);
   };
 
   const handleMouseLeave = () => {
     setHoveredProduct(null);
-    setIsHoverTimerActive(false);
   };
 
   const changePage = (pageNumber) => {
@@ -109,10 +101,12 @@ const NewProduct = ({ products }) => {
     return pageNumbers;
   };
 
-  const currentProducts = products.slice(
-    (currentPage - 1) * PRODUCTS_PER_PAGE,
-    currentPage * PRODUCTS_PER_PAGE
-  );
+  const currentProducts = useMemo(() => {
+    return products.slice(
+      (currentPage - 1) * PRODUCTS_PER_PAGE,
+      currentPage * PRODUCTS_PER_PAGE
+    );
+  }, [products, currentPage]);
 
   return (
     <div className="new-product-container">
@@ -139,23 +133,22 @@ const NewProduct = ({ products }) => {
             style={{ cursor: 'pointer' }}
           >
             <div className="product-card">
-              <span className="discount-badge">{product.discount}</span>
+              <span className="discount-badge">{product.discount_percentage}%</span>
               <div className="image-container">
                 <img
                   className="product-image"
                   src={
-                    hoveredProduct === index && product.altImages && product.altImages.length > 0
-                      ? product.altImages[currentImageIndex]  // Hiển thị ảnh thay thế khi hover
-                      : product.altImages[0] || "/default-image.png"  // Default nếu không có ảnh thay thế
+                    product.altImages && product.altImages.length > 0
+                      ? product.altImages[0]  // Display the first alternate image if available
+                      : "/default-image.png"  // Default image if no alternate images
                   }
-
                   alt={product.name}
+                  loading="lazy"
                   onError={(e) => {
                     e.target.onerror = null;
-                    e.target.src = "/default-image.png";  // Ảnh mặc định khi có lỗi tải ảnh
+                    e.target.src = "/default-image.png";  // Default image on error
                   }}
                 />
-
               </div>
               {/* <span className="product-badge">{product.badge}</span> */}
               <h6 className="product-title">{product.name}</h6>
@@ -181,57 +174,12 @@ const NewProduct = ({ products }) => {
                 className="btn-custom-cart"
                 onClick={(e) => handleAddToCart(e, product)}
               >
-                Add to Cart <span className="ms-4">+</span>
+                 Thêm vào giỏ hàng <span className="ms-4">+</span>
               </button>
             </div>
           </div>
         ))}
       </div>
-
-      {/* Pagination */}
-      {/* <div className="pagination">
-        <button
-          className="pagination-btn"
-          onClick={goToFirstPage}
-          disabled={currentPage === 1}
-        >
-          &laquo;
-        </button>
-        <button
-          className="pagination-btn"
-          onClick={previousPage}
-          disabled={currentPage === 1}
-        >
-          &lt;
-        </button>
-        {getPageNumbers().map((page, index) =>
-          page === "..." ? (
-            <span key={index} className="pagination-ellipsis">...</span>
-          ) : (
-            <button
-              key={page}
-              className={`pagination-btn ${currentPage === page ? "active" : ""}`}
-              onClick={() => changePage(page)}
-            >
-              {page}
-            </button>
-          )
-        )}
-        <button
-          className="pagination-btn"
-          onClick={nextPage}
-          disabled={currentPage === totalPages}
-        >
-          &gt;
-        </button>
-        <button
-          className="pagination-btn"
-          onClick={goToLastPage}
-          disabled={currentPage === totalPages}
-        >
-          &raquo;
-        </button>
-      </div> */}
     </div>
   );
 };

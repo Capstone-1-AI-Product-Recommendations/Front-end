@@ -7,6 +7,8 @@ import AddressModal from "./AddressModal";
 import ShippingModal from './ShippingModal';
 import { ShippingData } from '../../../data/ShippingData';
 import addressService from '../../../services/addressService';
+import orderService from '../../../services/orderService';
+import Swal from 'sweetalert2';
 import "./Checkout.css";
 
 const Checkout = () => {
@@ -56,7 +58,7 @@ const Checkout = () => {
     }
   }, [userId]);
 
-  // Get products from localStorage
+  // Get products from localStorage with safe fallback
   const checkoutProducts = JSON.parse(localStorage.getItem('checkoutProducts') || '[]');
 
   const handleAddressChange = (newAddress) => {
@@ -68,21 +70,83 @@ const Checkout = () => {
     setSelectedShipping(newShipping);
   };
 
-  const handleOrder = () => {
-    // Logic xử lý đặt hàng
-    navigate('/payment'); // Chuyển hướng đến trang thanh toán
+  const handleOrder = async () => {
+    try {
+        const cartItemIds = checkoutProducts.reduce((ids, shop) => {
+            const shopItemIds = shop.products.map(product => product.cart_item_id);
+            return [...ids, ...shopItemIds];
+        }, []);
+
+        const orderResponse = await orderService.createOrder(userId, cartItemIds);
+        const orderId = orderResponse.order_id;
+
+        if (selectedPayment === 'cod') {
+            await orderService.processCODPayment(
+                userId,
+                orderId,
+                selectedAddress.id,
+                calculateTotal()
+            );
+            
+            // Show success popup
+            await Swal.fire({
+              title: 'Đặt hàng thành công!',
+              text: 'Cảm ơn bạn đã mua hàng.',
+              icon: 'success',
+              confirmButtonText: 'OK'
+            });
+
+            // Clear checkout data and navigate home
+            localStorage.removeItem('checkoutProducts');
+            navigate('/');
+        } else if (selectedPayment === 'qrcode') {
+            const paymentResponse = await orderService.processPayOSPayment(
+              userId, 
+              orderId,
+              selectedAddress.id,
+              calculateTotal()
+            );
+            
+            console.log('Payment URL:', paymentResponse.payment_url);
+            
+            // Navigate with payment URL in state
+            navigate('/payment', {
+              state: {
+                paymentUrl: paymentResponse.payment_url,
+                orderId: orderId
+              },
+              replace: true  // Use replace to avoid navigation issues
+            });
+          }
+      
+          // Clear checkout data
+          localStorage.removeItem('checkoutProducts');
+    } catch (error) {
+        console.error('Error processing order:', error);
+        Swal.fire({
+          title: 'Lỗi',
+          text: 'Có lỗi xảy ra khi xử lý đơn hàng',
+          icon: 'error',
+          confirmButtonText: 'OK'
+        });
+    }
+};
+
+  const calculateSubTotal = () => {
+    return checkoutProducts.reduce((total, shop) => {
+      const shopTotal = shop.products.reduce((productTotal, item) => {
+        const price = parseFloat(item.product_price) || 0;
+        const quantity = parseInt(item.quantity) || 0;
+        return productTotal + (price * quantity);
+      }, 0);
+      return total + shopTotal;
+    }, 0);
   };
 
   const calculateTotal = () => {
-    return checkoutProducts.reduce((total, item) => 
-      total + (item.product_price * item.quantity), 0
-    );
-  };
-
-  const calculateSubTotal = () => {
-    return checkoutProducts.reduce((total, item) => 
-      total + (item.product_price * item.quantity), 0
-    );
+    const subTotal = calculateSubTotal();
+    const shippingCost = selectedShipping?.price || 0;
+    return subTotal + shippingCost;
   };
 
   return (
@@ -94,8 +158,9 @@ const Checkout = () => {
           {loading ? (
             <div>Đang tải...</div>
           ) : (
+            
             <div className="address-info">
-              <div className="user-details">
+              <div className="user-details">                
                 <span className="name">{selectedAddress?.recipient_name}</span>
                 <span className="phone">({selectedAddress?.recipient_phone})</span>
               </div>
@@ -130,17 +195,30 @@ const Checkout = () => {
             <span>Thành tiền</span>
           </div>
 
-          {checkoutProducts.map(item => (
-            <div key={item.cart_item_id} className="product-item">
-              <div className="product-info">
-                <img src={item.product_images[0]?.file} alt={item.product_name} />
-                <div className="product-details">
-                  <span className="product-name">{item.product_name}</span>
-                </div>
+          {checkoutProducts.map(shop => (
+            <div key={shop.shop_id} className="shop-section">
+              <div className="shop-header">
+                <span>{shop.shop_name}</span>
               </div>
-              <div className="product-price">{formatPrice(item.product_price)}₫</div>
-              <div className="product-quantity">{item.quantity}</div>
-              <div className="product-total">{formatPrice(item.product_price * item.quantity)}₫</div>
+              
+              {shop.products.map(item => (
+                <div key={item.cart_item_id} className="product-item">
+                  <div className="product-info">
+                    <img 
+                      src={item.product_images?.[0]?.file || ''} 
+                      alt={item.product_name} 
+                    />
+                    <div className="product-details">
+                      <span className="product-name">{item.product_name}</span>
+                    </div>
+                  </div>
+                  <div className="product-price">₫{formatPrice(item.product_price)}</div>
+                  <div className="product-quantity">{item.quantity}</div>
+                  <div className="product-total">
+                    ₫{formatPrice(item.product_price * item.quantity)}
+                  </div>
+                </div>
+              ))}
             </div>
           ))}
 
@@ -208,12 +286,12 @@ const Checkout = () => {
           </div>
           <div className="summary-row">
             <span>Tổng tiền phí vận chuyển</span>
-            <span>₫{selectedShipping?.price?.toLocaleString() || 0}</span>
+            <span>₫{(selectedShipping?.price || 0).toLocaleString()}</span>
           </div>
           <div className="summary-row total">
             <span>Tổng thanh toán</span>
             <span className="total-amount">
-              ₫{formatPrice(calculateSubTotal() + (selectedShipping?.price || 0))}
+              ₫{formatPrice(calculateTotal())}
             </span>
           </div>
         </div>
@@ -222,7 +300,6 @@ const Checkout = () => {
           Đặt Hàng
         </button>
       </div>
-
       <ShippingModal
         isOpen={showShippingModal}
         onClose={() => setShowShippingModal(false)}

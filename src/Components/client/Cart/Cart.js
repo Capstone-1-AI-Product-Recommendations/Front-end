@@ -19,6 +19,7 @@ const Cart = () => {
         const response = await cartService.getCart(userId);
         // Transform API response to match expected structure
         const transformedData = (response?.items || []).map(shop => ({
+          shop_id: shop.shop_id,
           shop_name: shop.shop_name,
           products: shop.items || [] // Ensure items array exists
         }));
@@ -92,8 +93,7 @@ const Cart = () => {
     return selectedItems.reduce((total, itemId) => {
       const product = cartData
         .flatMap(shop => shop.products)
-        .find(product => product.cart_item_id === itemId);
-        console.log('Product:', product); // Debug log
+        .find(product => product.cart_item_id === itemId);       
       return total + (product ? parseFloat(product.product_price) * product.quantity : 0);
     }, 0);
   };
@@ -135,13 +135,16 @@ const Cart = () => {
   };
 
   const handleCheckout = () => {
-    const selectedProducts = cartData.flatMap(shop => 
-      shop.products.filter(product => 
+    console.log('Cart data structure:', cartData);
+    const selectedProductsByShop = cartData.map(shop => ({
+      shop_id: shop.shop_id,
+      shop_name: shop.shop_name,
+      products: shop.products.filter(product => 
         selectedItems.includes(product.cart_item_id)
       )
-    );
-    
-    localStorage.setItem('checkoutProducts', JSON.stringify(selectedProducts));
+    })).filter(shop => shop.products.length > 0);
+    console.log('Selected products:', selectedProductsByShop);
+    localStorage.setItem('checkoutProducts', JSON.stringify(selectedProductsByShop));
     navigate('/checkout');
   };
 

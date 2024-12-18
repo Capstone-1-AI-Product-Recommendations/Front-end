@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import ProductAdBanner from "../../Components/client/ProductAdBanner/ProductAdBanner";
 import FeaturesSection from "../../Components/client/FeaturesSection/FeaturesSection";
 import MiniAdBanner from "../../Components/client/MiniAdBanner/MiniAdBanner";
@@ -15,61 +15,40 @@ const HomePage = ({ userRole }) => {
   const navigate = useNavigate();
   const [newProducts, setNewProducts] = useState([]);
   const [featuredProducts, setFeaturedProducts] = useState([]);
-  const [BestSellingProducts, setBestSellingProducts] = useState([]);
+  const [bestSellingProducts, setBestSellingProducts] = useState([]);
+
+  const getNewProducts = useCallback(async () => {
+    try {
+      const response = await fetchNewProducts();
+      setNewProducts(response.data);
+    } catch (error) {
+      console.error("Lỗi khi lấy sản phẩm mới về:", error);
+    }
+  }, []);
+
+  const getFeaturedProducts = useCallback(async () => {
+    try {
+      const response = await fetchFeaturedProducts();
+      setFeaturedProducts(response.data);
+    } catch (error) {
+      console.error("Lỗi khi lấy sản phẩm nổi bật:", error);
+    }
+  }, []);
+
+  const getBestSellingProducts = useCallback(async () => {
+    try {
+      const response = await fetchBestSellingProducts();
+      setBestSellingProducts(response.data);
+    } catch (error) {
+      console.error("Lỗi khi lấy sản phẩm bán chạy nhất:", error);
+    }
+  }, []);
 
   useEffect(() => {
-    const getNewProducts = async () => {
-      try {
-        const response = await fetchNewProducts();
-        console.log(response.data)
-        setNewProducts(response.data);
-        console.log(response.data);
-      } catch (error) {
-        console.error("Lỗi khi lấy sản phẩm mới về:", error);
-      }
-    };
-
-    const getFeaturedProducts = async () => {
-      try {
-        const response = await fetchFeaturedProducts();
-        setFeaturedProducts(response.data);
-      } catch (error) {
-        console.error("Lỗi khi lấy sản phẩm nổi bật:", error);
-      }
-    };
-
-    const getBestSellingProducts = async () => {
-      try {
-        const response = await fetchBestSellingProducts();
-        setBestSellingProducts(response.data);
-      } catch (error) {
-        console.error("Lỗi khi lấy sản phẩm bán chạy nhất:", error);
-      }
-    };
-
     getNewProducts();
     getFeaturedProducts();
     getBestSellingProducts();
-  }, []);
-
-  // Hàm xử lý khi nhấn "Trở thành người bán"
-  // const handleBecomeSeller = () => {
-  //   if (userRole === "user") {
-  //     navigate("/signup"); // Chuyển đến trang đăng ký nếu là user
-  //   } else if (userRole === "seller") {
-  //     navigate("/register-seller"); // Chuyển đến trang quản lý seller
-  //   } else if (userRole === "admin") {
-  //     navigate("/admin"); // Chuyển đến trang admin
-  //   }
-  // };
-
-  // const handleManageStore = () => {
-  //   if (userRole === 'seller') {
-  //     navigate('/seller');
-  //   } else {
-  //     navigate('/register-seller');
-  //   }
-  // };
+  }, [getNewProducts, getFeaturedProducts, getBestSellingProducts]);
 
   return (
     <div className="container-all">
@@ -81,7 +60,7 @@ const HomePage = ({ userRole }) => {
       <MiniAdBanner />
       <NewProduct products={newProducts} /> {/* Truyền dữ liệu "Hàng mới về" */}
       <FeaturedProduct products={featuredProducts} /> {/* Truyền dữ liệu "Sản phẩm nổi bật" */}
-      <BestSellingProduct products={BestSellingProducts} /> {/* Truyền dữ liệu "Bán chạy nhất" */}
+      <BestSellingProduct products={bestSellingProducts} /> {/* Truyền dữ liệu "Bán chạy nhất" */}
       <Chatbot />
     </div>
   );

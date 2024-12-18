@@ -2,14 +2,24 @@
 
 .payment-qr-container {
   width: 100%;
-  max-width: 400px;
+  max-width: 400px; /* Giới hạn chiều rộng container */
   background: white;
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  font-family: -apple-system, system-ui, sans-serif;
-  margin: 0 auto;
+  margin: 20px auto; /* Căn giữa theo chiều ngang */
   padding: 16px;
   border: 1px solid #e0e0e0;
+  text-align: center;
+}
+
+.payment-iframe {
+  width: 100%; /* Đảm bảo iframe chiếm hết phần tử cha */
+  height: 500px; /* Chiều cao cố định */
+  border: none; /* Xóa viền */
+  border-radius: 12px; /* Bo tròn các góc */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Tạo bóng cho iframe */
+  display: block; /* Căn giữa nếu cần */
+  margin: 0 auto;
 }
 
 .payment-qr-title {

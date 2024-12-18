@@ -21,6 +21,7 @@ const addressService = {
     getUserAddresses: async (userId) => {
         try {
             const response = await API.get(`/api/user/${userId}/addresses/`);
+            console.log('User addresses:', response.data.addresses);
             // Update localStorage with fresh data
             localStorage.setItem('userAddresses', JSON.stringify(response.data.addresses));
             return response.data;

@@ -1,54 +1,84 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./Filter.css";
 import Slider from "rc-slider";
 import "rc-slider/assets/index.css";
+import productService from '../../../../services/productService';
+import PropTypes from 'prop-types';
 
-const Filter = () => {
+const Filter = ({ onFilterChange }) => {
+  const [selectedRating, setSelectedRating] = useState(null);
   const [selectedFilters, setSelectedFilters] = useState({
-    category: [],
-    location: [],
-    shipping: [],
-    brand: [],
-    priceRange: { from: 0, to: 20000000 },
-    paymentOptions: [],
-    rating: [],
-    promotions: [],
+    subcategories: [],
+    cities: [],
+    minPrice: 0,
+    maxPrice: 20000000,
+    rating: null,
   });
 
+  const [topSubCategories, setTopSubCategories] = useState([]);
+
+  const formatSales = (sales) => {
+    return sales >= 1000 ? `${(sales / 1000).toFixed(0)}k+` : sales;
+  };
+
+  useEffect(() => {
+    const fetchTopSubCategories = async () => {
+      try {
+        const response = await productService.getTopSubCategories();
+        setTopSubCategories(response);
+      } catch (error) {
+        console.error('Error fetching top subcategories:', error);
+      }
+    };
+    fetchTopSubCategories();
+  }, []);
+
   const handleCheckboxChange = (section, value) => {
-    setSelectedFilters((prev) => ({
-      ...prev,
-      [section]: prev[section].includes(value)
-        ? prev[section].filter((item) => item !== value)
-        : [...prev[section], value],
-    }));
+    setSelectedFilters((prev) => {
+      const updatedFilters = {
+        ...prev,
+        [section]: prev[section].includes(value)
+          ? prev[section].filter((item) => item !== value)
+          : [...prev[section], value],
+      };
+      onFilterChange(updatedFilters);
+      return updatedFilters;
+    });
   };
 
   const handlePriceChange = (value) => {
-    // Round the price range to the nearest 500k
     const roundedFrom = Math.floor(value[0] / 500000) * 500000;
     const roundedTo = Math.ceil(value[1] / 500000) * 500000;
-    setSelectedFilters((prev) => ({
-      ...prev,
-      priceRange: { from: roundedFrom, to: roundedTo },
-    }));
+    const updatedFilters = {
+      ...selectedFilters,
+      minPrice: roundedFrom,
+      maxPrice: roundedTo,
+    };
+    setSelectedFilters(updatedFilters);
+    onFilterChange(updatedFilters);
   };
 
-  const handleApply = () => {
-    console.log("Applied filters:", selectedFilters);
+  const handleRatingChange = (rating) => {
+    setSelectedRating(rating);
+    const updatedFilters = {
+      ...selectedFilters,
+      rating: rating,
+    };
+    setSelectedFilters(updatedFilters);
+    onFilterChange(updatedFilters);
   };
 
   const handleClearAll = () => {
-    setSelectedFilters({
-      category: [],
-      location: [],
-      shipping: [],
-      brand: [],
-      priceRange: { from: 0, to: 20000000 },
-      paymentOptions: [],
-      rating: [],
-      promotions: [],
-    });
+    const clearedFilters = {
+      subcategories: [],
+      cities: [],
+      minPrice: 0,
+      maxPrice: 20000000,
+      rating: null,
+    };
+    setSelectedFilters(clearedFilters);
+    setSelectedRating(null);
+    onFilterChange(clearedFilters);
   };
 
   return (
@@ -57,38 +87,18 @@ const Filter = () => {
 
       <div className="filter-section">
         <h4>Theo Danh Mục</h4>
-        <label>
-          <input
-            type="checkbox"
-            onChange={() =>
-              handleCheckboxChange("category", "Bánh ngọt/ pastry")
-            }
-          />{" "}
-          Bánh ngọt/ pastry (21k+)
-        </label>
-        <label>
-          <input
-            type="checkbox"
-            onChange={() =>
-              handleCheckboxChange("category", "Dụng cụ làm bánh")
-            }
-          />{" "}
-          Dụng cụ làm bánh. (21k+)
-        </label>
-        <label>
-          <input
-            type="checkbox"
-            onChange={() => handleCheckboxChange("category", "Thời Trang Nữ")}
-          />{" "}
-          Thời Trang Nữ (6k+)
-        </label>
-        <label>
-          <input
-            type="checkbox"
-            onChange={() => handleCheckboxChange("category", "Nhà Sách Online")}
-          />{" "}
-          Nhà Sách Online (3k+)
-        </label>
+        {topSubCategories.map((subCategory, index) => (
+          <label key={index}>
+            <input
+              type="checkbox"
+              checked={selectedFilters.subcategories.includes(subCategory.subcategory_name)}
+              onChange={() =>
+                handleCheckboxChange("subcategories", subCategory.subcategory_name)
+              }
+            />{" "}
+            {subCategory.subcategory_name} ({formatSales(subCategory.total_sales)})
+          </label>
+        ))}
       </div>
 
       <div className="filter-section">
@@ -96,87 +106,26 @@ const Filter = () => {
         <label>
           <input
             type="checkbox"
-            onChange={() => handleCheckboxChange("location", "TP. Hồ Chí Minh")}
+            checked={selectedFilters.cities.includes("Hồ Chí Minh")}
+            onChange={() => handleCheckboxChange("cities", "Hồ Chí Minh")}
           />{" "}
-          TP. Hồ Chí Minh
+          Hồ Chí Minh
         </label>
         <label>
           <input
             type="checkbox"
-            onChange={() => handleCheckboxChange("location", "Đà Nẵng")}
+            checked={selectedFilters.cities.includes("Đà Nẵng")}
+            onChange={() => handleCheckboxChange("cities", "Đà Nẵng")}
           />{" "}
           Đà Nẵng
         </label>
         <label>
           <input
             type="checkbox"
-            onChange={() => handleCheckboxChange("location", "Hưng Yên")}
+            checked={selectedFilters.cities.includes("Hà Nội")}
+            onChange={() => handleCheckboxChange("cities", "Hà Nội")}
           />{" "}
-          Hưng Yên
-        </label>
-        <label>
-          <input
-            type="checkbox"
-            onChange={() => handleCheckboxChange("location", "Đồng Nai")}
-          />{" "}
-          Đồng Nai
-        </label>
-      </div>
-
-      <div className="filter-section">
-        <h4>Đơn Vị Vận Chuyển</h4>
-        <label>
-          <input
-            type="checkbox"
-            onChange={() => handleCheckboxChange("shipping", "Hỏa Tốc")}
-          />{" "}
-          Hỏa Tốc
-        </label>
-        <label>
-          <input
-            type="checkbox"
-            onChange={() => handleCheckboxChange("shipping", "Nhanh")}
-          />{" "}
-          Nhanh
-        </label>
-        <label>
-          <input
-            type="checkbox"
-            onChange={() => handleCheckboxChange("shipping", "Tiết Kiệm")}
-          />{" "}
-          Tiết Kiệm
-        </label>
-      </div>
-
-      <div className="filter-section">
-        <h4>Thương Hiệu</h4>
-        <label>
-          <input
-            type="checkbox"
-            onChange={() => handleCheckboxChange("brand", "Tân Huê Viên")}
-          />{" "}
-          Tân Huê Viên
-        </label>
-        <label>
-          <input
-            type="checkbox"
-            onChange={() => handleCheckboxChange("brand", "ORION")}
-          />{" "}
-          ORION
-        </label>
-        <label>
-          <input
-            type="checkbox"
-            onChange={() => handleCheckboxChange("brand", "Richy")}
-          />{" "}
-          Richy
-        </label>
-        <label>
-          <input
-            type="checkbox"
-            onChange={() => handleCheckboxChange("brand", "Bảo Minh")}
-          />{" "}
-          Bảo Minh
+          Hà Nội
         </label>
       </div>
 
@@ -187,8 +136,8 @@ const Filter = () => {
           min={0}
           max={20000000}
           value={[
-            selectedFilters.priceRange.from,
-            selectedFilters.priceRange.to,
+            selectedFilters.minPrice,
+            selectedFilters.maxPrice,
           ]}
           onChange={handlePriceChange}
           marks={{
@@ -201,90 +150,52 @@ const Filter = () => {
         />
         <div className="filter-price">
           <div>
-            <span> Từ: <b>{selectedFilters.priceRange.from}</b>₫</span>
-            <span> Đến: <b>{selectedFilters.priceRange.to}</b>₫</span>
+            <span> Từ: <b>{selectedFilters.minPrice}</b>₫</span>
+            <span> Đến: <b>{selectedFilters.maxPrice}</b>₫</span>
           </div>
         </div>
       </div>
-
-      {/* <div className="filter-section">
-        <h4>Các lựa chọn thanh toán</h4>
-        <label>
-          <input
-            type="checkbox"
-            onChange={() =>
-              handleCheckboxChange("paymentOptions", "0% TRẢ GÓP")
-            }
-          />{" "}
-          0% TRẢ GÓP
-        </label>
-      </div> */}
 
       <div className="filter-section">
         <h4>Đánh Giá</h4>
         <label>
           <input
-            type="checkbox"
-            onChange={() => handleCheckboxChange("rating", "5 sao")}
+            type="radio"
+            name="rating"
+            checked={selectedRating === "5"}
+            onChange={() => handleRatingChange("5")}
           />{" "}
           5 sao trở lên
         </label>
         <label>
           <input
-            type="checkbox"
-            onChange={() => handleCheckboxChange("rating", "4 sao")}
+            type="radio"
+            name="rating"
+            checked={selectedRating === "4"}
+            onChange={() => handleRatingChange("4")}
           />{" "}
           4 sao trở lên
         </label>
         <label>
           <input
-            type="checkbox"
-            onChange={() => handleCheckboxChange("rating", "3 sao")}
+            type="radio"
+            name="rating"
+            checked={selectedRating === "3"}
+            onChange={() => handleRatingChange("3")}
           />{" "}
           3 sao trở lên
         </label>
       </div>
 
-      <div className="filter-section">
-        <h4>Dịch Vụ & Khuyến Mãi</h4>
-        <label>
-          <input
-            type="checkbox"
-            onChange={() => handleCheckboxChange("promotions", "Voucher Xtra")}
-          />{" "}
-          Voucher Xtra
-        </label>
-        <label>
-          <input
-            type="checkbox"
-            onChange={() => handleCheckboxChange("promotions", "Đang giảm giá")}
-          />{" "}
-          Đang giảm giá
-        </label>
-        <label>
-          <input
-            type="checkbox"
-            onChange={() => handleCheckboxChange("promotions", "Gi Cũng Rẻ")}
-          />{" "}
-          Gi Cũng Rẻ
-        </label>
-        <label>
-          <input
-            type="checkbox"
-            onChange={() => handleCheckboxChange("promotions", "Hàng có sẵn")}
-          />{" "}
-          Hàng có sẵn
-        </label>
-      </div>
-
-      <button className="apply-button" onClick={handleApply}>
-        ÁP DỤNG
-      </button>
       <button className="clear-button" onClick={handleClearAll}>
         XÓA TẤT CẢ
       </button>
     </div>
   );
+};
+
+Filter.propTypes = {
+  onFilterChange: PropTypes.func.isRequired,
 };
 
 export default Filter;

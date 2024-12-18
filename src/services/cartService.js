@@ -25,6 +25,7 @@ const cartService = {
     try {
       const response = await api.get(`/cart/${userId}/`);
       // Lưu dữ liệu giỏ hàng vào local storage
+      console.log("Cart data:", response.data);
       localStorage.setItem('cartData', JSON.stringify(response.data));
       return response.data;
     } catch (error) {
@@ -49,6 +50,8 @@ const cartService = {
     try {
       const response = await api.post(`/cart/add/${userId}/`, productData);
       localStorage.setItem('cartData', JSON.stringify(response.data));
+      // Trigger cart update event
+      window.dispatchEvent(new Event('cartUpdated'));
       return response.data;
     } catch (error) {
       console.error('Error adding to cart:', error);

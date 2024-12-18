@@ -1,13 +1,11 @@
 //App.js
 
-import React, { useState, useEffect, useRef } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import React, { useState, useEffect, useRef, Suspense } from "react";
+import { BrowserRouter as Router, Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import { CartProvider } from './context/CartContext';
 import Footer from "./Components/client/Footer/Footer";
-import RouterCustom from "./Router";
-import HeaderNoLogin from "./Components/client/Header/HeaderNoLogin";
-import HeaderAfterLogin from "./Components/client/Header/HeaderAfterLogin";
-import SearchResults from './Components/client/Search/SearchResults/SearchResults';
+import HeaderContainer from "./Components/client/Header/HeaderContainer";
+const RouterCustom = React.lazy(() => import("./Router")); // Lazy load RouterCustom
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -30,22 +28,15 @@ function App() {
         navigate(currentPath);
       }
     }
-  }, []);
+  }, [location, navigate]);
 
-  const handleLoginSuccess = (role) => {
+  const handleLoginSuccess = (userData) => {
     setIsLoggedIn(true);
-    setUserRole(role);
+    setUserRole(userData.role);
     localStorage.setItem("isLoggedIn", "true");
-    localStorage.setItem("userRole", role);
-    localStorage.setItem("user", JSON.stringify({ role })); // Lưu thông tin người dùng
+    localStorage.setItem("userRole", userData.role);
+    localStorage.setItem("user", JSON.stringify(userData)); // Lưu thông tin người dùng
   };
-
-  // Theo dõi sự thay đổi của isLoggedIn
-  // useEffect(() => {
-  //   if (isLoggedIn) {
-  //     navigate("/"); 
-  //   }
-  // }, [isLoggedIn]);
 
   const handleLogout = () => {
     setIsLoggedIn(false);
@@ -72,17 +63,20 @@ function App() {
     <CartProvider>
       <div className="App">
         {shouldShowHeader && (
-          isLoggedIn ? (
-            <HeaderAfterLogin onLogout={handleLogout} userRole={userRole} />
-          ) : (
-            <HeaderNoLogin onLoginSuccess={handleLoginSuccess} />
-          )
+          <HeaderContainer
+            isLoggedIn={isLoggedIn}
+            userRole={userRole}
+            onLoginSuccess={handleLoginSuccess}
+            onLogout={handleLogout}
+          />
         )}
-        <RouterCustom
-          isLoggedIn={isLoggedIn}
-          userRole={userRole}
-          onLoginSuccess={handleLoginSuccess}
-        />
+        <Suspense fallback={<div>Loading...</div>}>
+          <RouterCustom
+            isLoggedIn={isLoggedIn}
+            userRole={userRole}
+            onLoginSuccess={handleLoginSuccess}
+          />
+        </Suspense>
         {shouldShowHeader && <Footer />}
       </div>
     </CartProvider>

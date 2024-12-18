@@ -1,8 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo, useContext } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./FeaturedProduct.css";
 import { FaHeart } from "react-icons/fa";
 import { useNavigate } from "react-router-dom"; // Add this import
+import cartService from '../../../services/cartService';
+import { CartContext } from '../../../context/CartContext';
+import productService from '../../../services/productService';
 
 const PRODUCTS_PER_PAGE = 36;
 
@@ -11,6 +14,8 @@ const FeaturedProduct = ({ products }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState({});
   const [currentPage, setCurrentPage] = useState(1);
   const navigate = useNavigate(); // Add this line
+  const { updateCartCount } = useContext(CartContext);
+  const [loading, setLoading] = useState(false);
 
   const totalPages = Math.ceil(products.length / PRODUCTS_PER_PAGE);
 
@@ -19,7 +24,7 @@ const FeaturedProduct = ({ products }) => {
 
   useEffect(() => {
     let interval;
-    if (hoveredProduct !== null && products[hoveredProduct].altImages) {
+    if (hoveredProduct !== null && products[hoveredProduct]?.altImages) {
       interval = setInterval(() => {
         setCurrentImageIndex((prev) => ({
           ...prev,
@@ -95,13 +100,38 @@ const FeaturedProduct = ({ products }) => {
     return pageNumbers;
   };
 
-  const currentProducts = products.slice(
-    (currentPage - 1) * PRODUCTS_PER_PAGE,
-    currentPage * PRODUCTS_PER_PAGE
-  );
+  const currentProducts = useMemo(() => {
+    return products.slice(
+      (currentPage - 1) * PRODUCTS_PER_PAGE,
+      currentPage * PRODUCTS_PER_PAGE
+    );
+  }, [products, currentPage]);
 
   const handleProductClick = (productId) => {
     navigate(`/product-detail/${productId}`);
+  };
+
+  const handleAddToCart = async (e, product) => {
+    e.stopPropagation();
+    try {
+      setLoading(true);
+      const user = JSON.parse(localStorage.getItem('user')); // Assuming user object is stored in localStorage
+      const userId = user ? user.user_id : null;
+      if (!userId) {
+        alert('User not logged in.');
+        return;
+      }
+      const productData = { product_id: product.product_id, quantity: 1 };
+      const newCartData = await cartService.addToCart(userId, productData);
+      alert('Product added to cart successfully!');
+      // Update cart count
+      updateCartCount(newCartData);
+    } catch (error) {
+      console.error('Error adding product to cart:', error);
+      alert('Failed to add product to cart.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -131,7 +161,7 @@ const FeaturedProduct = ({ products }) => {
               <div className="row g-0">
                 <div className="col-6 position-relative">
                   <div className="header-icons-container">
-                    <div className="discount-badge">{product.discount}% </div>
+                    <div className="discount-badge">{product.discount_percentage}% </div>
                     <div className="heart-icon">
                       <FaHeart />
                     </div>
@@ -145,6 +175,7 @@ const FeaturedProduct = ({ products }) => {
                       }
                       alt={product.title}
                       className="img-fluid product-image rounded"
+                      loading="lazy"
                     />
                   </div>
                   <div className="image-indicator">
@@ -158,7 +189,7 @@ const FeaturedProduct = ({ products }) => {
                   </div>
                 </div>
                 <div className="col-6 d-flex flex-column justify-content-center">
-                  <h6 className="product-title mb-2">{product.title}</h6>
+                  <h6 className="product-title mb-2">{product.name}</h6>
                   <p className="price mb-0">
                     <strong className="price-new text-danger">{product.price}</strong>
                     <small className="text-muted ms-2">
@@ -179,13 +210,15 @@ const FeaturedProduct = ({ products }) => {
                     })}
                     <span className="reviews"> ({product.rating})</span>
                   </div>
-                  <button className="add-to-cart-product w-100 mt-5">
+                  <button
+                    className="add-to-cart-product w-100 mt-5"
+                    onClick={(e) => handleAddToCart(e, product)}
+                  >
                     Thêm vào giỏ hàng
                     <span className="ms-2">+</span>
                   </button>
                 </div>
               </div>
-              <p className="note text-muted text-center mt-2">Remains until the end of the offer</p>
             </div>
           </div>
         ))}

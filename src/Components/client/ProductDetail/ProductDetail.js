@@ -16,6 +16,8 @@ const ProductDetail = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showNotification, setShowNotification] = useState(false);
+  const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false); // State for description expansion
+  const [isDetailsExpanded, setIsDetailsExpanded] = useState(false); // State for details expansion
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -33,8 +35,18 @@ const ProductDetail = () => {
       }
     };
 
+    const fetchComments = async () => {
+      try {
+        const comments = await productService.getComments(id);
+        setProduct(prevProduct => ({ ...prevProduct, comments }));
+      } catch (error) {
+        console.error("Error fetching product comments:", error);
+      }
+    };
+
     if (id) {
       fetchProduct();
+      fetchComments();
     }
   }, [id]);
 
@@ -100,6 +112,14 @@ const ProductDetail = () => {
       const newLikes = { ...prev, [commentId]: isLiked };
       return newLikes;
     });
+  };
+
+  const toggleDescription = () => {
+    setIsDescriptionExpanded(!isDescriptionExpanded);
+  };
+
+  const toggleDetails = () => {
+    setIsDetailsExpanded(!isDetailsExpanded);
   };
 
   return (
@@ -176,28 +196,36 @@ const ProductDetail = () => {
 
         <div className="product-details-table">
           <h2>CHI TIẾT SẢN PHẨM</h2>
-          <table>
-            <tbody>
-              {product.detail_product?.split("\n").map((row, index) => {
-                const [key, value] = row.split(":").map(item => item.trim());
-                return (
-                  <tr key={index}>
-                    <td>{key}</td>
-                    <td>{value}</td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
+          <div className={`details-content ${isDetailsExpanded ? 'expanded' : 'collapsed'}`}>
+            <table>
+              <tbody>
+                {product.detail_product?.split("\n").map((row, index) => {
+                  const [key, value] = row.split(":").map(item => item.trim());
+                  return (
+                    <tr key={index}>
+                      <td>{key}</td>
+                      <td>{value}</td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+          <button onClick={toggleDetails} className="toggle-details-btn">
+            {isDetailsExpanded ? 'Thu gọn' : 'Xem thêm'}
+          </button>
         </div>
 
         <div className="product-description-section">
           <h2>MÔ TẢ SẢN PHẨM</h2>
-          <div className="description-content">
+          <div className={`description-content ${isDescriptionExpanded ? 'expanded' : 'collapsed'}`}>
             {product.description?.split('\\n').map((line, index) => (
               <p key={index}>{line}</p>
             ))}
           </div>
+          <button onClick={toggleDescription} className="toggle-description-btn">
+            {isDescriptionExpanded ? 'Thu gọn' : 'Xem thêm'}
+          </button>
         </div>
 
         <div className="product-reviews-section">
@@ -218,10 +246,15 @@ const ProductDetail = () => {
             {product.comments.map((comment) => (
               <div key={comment.id} className="review-item">
                 <div className="review-header">
-                  <span className="username">{comment.username}</span>
+                  <img 
+                    src={comment.avatar || 'default-avatar-url'} 
+                    alt="avatar" 
+                    className="avatar" 
+                  />
+                  <span className="username">{comment.full_name}</span>
                   <span className="rating">{"★".repeat(comment.rating)}</span>
                 </div>
-                <div className="review-date">{comment.date}</div>
+                <div className="review-date">{new Date(comment.created_at).toLocaleDateString()}</div>
                 <div className="review-content">{comment.comment}</div>
                 <div className="review-footer">
                   <button

@@ -589,6 +589,44 @@
     cursor: pointer;
   }
 
+  .description-content.collapsed {
+    max-height: 100px; /* Adjust the height as needed */
+    overflow: hidden;
+  }
+
+  .description-content.expanded {
+    max-height: none;
+  }
+
+  .toggle-description-btn {
+    background: none;
+    border: none;
+    color: #007bff;
+    cursor: pointer;
+    font-size: 14px;
+    margin-top: 10px;
+    text-decoration: underline;
+  }
+
+  .details-content.collapsed {
+    max-height: 100px; /* Adjust the height as needed */
+    overflow: hidden;
+  }
+
+  .details-content.expanded {
+    max-height: none;
+  }
+
+  .toggle-details-btn {
+    background: none;
+    border: none;
+    color: #007bff;
+    cursor: pointer;
+    font-size: 14px;
+    margin-top: 10px;
+    text-decoration: underline;
+  }
+
   /* Phần điểm nổi bật */
   .highlights {
     margin-bottom: 20px;

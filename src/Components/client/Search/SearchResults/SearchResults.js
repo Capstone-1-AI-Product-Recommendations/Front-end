@@ -1,65 +1,26 @@
 import React, { useState, useEffect } from "react";
-import productService from '../../../../services/productService';
 import "./SearchResults.css";
-import productImg from "../../../../img/Product/cake.png";
-import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { useNavigate } from 'react-router-dom';
 
-const SearchResults = ({ keyword }) => {
-  const sortOptions = ["Liên Quan", "Mới Nhất", "Bán Chạy", "Giá"];
-  const [activeSort, setActiveSort] = useState(0);
-  const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [currentPage, setCurrentPage] = useState(1);
-  const productsPerPage = 20;
+const SearchResults = ({ products, loading, error }) => {
   const navigate = useNavigate();
+  const productsPerPage = 20;
+  const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        setLoading(true);
-        const data = await productService.searchProducts(keyword);
-        setProducts(data.products);
-        setError(null);
-      } catch (err) {
-        setError('Không thể tìm thấy sản phẩm');
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    };
+    console.log("Received products:", products);
+  }, [products]);
 
-    if (keyword) {
-      fetchProducts();
-    }
-  }, [keyword]);
+  const productArray = Array.isArray(products) ? products : products.products;
 
-  const totalPages = Math.ceil(products.length / productsPerPage);
+  if (!productArray || !Array.isArray(productArray)) {
+    return <div>No products found.</div>;
+  }
+
+  const totalPages = Math.ceil(productArray.length / productsPerPage);
   const indexOfLastProduct = currentPage * productsPerPage;
   const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
-  const currentProducts = products.slice(indexOfFirstProduct, indexOfLastProduct);
-
-  const sortProducts = (sortType) => {
-    let sortedProducts = [...products];
-    switch(sortType) {
-      case 0: // Liên Quan - mặc định không sort
-        break;
-      case 1: // Mới Nhất
-        sortedProducts.sort((a, b) => b.dateAdded - a.dateAdded);
-        break;
-      case 2: // Bán Chạy
-        sortedProducts.sort((a, b) => b.soldCount - a.soldCount);
-        break;
-      case 3: // Giá
-        sortedProducts.sort((a, b) => a.price - b.price);
-        break;
-      default:
-        break;
-    }
-    setProducts(sortedProducts);
-    setCurrentPage(1);
-  };
+  const currentProducts = productArray.slice(indexOfFirstProduct, indexOfLastProduct);
 
   const renderPageNumbers = () => {
     const pages = [];
@@ -105,7 +66,7 @@ const SearchResults = ({ keyword }) => {
           key={index}
           className={`page-number ${currentPage === number ? "active" : ""} ${number === "..." ? "dots" : ""}`}
           onClick={() => number !== "..." && setCurrentPage(number)}
-          disabled={number === "..."}>
+          disabled={number === "..."} >
           {number}
         </button>
       ))}
@@ -124,50 +85,16 @@ const SearchResults = ({ keyword }) => {
     navigate(`/product-detail/${productId}`);
   };
 
-  const trackUserBehavior = (behavior) => {
-    const userBehavior = JSON.parse(localStorage.getItem("userBehavior")) || [];
-    userBehavior.push(behavior);
-    localStorage.setItem("userBehavior", JSON.stringify(userBehavior));
-  };
-
   if (loading) return <div>Đang tải...</div>;
   if (error) return <div>Lỗi: {error}</div>;
 
   return (
     <div className="search-results">
-      <div className="search-info">
-        {/* <span className="search-term">
-          Kết quả tìm kiếm cho từ khoá '{keyword}'
-        </span> */}
-      </div>
-
-      <div className="filter-bar">
-        <div className="sort-section">
-          <span>Sắp xếp theo</span>
-          <div className="sort-options">
-            {sortOptions.map((option, index) => (
-              <button
-                key={index}
-                className={`sort-button ${activeSort === index ? "active" : ""}`}
-                onClick={() => {
-                  setActiveSort(index);
-                  sortProducts(index);
-                }}
-              >
-                {option}
-              </button>
-            ))}
-          </div>
-        </div>
-        {/* Pagination ở góc phải */}
-        {renderPagination()}
-      </div>
-
       <div className="products-grid-search">
         {currentProducts.map((product) => (
           <div key={product.product_id} className="product-card-search" onClick={() => handleProductClick(product.product_id)} style={{ cursor: 'pointer' }}>
             <div className="product-image">
-              <img src={product.images[0]} alt={product.name} />
+              <img src={product.images[0].file || product.images[0]} alt={product.name} />
               {product.label && (
                 <div className="sale-label">{product.label}</div>
               )}

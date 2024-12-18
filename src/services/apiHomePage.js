@@ -8,7 +8,7 @@ const API = axios.create({
 export const fetchNewProducts = () => API.get('/products/trending/');
 
 // API cho "Sản phẩm nổi bật"
-export const fetchFeaturedProducts = () => API.get('/products/random/');
+export const fetchFeaturedProducts = () => API.get('/products/featured/');
 
 // API cho "Bán chạy nhất"
 export const fetchBestSellingProducts = () => API.get('/recommendations/recommended/');
