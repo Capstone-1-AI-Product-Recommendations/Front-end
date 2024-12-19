@@ -162,9 +162,9 @@ const FeaturedProduct = ({ products }) => {
                 <div className="col-6 position-relative">
                   <div className="header-icons-container">
                     <div className="discount-badge">{product.discount_percentage}% </div>
-                    <div className="heart-icon">
+                    {/* <div className="heart-icon">
                       <FaHeart />
-                    </div>
+                    </div> */}
                   </div>
                   <div className="image-container mb-2">
                     <img
