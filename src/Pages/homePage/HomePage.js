@@ -21,6 +21,14 @@ const HomePage = ({ userRole }) => {
   const [taskStatus, setTaskStatus] = useState(null);
   const [recommendations, setRecommendations] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [notification, setNotification] = useState(null);
+
+  const showNotification = (message) => {
+    setNotification(message);
+    setTimeout(() => {
+      setNotification(null);
+    }, 3000); // Hide notification after 3 seconds
+  };
 
   const getNewProducts = useCallback(async () => {
     try {
@@ -74,15 +82,16 @@ const HomePage = ({ userRole }) => {
   
   return (
     <div className="container-all">
+      {notification && <div className="notification">{notification}</div>}
       <div className="main-layout">
         {/* <Sidebar /> */}
         <ProductAdBanner />
       </div>
       <FeaturesSection />
       <MiniAdBanner />
-      <NewProduct products={newProducts} /> {/* Truyền dữ liệu "Hàng mới về" */}
-      <FeaturedProduct products={featuredProducts} /> {/* Truyền dữ liệu "Sản phẩm nổi bật" */}
-      <BestSellingProduct products={recommendations}/> {/* Truyền dữ liệu "Bán chạy nhất" */}
+      <NewProduct products={newProducts} showNotification={showNotification} /> {/* Pass showNotification */}
+      <FeaturedProduct products={featuredProducts} showNotification={showNotification} /> {/* Pass showNotification */}
+      <BestSellingProduct products={recommendations} showNotification={showNotification} /> {/* Pass showNotification */}
       <Chatbot />
     </div>
   );

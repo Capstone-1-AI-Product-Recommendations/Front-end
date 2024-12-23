@@ -52,7 +52,7 @@
   }
   
   .charts-container {
-    display: grid;
+    display: flex;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 20px;
   }
@@ -87,5 +87,95 @@
   
     .chart-wrapper {
       padding: 15px;
+    }
+  }
+
+  .statistics-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f5f6fa;
+    box-sizing: border-box;
+    margin-bottom: 20px;
+  }
+  
+  .stats-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .time-range-select {
+    padding: 8px 12px;
+    border: 1px solid #dfe6e9;
+    border-radius: 5px;
+    font-size: 14px;
+    outline: none;
+  }
+  
+  .stats-summary {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+  }
+  
+  .stat-card {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    display: flex; /* Sử dụng Flexbox */
+    flex-direction: column;
+    justify-content: center; /* Canh giữa theo chiều dọc */
+    align-items: center; /* Canh giữa theo chiều ngang */
+    text-align: center;
+  }
+  
+  .stat-card h3 {
+    font-size: 14px;
+    color: #636e72;
+    margin-bottom: 10px;
+  font-weight: bold;
+    font-size: 14px;
+    color: #636e72;
+    margin: 0; /* Loại bỏ margin mặc định */
+  }
+  
+  .stat-card p {
+    font-size: 14px;
+    font-weight: bold;
+    color: #2d3436;
+    margin: 5px 0 0; /* Đặt khoảng cách nhỏ giữa h3 và p */
+  }
+  
+  .charts-container {
+    margin-top: 20px;
+    display: flex;
+    gap: 20px;
+  }
+  
+  .chart-wrapper {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .chart-wrapper h3 {
+    font-size: 16px;
+    margin-bottom: 15px;
+    color: #2d3436;
+  }
+  
+  @media (max-width: 768px) {
+    .charts-container {
+      grid-template-columns: 1fr; /* Chỉ hiển thị 1 cột trên màn hình nhỏ */
+    }
+  
+    .stats-header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 10px;
     }
   }

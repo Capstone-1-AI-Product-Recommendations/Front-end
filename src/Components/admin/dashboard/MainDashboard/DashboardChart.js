@@ -166,7 +166,7 @@ const DashboardChart = () => {
 
       <div className="chart-wrapper">
         <div className="chart-header">
-          <div className="chart-type-selector">
+          {/* <div className="chart-type-selector">
             <button 
               className={chartType === 'line' ? 'active' : ''} 
               onClick={() => setChartType('line')}
@@ -192,7 +192,7 @@ const DashboardChart = () => {
             <button>7 days</button>
             <button>15 days</button>
             <button>30 days</button>
-          </div>
+          </div> */}
         </div>
         <div className="chart-area">
           {chartType === 'line' && <Line data={lineData} options={options} height={240} />}

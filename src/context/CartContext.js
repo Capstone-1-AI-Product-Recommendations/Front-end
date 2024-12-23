@@ -1,4 +1,4 @@
-import React, { createContext, useState, useEffect } from 'react';
+import React, { createContext, useState, useEffect, useCallback } from 'react';
 import cartService from '../services/cartService';
 
 export const CartContext = createContext();
@@ -6,44 +6,63 @@ export const CartContext = createContext();
 export const CartProvider = ({ children }) => {
   const [cartCount, setCartCount] = useState(0);
   const [cartItems, setCartItems] = useState([]);
+  const [notification, setNotification] = useState(null);
 
-  const calculateTotalItems = (items) => {
-    return items.reduce((total, shop) => {
-      return total + shop.items.reduce((shopTotal, item) => {
-        return shopTotal + (parseInt(item.quantity) || 0);
-      }, 0);
-    }, 0);
-  };
+  const calculateCartCount = useCallback((items) => {
+    return items.reduce((sum, shop) => sum + shop.items.length, 0);
+  }, []);
 
-  const updateCartCount = () => {
-    const cartData = JSON.parse(localStorage.getItem('cartData'));
-    if (cartData && cartData.items) {
-      const total = calculateTotalItems(cartData.items);
-      setCartCount(total);
-      setCartItems(cartData.items);
-    }
-  };
-
-  const addToCart = async (userId, productData) => {
+  const loadCartData = useCallback(async () => {
     try {
-      await cartService.addToCart(userId, productData);
-      const newCartData = await cartService.getCart(userId);
-      setCartItems(newCartData.items || []);
-      window.dispatchEvent(new Event('cartUpdated'));
+      const user = JSON.parse(localStorage.getItem('user'));
+      if (user && user.user_id) {
+        const cartData = await cartService.getCart(user.user_id);
+        if (cartData && cartData.items) {
+          setCartItems(cartData.items);
+          const total = calculateCartCount(cartData.items);
+          setCartCount(total);
+        }
+      }
     } catch (error) {
-      console.error('Error adding to cart:', error);
+      console.error('Error loading cart data:', error);
     }
+  }, [calculateCartCount]);
+
+  const dispatchCartUpdateEvent = () => {
+    const event = new CustomEvent('cartUpdated');
+    window.dispatchEvent(event);
+  };
+
+  const updateCartCount = async (newCartData) => {
+    console.log('newCartData:', newCartData); // Log newCartData for debugging
+    if (newCartData && typeof newCartData === 'object' && newCartData.items && Array.isArray(newCartData.items)) {
+      setCartItems(newCartData.items);
+      const total = calculateCartCount(newCartData.items);
+      setCartCount(total);
+      showNotification('Product added to cart'); // Display notification message
+    } else {
+      console.error('newCartData is not valid');
+      // Fetch the updated cart data from the backend
+      await loadCartData();
+    }
+    dispatchCartUpdateEvent(); // Dispatch event after updating cart
   };
 
   useEffect(() => {
-    updateCartCount();
-    window.addEventListener('cartUpdated', updateCartCount);
-    return () => window.removeEventListener('cartUpdated', updateCartCount);
-  }, []);
+    loadCartData();
+  }, [loadCartData]);
+
+  const showNotification = (message) => {
+    setNotification(message);
+    setTimeout(() => {
+      setNotification(null);
+    }, 3000); // Hide notification after 3 seconds
+  };
 
   return (
-    <CartContext.Provider value={{ cartCount, cartItems, addToCart, updateCartCount }}>
+    <CartContext.Provider value={{ cartCount, cartItems, updateCartCount, loadCartData, showNotification }}>
       {children}
+      {notification && <div className="notification">{notification}</div>}
     </CartContext.Provider>
   );
 };

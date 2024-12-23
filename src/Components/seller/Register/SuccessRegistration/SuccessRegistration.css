@@ -1,47 +1,48 @@
 .success-registration {
-    /* max-width: 1440px; */
-    /* margin: 0 auto; */
-    text-align: center;
-    /* background-color: #fff; */
-    border-radius: 8px;
-    /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); */
-  }
-  
-  .check-icon { 
-    width: 80px;
-    height: 80px;
-    margin-bottom: 20px;
-  }
-  
-  h2 {
-    color: #333;
-    font-size: 24px;
-    font-weight: 600;
-    margin-bottom: 10px;
-  }
-  
-  p {
-    color: #666;
-    font-size: 16px;
-    margin-bottom: 20px;
-  }
-  
-  .add-product-seller-btn {
-    display: inline-flex;
-    justify-content: center;
-    align-items: center;
-    background-color: #663AB6;
-    color: #fff;
-    border: none;
-    padding: 12px 24px;
-    border-radius: 4px;
-    font-size: 16px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-    margin: 0 auto;
-    min-width: 200px;
-  }
-  
-  .add-product-btn:hover {
-    background-color: #663AB6;
-  }
+  /* max-width: 1440px; */
+  /* margin: 0 auto; */
+  text-align: center;
+  /* background-color: #fff; */
+  border-radius: 8px;
+  /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); */
+}
+
+.check-icon { 
+  width: 80px;
+  height: 80px;
+  margin-bottom: 20px;
+}
+
+h2 {
+  color: #333;
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+p {
+  color: #666;
+  font-size: 16px;
+  margin-bottom: 20px;
+}
+
+.add-product-seller-btn {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #663AB6;
+  color: #fff;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  margin: 0 auto;
+  min-width: 200px;
+}
+
+.add-product-btn:hover {
+  background-color: #663AB6;
+}
+

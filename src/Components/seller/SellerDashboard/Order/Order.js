@@ -1,7 +1,8 @@
-// Orders.js
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './Orders.css';
 import productImg from "../../../../img/Product/newProduct.png"; // Import a default product image
+import { fetchOrderData } from '../../../../services/sellerService'; // Import the new API function
+import { exportOrders } from '../../../../services/sellerService'; // Import the new API function
 
 const Orders = () => {
   const [dateRange, setDateRange] = useState('01-11-2023 - 16-11-2023');
@@ -10,28 +11,27 @@ const Orders = () => {
   const [paymentSource, setPaymentSource] = useState('all');
   const [currentPage, setCurrentPage] = useState(1);
   const [ordersPerPage, setOrdersPerPage] = useState(10);
+  const [orders, setOrders] = useState([]);
 
-  const generateRandomOrders = () => {
-    const randomOrders = [];
-    for (let i = 0; i < 100; i++) {
-      const randomUsername = `user${i + 1}`;
-      const randomStatus = ['chờ xác nhận', 'đang xử lý', 'đã giao', 'trả hàng', 'đã hủy'][Math.floor(Math.random() * 5)];
-      const randomTotal = Math.floor(Math.random() * 1000000);
-      const randomPaymentMethod = ['thanh toán khi nhận hàng', 'chuyển khoản'][Math.floor(Math.random() * 2)];
-      const randomProductName = `Sản phẩm ${i + 1}`; // Generate a random product name
-      randomOrders.push({
-        customer: { id: randomUsername },
-        date: `15/11/2023 ${Math.floor(Math.random() * 24)}:${Math.floor(Math.random() * 60)}`,
-        status: randomStatus,
-        total: randomTotal,
-        paymentMethod: randomPaymentMethod,
-        productName: randomProductName, // Add the random product name to the order
+  useEffect(() => {
+    console.log("useEffect running");
+    const user = JSON.parse(localStorage.getItem('user')); // Parse the user object from localStorage
+    console.log("User from localStorage:", user);
+    const userId = user ? user.user_id : null; // Extract user_id from the user object
+    console.log("Extracted userId:", userId);
+    if (userId) {
+      fetchOrderData(userId).then(data => {
+        console.log("Fetched orders:", data); // Log the fetched orders
+        setOrders(data);
+      }).catch(error => {
+        console.error("Error fetching orders:", error);
       });
+    } else {
+      console.error("No userId found");
     }
-    return randomOrders;
-  };
+  }, []);
 
-  const orders = generateRandomOrders();
+  console.log("Orders state:", orders);
 
   const calculateOrderStats = () => {
     const orderStats = orders.reduce((acc, order) => {
@@ -61,6 +61,46 @@ const Orders = () => {
     setCurrentPage(newPage);
   };
 
+  const handleExport = async () => {
+    try {
+      const user = JSON.parse(localStorage.getItem('user')); // Lấy thông tin user
+      const sellerId = user ? user.user_id : null;
+  
+      if (!sellerId) {
+        console.error("Seller ID not found");
+        return;
+      }
+  
+      const fileData = await exportOrders(sellerId); // Gọi API export
+  
+      // Lấy ngày hiện tại để tạo tên file
+      const currentDate = new Date();
+      const formattedDate = `${currentDate.getFullYear()}-${(currentDate.getMonth() + 1)
+        .toString()
+        .padStart(2, '0')}-${currentDate
+        .getDate()
+        .toString()
+        .padStart(2, '0')}`; // Format: YYYY-MM-DD
+      const fileName = `ThongKeDonHang_${formattedDate}.csv`; // Tên file theo ngày
+  
+      // Tạo blob và tải file về
+      const blob = new Blob([fileData], {
+        type: 'text/csv;charset=utf-8;', // CSV mặc định
+      });
+  
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = fileName; // Sử dụng tên file động
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+  
+      console.log(`File ${fileName} has been downloaded successfully.`);
+    } catch (error) {
+      console.error('Failed to export orders:', error);
+    }
+  };
   const paginatedOrders = orders.slice((currentPage - 1) * ordersPerPage, currentPage * ordersPerPage);
 
   return (
@@ -69,10 +109,10 @@ const Orders = () => {
         <h1>Đơn hàng</h1>
         <div className="header-buttons">
           <button className="create-order">Tạo đơn hàng</button>
-          <button className="export-button">
+          <div className="export-button" onClick={() => handleExport('csv')}>
             <span>Xuất file</span>
-            <span className="arrow-down">▼</span>
-          </button>
+            {/* <span className="arrow-down">▼</span> */}
+          </div>
         </div>
       </div>
 
@@ -125,15 +165,15 @@ const Orders = () => {
             {paginatedOrders.map((order, index) => (
               <tr key={index}>
                 <td className="customer-info">
-                  <div className="customer-id">{order.customer.id}</div>
+                  <div className="customer-id">{order.fullName}</div>
                 </td>
-                <td>{order.productName || 'N/A'}</td> {/* Display the random product name */}
+                <td>{order.productName || 'N/A'}</td>
                 <td>
-                  <img src={order.productImage || productImg} alt="Product" style={{ width: '50px', height: '50px' }} />
+                  <img src={order.images[0] || productImg} alt="Product" style={{ width: '50px', height: '50px' }} />
                 </td>
-                <td>{order.date}</td>
+                <td>{order.recentDate}</td>
                 <td>{order.paymentMethod}</td>
-                <td>{order.total.toLocaleString()}</td>
+                <td>{order.price.toLocaleString()}</td>
                 <td>
                   <span className={`status-badge ${order.status}`}>
                     {order.status}

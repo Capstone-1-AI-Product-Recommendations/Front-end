@@ -1,12 +1,38 @@
 // Inventory.js
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './Inventory.css';
-import productImg from "../../../../img/Product/newProduct.png";
+import { fetchInventoryData } from '../../../../services/sellerService';
 
 const Inventory = () => {
   const [activeTab, setActiveTab] = useState('kho-hang');
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
+  const [inventoryItems, setInventoryItems] = useState([]);
+
+  const user = JSON.parse(localStorage.getItem('user')); // Retrieve user object from local storage
+  const userId = user ? user.user_id : null; // Extract user_id from user object
+
+  useEffect(() => {
+    if (userId) {
+      const getInventoryData = async () => {
+        try {
+          const items = await fetchInventoryData(userId);
+          setInventoryItems(items);
+        } catch (error) {
+          console.error('Error fetching inventory data:', error);
+        }
+      };
+
+      getInventoryData();
+    } else {
+      console.error('User ID is null');
+    }
+  }, [userId]);
+
+  const filteredItems = inventoryItems.filter(item =>
+    (typeof item.sku === 'string' && item.sku.toLowerCase().includes(searchTerm.toLowerCase())) ||
+    (typeof item.name === 'string' && item.name.toLowerCase().includes(searchTerm.toLowerCase()))
+  );
 
   const inventoryTabs = [
     { id: 'kho-hang', label: 'Kho hàng', icon: '🏪' },
@@ -23,59 +49,16 @@ const Inventory = () => {
     { label: 'Chưa bắt tồn kho', value: '8' },
   ];
 
-  const inventoryItems = [
-    {
-      sku: 'SP0013-1',
-      image: productImg,
-      name: 'Hươu hà nội',
-      description: 'Lên tường màu hồng',
-      cost: 130000,
-      stock: 1,
-      totalValue: 130000,
-    },
-    {
-      sku: 'SP0008',
-      image: productImg,
-      name: 'Gấu Misa',
-      description: '',
-      cost: 300000,
-      stock: 6,
-      totalValue: 1800000,
-      warning: true,
-    },
-    {
-      sku: 'SP0023-11',
-      image: productImg,
-      name: 'MINI',
-      description: 'Hồng Xanh',
-      cost: 200000,
-      stock: 0,
-      totalValue: 0,
-    },
-    {
-      sku: 'SP0037',
-      image: productImg,
-      name: 'Dior flowers',
-      description: '',
-      cost: 500000,
-      stock: 0,
-      totalValue: 0,
-    },
-    {
-      sku: 'SP0013-2',
-      image: productImg,
-      name: 'Hươu hà nội',
-      description: 'Lên tường màu xanh',
-      cost: 130000,
-      stock: 2,
-      totalValue: 260000,
-    },
-  ];
+  const formatDate = (dateString) => {
+    if (!dateString) return 'Đang kiểm tra';
+    const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
+    return new Date(dateString).toLocaleDateString('vi-VN', options);
+  };
 
   return (
     <div className="inventory-container">
       {/* Tab Menu */}
-      <div className="inventory-tabs">
+      {/* <div className="inventory-tabs">
         {inventoryTabs.map((tab) => (
           <button
             key={tab.id}
@@ -86,17 +69,17 @@ const Inventory = () => {
             <span className="tab-label">{tab.label}</span>
           </button>
         ))}
-      </div>
+      </div> */}
 
       {/* Stats Cards */}
-      <div className="inventory-stats">
+      {/* <div className="inventory-stats">
         {inventoryStats.map((stat, index) => (
           <div key={index} className="stat-card">
             <div className="stat-value">{stat.value}</div>
             <div className="stat-label">{stat.label}</div>
           </div>
         ))}
-      </div>
+      </div> */}
 
       {/* Search and Filter */}
       <div className="inventory-controls">
@@ -117,7 +100,7 @@ const Inventory = () => {
             {/* Add your categories here */}
           </select>
         </div>
-        <button className="create-transaction">Tạo giao dịch</button>
+        <button className="create-transaction">Thêm sản phẩm</button>
       </div>
 
       {/* Inventory Table */}
@@ -130,15 +113,16 @@ const Inventory = () => {
               <th>GIÁ VỐN</th>
               <th>TỒN KHO</th>
               <th>GIÁ TRỊ TỒN</th>
+              <th>NGÀY THÊM</th>
               <th></th>
             </tr>
           </thead>
           <tbody>
-            {inventoryItems.map((item) => (
+            {filteredItems.map((item) => (
               <tr key={item.sku}>
                 <td>{item.sku}</td>
                 <td className="product-cell">
-                  <img src={item.image} alt={item.name} />
+                  <img src={item.images[0]} alt={item.name} />
                   <div className="product-info">
                     <div className="product-name">{item.name}</div>
                     <div className="product-description">{item.description}</div>
@@ -149,6 +133,7 @@ const Inventory = () => {
                   {item.stock}
                 </td>
                 <td>{item.totalValue.toLocaleString()}</td>
+                <td>{formatDate(item.recent_date)}</td>
                 <td>
                   <button className="action-button">⋮</button>
                 </td>

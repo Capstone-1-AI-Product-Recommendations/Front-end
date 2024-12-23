@@ -18,8 +18,10 @@ API.interceptors.request.use((config) => {
 
 const clearCartItems = (callback) => {
     localStorage.removeItem('cartData');
-    if (callback) {
+    if (typeof callback === 'function') {
         callback();
+    } else {
+        console.error('callback is not a function');
     }
 };
 

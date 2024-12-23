@@ -19,7 +19,7 @@ const PublicLayout = () => {
       </div>
 
       {/* Orders Table */}
-      <OrdersTable />
+      {/* <OrdersTable /> */}
       <Outlet />
     </div>
   );

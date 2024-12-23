@@ -93,3 +93,38 @@ export const updateNotificationStatus = async (userId, notificationId) => {
     throw error;
   }
 };
+
+// API to fetch user information
+export const fetchUserInfo = async (userId) => {
+  try {
+    console.log('Fetching user info:', userId);
+    const response = await API.get(`/user/${userId}/info/`);
+    console.log('User info:', response.data);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching user info:', error);
+    throw error;
+  }
+};
+
+// API to update user information
+export const updateUserInfo = async (userId, userData) => {
+  try {
+    const response = await API.put(`/user/${userId}/info/update/`, userData);
+    return response.data;
+  } catch (error) {
+    console.error('Error updating user info:', error);
+    throw error;
+  }
+};
+
+// API to fetch user orders
+export const fetchUserOrders = async (userId) => {
+  try {
+    const response = await API.get(`/user/${userId}/orders/`);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching user orders:', error);
+    throw error;
+  }
+};

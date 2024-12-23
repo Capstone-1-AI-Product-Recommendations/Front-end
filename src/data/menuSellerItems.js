@@ -27,16 +27,17 @@ import {
       id: "products",
       icon: FaStore,
       label: "Quản lý sản phẩm",
-      path: "/seller-dashboard/products",
-      subItems: []
-    },
-    {
-      id: "inventory",
-      icon: FaWarehouse,
-      label: "Kho hàng",
       path: "/seller-dashboard/inventory",
+      // path: "/seller-dashboard/products",
       subItems: []
     },
+    // },
+    // {
+    //   id: "inventory",
+    //   icon: FaWarehouse,
+    //   label: "Kho hàng",
+    //   subItems: []
+    // },
     // {
     //   id: "statistics",
     //   icon: FaChartLine,

@@ -4,6 +4,9 @@ import { FaChevronRight, FaTh, FaUserCircle } from 'react-icons/fa';
 import logoApp from '../../../../img/logoApp.png';
 
 const HeaderSeller = () => {
+    const user = JSON.parse(localStorage.getItem('user')); // Retrieve user object from local storage
+    const username = user ? user.full_name : null; 
+    console.log(username);
     return (
         <div className="header">
             <div className="header-left">
@@ -19,7 +22,7 @@ const HeaderSeller = () => {
             <div className="header-right">
                 <FaTh className="icon" />
                 <FaUserCircle className="icon user-icon" />
-                <span className="username">minhmanh2709</span>
+                <span className="username">{username}</span>
                 <FaChevronRight className="dropdown-icon" />
             </div>
         </div>

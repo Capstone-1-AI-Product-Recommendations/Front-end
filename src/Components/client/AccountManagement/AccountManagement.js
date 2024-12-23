@@ -1,9 +1,9 @@
 /** @format */
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import "./AccountManagement.css";
 import logoUser from "../../../img/logUser.jpg";
-import { orders } from "../../../data/orders";
+import { fetchUserInfo, updateUserInfo, fetchUserOrders } from "../../../services/apiLogin"; // Import the new API method
 
 const AccountManagement = () => {
   // Lấy state từ router hoặc mặc định là "Hồ Sơ"
@@ -13,6 +13,49 @@ const AccountManagement = () => {
   const [submenuOpen, setSubmenuOpen] = useState(true); // State quản lý hiển thị submenu
 
   const [uploadedImage, setUploadedImage] = useState(logoUser); // State lưu ảnh đã tải lên
+  const [userInfo, setUserInfo] = useState(null); // State to store user info
+  const [orders, setOrders] = useState([]); // State to store user orders
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const user = JSON.parse(localStorage.getItem('user'));
+        const userId = user.user_id; // Assuming user_id is stored in localStorage
+        console.log('User ID:', userId);
+        if (userId) {
+          const userInfoData = await fetchUserInfo(userId);
+          setUserInfo(userInfoData);
+          const userOrdersData = await fetchUserOrders(userId);
+          setOrders(userOrdersData);
+        }
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const handleProfileUpdate = async (event) => {
+    event.preventDefault();
+    try {
+      const user = JSON.parse(localStorage.getItem('user'));
+      const userId = user.user_id;
+      const updatedData = {
+        full_name: event.target.full_name.value,
+        email: event.target.email.value,
+        phone_number: event.target.phone_number.value,
+        address: event.target.address.value,
+        city: event.target.city.value,
+      };
+      const updatedUserInfo = await updateUserInfo(userId, updatedData);
+      setUserInfo(updatedUserInfo);
+      alert('Cập nhật thông tin thành công!');
+    } catch (error) {
+      console.error('Error updating user info:', error);
+      alert('Cập nhật thông tin thất bại!');
+    }
+  };
 
   // Hàm xử lý khi người dùng chọn ảnh mới
   const handleImageChange = (event) => {
@@ -77,80 +120,74 @@ const AccountManagement = () => {
           <div className="profile-info">
             <h1>Hồ Sơ Của Tôi</h1>
             <p>Quản lý thông tin hồ sơ để bảo mật tài khoản</p>
-            <div className="profile-details">
-              <div className="profile-item">
-                <span className="profile-item-label">Tên đăng nhập:</span>
-                <span className="profile-item-value">User</span>
+            {userInfo ? (
+              <div className="profile-details">
+                <div className="profile-item">
+                  <span className="profile-item-label">Tên đăng nhập:</span>
+                  <span className="profile-item-value">{userInfo.username}</span>
+                </div>
+                <div className="profile-item">
+                  <span className="profile-item-label">Tên:</span>
+                  <span className="profile-item-value">{userInfo.full_name}</span>
+                </div>
+                <div className="profile-item">
+                  <span className="profile-item-label">Email:</span>
+                  <span className="profile-item-value">{userInfo.email}</span>
+                </div>
+                <div className="profile-item">
+                  <span className="profile-item-label">Số điện thoại:</span>
+                  <span className="profile-item-value">{userInfo.phone_number}</span>
+                </div>
+                <div className="profile-item">
+                  <span className="profile-item-label">Địa chỉ:</span>
+                  <span className="profile-item-value">{userInfo.address}</span>
+                </div>
+                <div className="profile-item">
+                  <span className="profile-item-label">Thành phố:</span>
+                  <span className="profile-item-value">{userInfo.city}</span>
+                </div>
               </div>
-              <div className="profile-item">
-                <span className="profile-item-label">Tên:</span>
-                <span className="profile-item-value">Trần Thị Mỹ Duyên</span>
-              </div>
-              <div className="profile-item">
-                <span className="profile-item-label">Email:</span>
-                <span className="profile-item-value">Trant******@gmail.com</span>
-              </div>
-              <div className="profile-item">
-                <span className="profile-item-label">Số điện thoại:</span>
-                <span className="profile-item-value">******60</span>
-              </div>
-              <div className="profile-item">
-                <span className="profile-item-label">Giới tính:</span>
-                <span className="profile-item-value">Nữ</span>
-              </div>
-              <div className="profile-item">
-                <span className="profile-item-label">Ngày sinh:</span>
-                <span className="profile-item-value">23/01/2003</span>
-              </div>
-            </div>
+            ) : (
+              <p>Loading...</p>
+            )}
           </div>
         )}
-        {activeTab === "Sửa Hồ Sơ" && (
+        {activeTab === "Sửa Hồ Sơ" && userInfo && (
           <>
-            <form className="profile-form">
+            <form className="profile-form" onSubmit={handleProfileUpdate}>
               <h1 className="profile-title">Sửa Hồ Sơ</h1>
               <p className="profile-description">
                 Cập nhật thông tin của bạn để bảo mật tài khoản tốt hơn.
               </p>
               <div className="form-group-profile">
                 <label className="form-label">Tên đăng nhập</label>
-                <input className="form-input" type="text" value="kiet_boy" readOnly />
+                <input className="form-input" type="text" value={userInfo.username} readOnly disabled />
               </div>
               <div className="form-group-profile">
                 <label className="form-label">Tên</label>
-                <input className="form-input" type="text" placeholder="Trần Anh Kiệt" />
+                <input className="form-input" type="text" name="full_name" defaultValue={userInfo.full_name} />
               </div>
               <div className="form-group-profile">
                 <label className="form-label">Email</label>
-                <input className="form-input" type="email" value="ki******@gmail.com" readOnly />
+                <input className="form-input" type="email" name="email" defaultValue={userInfo.email} readOnly />
               </div>
               <div className="form-group-profile">
                 <label className="form-label">Số điện thoại</label>
-                <input className="form-input" type="tel" placeholder="******60" />
+                <input className="form-input" type="tel" name="phone_number" defaultValue={userInfo.phone_number} />
               </div>
               <div className="form-group-profile">
-                <label className="form-label">Giới tính</label>
-                <div className="gender-options">
-                  <label>
-                    <input type="radio" name="gender" value="male" /> Nam
-                  </label>
-                  <label>
-                    <input type="radio" name="gender" value="female" /> Nữ
-                  </label>
-                  <label>
-                    <input type="radio" name="gender" value="other" /> Khác
-                  </label>
-                </div>
+                <label className="form-label">Địa chỉ</label>
+                <input className="form-input" type="text" name="address" defaultValue={userInfo.address} />
               </div>
               <div className="form-group-profile">
-                <label className="form-label">Ngày sinh</label>
-                <input className="form-input" type="date" defaultValue="2003-01-23" />
+                <label className="form-label">Thành phố</label>
+                <input className="form-input" type="text" name="city" defaultValue={userInfo.city} />
               </div>
               <button type="submit" className="save-button">
                 Lưu
               </button>
             </form>
-            <div className="profile-picture">
+            {/* <div className="profile-picture">
               <img src={uploadedImage} alt="User Avatar" className="avatar" />
               <label htmlFor="upload-input" className="upload-button">
                 Chọn Ảnh
@@ -172,7 +209,7 @@ const AccountManagement = () => {
               >
                 Xóa Ảnh
               </button>
-            </div>
+            </div> */}
           </>
         )}
         {activeTab === "Đơn Mua" && (
@@ -182,37 +219,26 @@ const AccountManagement = () => {
               orders.map((order, index) => (
                 <div className="order-card" key={index}>
                   <div className="order-header">
-                    <span className="shop-name">{order.shopName}</span>
+                    <span className="shop-name">{order.shop_name}</span>
                     <span
-                      className={`order-status ${order.status === "HOÀN THÀNH" ? "success" : "cancel"
-                        }`}
+                      className={`order-status ${order.status === "đã hủy" ? "cancel" : "success"}`}
                     >
                       {order.status}
                     </span>
                   </div>
                   <div className="order-body">
                     <img
-                      src={order.product.image}
-                      alt={order.product.name}
+                      src={order.image}
+                      alt={order.product_name}
                       className="order-image"
                     />
                     <div className="order-details">
-                      <p>{order.product.name}</p>
-                      <p>Phân loại hàng: {order.product.type}</p>
-                      <p>x{order.product.quantity}</p>
-                    </div>
-                    <div className="order-actions">
-                      {order.actions.map((action, i) => (
-                        <button key={i} className="order-action-button">
-                          {action}
-                        </button>
-                      ))}
+                      <p>{order.product_name}</p>
+                      <p>x{order.quantity}</p>
                     </div>
                   </div>
                   <div className="order-footer">
-                    <span className="order-price">
-                      Thành tiền: ₫{order.product.price.toLocaleString()}
-                    </span>
+                    <span className="order-id">Mã đơn hàng: {order.order_id}</span>
                   </div>
                 </div>
               ))

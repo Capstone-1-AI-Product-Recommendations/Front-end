@@ -55,6 +55,7 @@ const menuAdminItems = [
   //     }
   //   ]
   // },
+  { id: "orders", icon: FaBoxes, label: "Quản lý đơn hàng", path: "/admin/orders", subItems: [] },
   {
     id: "logout",
     icon: FaSignOutAlt,

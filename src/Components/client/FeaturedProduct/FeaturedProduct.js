@@ -14,7 +14,7 @@ const FeaturedProduct = ({ products }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState({});
   const [currentPage, setCurrentPage] = useState(1);
   const navigate = useNavigate(); // Add this line
-  const { updateCartCount } = useContext(CartContext);
+  const { updateCartCount, showNotification } = useContext(CartContext); // Destructure showNotification from context
   const [loading, setLoading] = useState(false);
 
   const totalPages = Math.ceil(products.length / PRODUCTS_PER_PAGE);
@@ -123,12 +123,12 @@ const FeaturedProduct = ({ products }) => {
       }
       const productData = { product_id: product.product_id, quantity: 1 };
       const newCartData = await cartService.addToCart(userId, productData);
-      alert('Product added to cart successfully!');
-      // Update cart count
-      updateCartCount(newCartData);
+      console.log('newCartData:', newCartData); // Log newCartData for debugging
+      updateCartCount(newCartData); // Update cart count
+      showNotification('Product added to cart successfully!'); // Show notification
     } catch (error) {
       console.error('Error adding product to cart:', error);
-      alert('Failed to add product to cart.');
+      showNotification('Failed to add product to cart.'); // Show notification
     } finally {
       setLoading(false);
     }

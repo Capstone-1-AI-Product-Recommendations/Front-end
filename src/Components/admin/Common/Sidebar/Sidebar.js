@@ -24,6 +24,13 @@ const Sidebar = () => {
     }
   };
 
+  const orderManagementItem = {
+    id: "orderManagement",
+    label: "Quản lý đơn hàng",
+    icon: ChevronDown, // Replace with appropriate icon
+    path: "/order-management",
+  };
+
   return (
     <div className="sidebar-admin">
       {/* Logo Section */}
@@ -33,6 +40,7 @@ const Sidebar = () => {
 
       {/* Menu Section */}
       <div className="sidebar-menu">
+        
         {menuAdminItems.map((item) => (
           <div key={item.id}>
             <div
@@ -60,8 +68,9 @@ const Sidebar = () => {
                 ))}
               </div>
             )}
-          </div>
+          </div>          
         ))}
+        
       </div>
     </div>
   );

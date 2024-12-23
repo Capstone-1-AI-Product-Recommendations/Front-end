@@ -41,7 +41,7 @@ import PublicLayout from "./Components/admin/dashboard/Overview/PublicLayout";
 import UserManagement from "./Components/admin/dashboard/UserManagement/UserManagement";
 import AdminProductManagement from "./Components/admin/dashboard/AdminProductManagement/AdminProductManagement";
 import Permission from "./Components/admin/Permission/Permission";
-
+import OrderManagement from "./Components/admin/orders/OrderManagement";
 const RouterCustom = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userRole, setUserRole] = useState(""); // State cho vai trò người dùng
@@ -141,11 +141,22 @@ const RouterCustom = () => {
       {/* Protected routes */}
       {isLoggedIn && (
         <>
-          <Route path="/profile" element={<AccountManagement />} />
+          <Route path="/my-account" element={<AccountManagement />} />
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/order-summary" element={<OrderSummary />} />
           <Route path="/payment" element={<PaymentQRCode />} />
           <Route path="/confirmation" element={<OrderConfirmation />} />
+          <Route path="/register-seller" element={<RegisterSeller />} />
+          <Route path="/shipping-setting" element={<ShippingSetting />} />
+          <Route path="/tax-information" element={<TaxInformation />} />
+          <Route
+            path="/identity-information"
+            element={<IdentityInformation />}
+          />
+          <Route
+            path="/check-registration"
+            element={<SuccessRegistration />}
+          />
 
           {/* Seller routes */}
           {userRole === "seller" && (
@@ -167,6 +178,7 @@ const RouterCustom = () => {
               <Route path="dashboard" element={<PublicLayout />} />
               <Route path="permissions" element={<Permission />} />
               <Route path="products" element={<AdminProductManagement />} />
+              <Route path="orders" element={<OrderManagement />} />
               <Route path="users" element={<UserManagement />} />
             </Route>
           )}

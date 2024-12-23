@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   LineChart,
   Line,
@@ -15,10 +15,49 @@ import {
   ResponsiveContainer
 } from 'recharts';
 import './Statistics.css';
+import { fetchSalesSummary, fetchYearlySalesSummary, fetchCategoryData } from '../../../../services/sellerService';
 
 const Statistics = () => {
-  const [timeRange, setTimeRange] = useState('week');
-  
+  const [timeRange, setTimeRange] = useState('year'); // Default to 'year'
+  const [stats, setStats] = useState({
+    totalRevenue: '0 đ',
+    totalOrders: '0',
+    averageOrder: '0 đ',
+  });
+  const [yearlySalesData, setYearlySalesData] = useState([]);
+  const [categoryData, setCategoryData] = useState([]);
+
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem('user'));
+    console.log("user", user);
+    const userId = user ? user.user_id : null;
+    if (userId) {
+      fetchSalesSummary(userId).then(data => {
+        setStats({
+          totalRevenue: `${data.totalRevenue.toLocaleString()} đ`,
+          totalOrders: data.totalOrders.toString(),
+          averageOrder: `${data.averageOrderValue.toLocaleString()} đ`,
+        });
+      }).catch(error => {
+        console.error('Error fetching sales summary:', error);
+      });
+
+      fetchYearlySalesSummary(userId).then(data => {
+        setYearlySalesData(data);
+      }).catch(error => {
+        console.error('Error fetching yearly sales summary:', error);
+      });
+
+      fetchCategoryData(userId).then(data => {
+        setCategoryData(data);
+      }).catch(error => {
+        console.error('Error fetching category data:', error);
+      });
+    } else {
+      console.error('User ID not found in local storage');
+    }
+  }, []);
+
   // Data mẫu
   const salesData = {
     week: [
@@ -52,28 +91,14 @@ const Statistics = () => {
     ],
   };
 
-  const categoryData = [
-    { name: 'Điện tử', value: 400 },
-    { name: 'Thời trang', value: 300 },
-    { name: 'Đồ gia dụng', value: 200 },
-    { name: 'Mỹ phẩm', value: 150 },
-  ];
-
   const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
-
-  const stats = {
-    totalRevenue: '659,000,000 đ',
-    totalOrders: '3,715',
-    averageOrder: '177,000 đ',
-    conversionRate: '2.4%'
-  };
 
   return (
     <div className="statistics-container">
       <div className="stats-header">
         <h2>Thống kê bán hàng</h2>
-        <select 
-          value={timeRange} 
+        <select
+          value={timeRange}
           onChange={(e) => setTimeRange(e.target.value)}
           className="time-range-select"
         >
@@ -96,17 +121,17 @@ const Statistics = () => {
           <h3>Giá trị đơn trung bình</h3>
           <p>{stats.averageOrder}</p>
         </div>
-        <div className="stat-card">
+        {/* <div className="stat-card">
           <h3>Tỷ lệ chuyển đổi</h3>
           <p>{stats.conversionRate}</p>
-        </div>
+        </div> */}
       </div>
 
       <div className="charts-container">
         <div className="chart-wrapper">
           <h3>Doanh thu theo thời gian</h3>
           <ResponsiveContainer width="100%" height={300}>
-            <LineChart data={salesData[timeRange]}>
+            <LineChart data={timeRange === 'year' ? yearlySalesData : salesData[timeRange]}>
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="name" />
               <YAxis />
@@ -125,7 +150,7 @@ const Statistics = () => {
         <div className="chart-wrapper">
           <h3>Số lượng đơn hàng</h3>
           <ResponsiveContainer width="100%" height={300}>
-            <BarChart data={salesData[timeRange]}>
+            <BarChart data={timeRange === 'year' ? yearlySalesData : salesData[timeRange]}>
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="name" />
               <YAxis />

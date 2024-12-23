@@ -13,6 +13,7 @@
   padding: 12px;
   text-align: left;
   border-bottom: 1px solid #eee;
+  white-space: nowrap; /* Prevent columns from moving */
 }
 
 .order-table th {
@@ -22,4 +23,36 @@
 
 .order-table tr:hover {
   background-color: #f5f7fa;
-} 
+}
+
+.search-input {
+  margin-bottom: 20px;
+  padding: 8px;
+  width: 100%;
+  max-width: 300px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.pagination {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.pagination button {
+  margin: 0 5px;
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  background-color: #f5f5f5;
+  cursor: pointer;
+}
+
+.pagination button.active {
+  background-color: #007bff;
+  color: white;
+}
+
+.pagination button:disabled {
+  background-color: #e9ecef;
+  cursor: not-allowed;
+}

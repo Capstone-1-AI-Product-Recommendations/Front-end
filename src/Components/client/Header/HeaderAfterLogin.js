@@ -21,6 +21,14 @@ const HeaderAfterLogin = ({ onLogout, userRole }) => {
   const [notifications, setNotifications] = useState([]);
   const [showNotificationsDropdown, setShowNotificationsDropdown] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0); // State for unread notifications count
+  const [notification, setNotification] = useState(null);
+
+  const showNotification = (message) => {
+    setNotification(message);
+    setTimeout(() => {
+      setNotification(null);
+    }, 3000); // Hide notification after 3 seconds
+  };
 
   const calculateCartCount = useCallback((items) => {
     return items.reduce((sum, shop) => sum + shop.items.length, 0);
@@ -218,6 +226,7 @@ const HeaderAfterLogin = ({ onLogout, userRole }) => {
 
   return (
     <>
+      {notification && <div className="notification">{notification}</div>}
       {/* ** Header Container ** */}
       <div className="menu-container">
         <header className="header-user">

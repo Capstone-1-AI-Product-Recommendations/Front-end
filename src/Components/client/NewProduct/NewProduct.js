@@ -2,17 +2,16 @@ import React, { useState, useContext, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { CartContext } from '../../../context/CartContext';
 import "./NewProduct.css";
-import { fetchNewProducts } from "../../../services/apiHomePage"; // Import the API function
 import cartService from '../../../services/cartService';
 
 const PRODUCTS_PER_PAGE = 36;
 
-const NewProduct = ({ products, updateCartCount }) => {
+const NewProduct = ({ products, showNotification }) => {
   const [hoveredProduct, setHoveredProduct] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
 
   const navigate = useNavigate();
-  const { addToCart } = useContext(CartContext);
+  const { updateCartCount } = useContext(CartContext); // Get updateCartCount from context
 
   const totalPages = Math.ceil(products.length / PRODUCTS_PER_PAGE);
 
@@ -31,12 +30,12 @@ const NewProduct = ({ products, updateCartCount }) => {
       }
       const productData = { product_id: product.product_id, quantity: 1 };
       const newCartData = await cartService.addToCart(userId, productData);
-      alert('Product added to cart successfully!');
-      // Update cart count
-      updateCartCount(newCartData);
+      console.log('newCartData:', newCartData); // Log newCartData for debugging
+      updateCartCount(newCartData); // Update cart count
+      showNotification('Product added to cart successfully!'); // Show notification
     } catch (error) {
       console.error('Error adding product to cart:', error);
-      alert('Failed to add product to cart.');
+      showNotification('Failed to add product to cart.'); // Show notification
     }
   };
 

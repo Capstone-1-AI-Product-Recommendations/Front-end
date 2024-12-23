@@ -21,7 +21,8 @@ const UserManagement = () => {
   const [newUser, setNewUser] = useState({
     email: '',
     phone: '',
-    role: 'User'
+    role: 'User',
+    password: '' // Add password field
   });
   const [roleFilter, setRoleFilter] = useState('all');
   const [showSellerManagement, setShowSellerManagement] = useState(false);
@@ -83,6 +84,18 @@ const UserManagement = () => {
     );
   };
 
+  const handleDeleteUser = async (userId) => {
+    if (window.confirm('Bạn có chắc chắn muốn xóa người dùng này?')) {
+      try {
+        await adminService.deleteUser(userId);
+        setUsers(users.filter(user => user.user_id !== userId));
+      } catch (error) {
+        console.error('Error deleting user:', error);
+        alert('Failed to delete user.');
+      }
+    }
+  };
+
   const handleClose = () => setShowModal(false);
   const handleShow = () => setShowModal(true);
 
@@ -90,31 +103,65 @@ const UserManagement = () => {
     setShowSellerManagement(!showSellerManagement);
   };
 
-  const handleSubmit = () => {
-    const newId = users.length + 1;
+  const handleSubmit = async () => {
+    if (!newUser.username || !newUser.email || !newUser.password) {
+      alert('Vui lòng điền đầy đủ thông tin.');
+      return;
+    }
+
     const newUserData = {
-      id: newId,
-      username: `user${newId}`,
+      username: newUser.username,
       email: newUser.email,
-      fullname: `Người dùng ${newId}`,
-      role: newUser.role.toLowerCase(),
-      status: 1,
-      permissions: {
-        search: true,
-        tourManagement: newUser.role !== 'User',
-        revenueStats: newUser.role !== 'User',
-        permissions: newUser.role === 'Admin'
-      }
+      password: newUser.password,
+      role_name: newUser.role.toLowerCase()
     };
-    
-    setUsers([...users, newUserData]);
-    handleClose();
-    setNewUser({
-      email: '',
-      phone: '',
-      role: 'User'
-    });
+
+    try {
+      const createdUser = await adminService.createUser(newUserData);
+      setUsers([...users, createdUser]);
+      handleClose();
+      setNewUser({
+        username: '',
+        email: '',
+        role: 'User',
+        password: ''
+      });
+    } catch (error) {
+      console.error('Error creating user:', error);
+      alert('Failed to create user.');
+    }
   };
+
+  const handleExport = async () => {
+    try {
+        const fileData = await adminService.exportUsers(); // Call the export API
+
+        const currentDate = new Date();
+        const formattedDate = `${currentDate.getFullYear()}-${(currentDate.getMonth() + 1)
+            .toString()
+            .padStart(2, '0')}-${currentDate
+            .getDate()
+            .toString()
+            .padStart(2, '0')}`; // Format: YYYY-MM-DD
+        const fileName = `UserExport_${formattedDate}.csv`; // Dynamic file name
+
+        const blob = new Blob([fileData], {
+            type: 'text/csv;charset=utf-8;',
+        });
+
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = fileName; // Use dynamic file name
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+        console.log(`File ${fileName} has been downloaded successfully.`);
+    } catch (error) {
+        console.error('Failed to export users:', error);
+    }
+};
 
   const renderPagination = () => {
     const range = [];
@@ -229,6 +276,9 @@ const UserManagement = () => {
               <button className="btn btn-primary" onClick={handleShow}>
                 + Thêm
               </button>
+              <button className="btn btn-secondary" onClick={handleExport}>
+                Xuất file
+              </button>
             </div>
           </div>
 
@@ -250,8 +300,11 @@ const UserManagement = () => {
                   <td>{user.full_name}</td>
                   <td>{user.role_name}</td>
                   <td className="action-buttons-admin">
-                    <MdEditNote className="edit-icon-admin me-4 ms-3  " />
-                    <FaTrash className="delete-icon-admin md-2" />
+                    <MdEditNote className="edit-icon-admin me-4 ms-3" />
+                    <FaTrash 
+                      className="delete-icon-admin md-2" 
+                      onClick={() => handleDeleteUser(user.user_id)} 
+                    />
                   </td>
                 </tr>
               ))}
@@ -268,6 +321,14 @@ const UserManagement = () => {
               <Form>
                 <Form.Group className="mb-3">
                   <Form.Control
+                    type="text"
+                    placeholder="Username"
+                    value={newUser.username}
+                    onChange={(e) => setNewUser({...newUser, username: e.target.value})}
+                  />
+                </Form.Group>
+                <Form.Group className="mb-3">
+                  <Form.Control
                     type="email"
                     placeholder="Email"
                     value={newUser.email}
@@ -276,10 +337,10 @@ const UserManagement = () => {
                 </Form.Group>
                 <Form.Group className="mb-3">
                   <Form.Control
-                    type="text"
-                    placeholder="Số điện thoại"
-                    value={newUser.phone}
-                    onChange={(e) => setNewUser({...newUser, phone: e.target.value})}
+                    type="password"
+                    placeholder="Mật khẩu"
+                    value={newUser.password}
+                    onChange={(e) => setNewUser({...newUser, password: e.target.value})}
                   />
                 </Form.Group>
                 <Form.Group>
@@ -287,9 +348,9 @@ const UserManagement = () => {
                     value={newUser.role}
                     onChange={(e) => setNewUser({...newUser, role: e.target.value})}
                   >
-                    <option value="User">User</option>
-                    <option value="Seller">Seller</option>
-                    <option value="Admin">Admin</option>
+                    <option value="user">User</option>
+                    <option value="seller">Seller</option>
+                    <option value="admin">Admin</option>
                   </Form.Select>
                 </Form.Group>
               </Form>
