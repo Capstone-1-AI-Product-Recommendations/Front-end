@@ -12,6 +12,7 @@ const SearchResults = ({ products, loading, error }) => {
   }, [products]);
 
   const productArray = Array.isArray(products) ? products : products.products;
+  console.log("Product array:", productArray);
 
   if (!productArray || !Array.isArray(productArray)) {
     return <div>No products found.</div>;

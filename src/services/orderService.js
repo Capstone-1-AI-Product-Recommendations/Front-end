@@ -17,12 +17,13 @@ API.interceptors.request.use((config) => {
 });
 
 const clearCartItems = (callback) => {
-    localStorage.removeItem('cartData');
+    // localStorage.removeItem('cartData');
     if (typeof callback === 'function') {
         callback();
     } else {
         console.error('callback is not a function');
     }
+    window.dispatchEvent(new Event('cartUpdated')); // Dispatch cartUpdated event
 };
 
 const orderService = {

@@ -9,8 +9,9 @@ import CartDropdown from "../Cart/CartDropdown";
 import { NavLink } from "react-router-dom";
 import "./HeaderAfterLogin.css";
 import productService from '../../../services/productService';
-import { fetchUserNotifications, updateNotificationStatus } from '../../../services/apiLogin'; // Import the new function
+import { fetchUserNotifications, updateNotificationStatus, logoutUser } from '../../../services/apiLogin'; // Import the new function
 import orderService from '../../../services/orderService'; // Import orderService
+import cartService from '../../../services/cartService'; // Import the cartService
 
 const HeaderAfterLogin = ({ onLogout, userRole }) => {
   const navigate = useNavigate();
@@ -34,13 +35,16 @@ const HeaderAfterLogin = ({ onLogout, userRole }) => {
     return items.reduce((sum, shop) => sum + shop.items.length, 0);
   }, []);
 
-  const loadCartData = useCallback(() => {
+  const loadCartData = useCallback(async () => {
     try {
-      const cartData = JSON.parse(localStorage.getItem('cartData'));
-      if (cartData && cartData.items) {
-        setCartItems(cartData.items);
-        const total = calculateCartCount(cartData.items);
-        setCartCount(prevCount => prevCount !== total ? total : prevCount);
+      const user = JSON.parse(localStorage.getItem('user'));
+      if (user && user.user_id) {
+        const cartData = await cartService.getCart(user.user_id);
+        if (cartData && cartData.items) {
+          setCartItems(cartData.items);
+          const total = calculateCartCount(cartData.items);
+          setCartCount(prevCount => prevCount !== total ? total : prevCount);
+        }
       }
     } catch (error) {
       console.error('Error loading cart data:', error);
@@ -156,12 +160,18 @@ const HeaderAfterLogin = ({ onLogout, userRole }) => {
     setHoveredCategory(null);
   }, []);
 
-  const handleLogout = useCallback(() => {
-    if (typeof onLogout === "function") {
-      onLogout();
+  const handleLogout = useCallback(async () => {
+    try {
+      const user = JSON.parse(localStorage.getItem('user'));
+      if (user && user.user_id) {
+        await logoutUser(user.user_id); // Call the logoutUser function
+      }
+      if (typeof onLogout === "function") {
+        onLogout();
+      }
       navigate("/", { replace: true }); // Use replace option only when necessary
-    } else {
-      console.error("onLogout is not a function");
+    } catch (error) {
+      console.error("Logout error:", error);
     }
   }, [navigate, onLogout]);
 

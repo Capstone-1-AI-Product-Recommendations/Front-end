@@ -5,11 +5,11 @@ const API_URL = 'http://127.0.0.1:8000/api';
 // Tạo instance axios với cấu hình chung
 const api = axios.create({
   baseURL: API_URL,
+  withCredentials: true, // Ensure withCredentials is set here
   headers: {
     'Content-Type': 'application/json',
   },
 });
-
 // Thêm interceptor để xử lý token
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem('token');
@@ -26,7 +26,7 @@ const cartService = {
       const response = await api.get(`/cart/${userId}/`);
       // Lưu dữ liệu giỏ hàng vào local storage
       console.log("Cart data:", response.data);
-      localStorage.setItem('cartData', JSON.stringify(response.data));
+      // localStorage.setItem('cartData', JSON.stringify(response.data));
       return response.data;
     } catch (error) {
       console.error('Error fetching cart:', error);
@@ -35,21 +35,22 @@ const cartService = {
   },
 
   // Thêm sản phẩm vào giỏ hàng
-  addItemToCart: async (userId, item) => {
-    try {
-      const response = await axios.post(`${API_URL}/cart/${userId}/`, item);
-      return response.data;
-    } catch (error) {
-      console.error('Error adding item to cart:', error);
-      throw error;
-    }
-  },
+  // addItemToCart: async (userId, item) => {
+  //   try {
+  //     console.log("Current cookies:", document.cookie);
+  //     const response = await axios.post(`${API_URL}/cart/${userId}/`, item);
+  //     return response.data;
+  //   } catch (error) {
+  //     console.error('Error adding item to cart:', error);
+  //     throw error;
+  //   }
+  // },
 
   // Add item to cart
   addToCart: async (userId, productData) => {
     try {
       const response = await api.post(`/cart/add/${userId}/`, productData);
-      localStorage.setItem('cartData', JSON.stringify(response.data));
+      // localStorage.setItem('cartData', JSON.stringify(response.data));
       // Trigger cart update event
       window.dispatchEvent(new Event('cartUpdated'));
       return response.data;
@@ -69,11 +70,11 @@ const cartService = {
       console.log("Update cart", response.data);
       // Update localStorage with new cart data
       if (response.data) {
-        localStorage.setItem('cartData', JSON.stringify(response.data));
+        // localStorage.setItem('cartData', JSON.stringify(response.data));
         // Trigger cart update event
         window.dispatchEvent(new Event('cartUpdated'));
       }
-      
+
       return response.data;
     } catch (error) {
       console.error('Error updating cart item:', error);
@@ -107,7 +108,7 @@ const cartService = {
   initializeCart: async (userId) => {
     try {
       const response = await api.get(`/cart/${userId}/`);
-      localStorage.setItem('cartData', JSON.stringify(response.data));
+      // localStorage.setItem('cartData', JSON.stringify(response.data));
       return response.data;
     } catch (error) {
       console.error('Error initializing cart:', error);

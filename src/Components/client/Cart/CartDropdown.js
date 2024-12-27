@@ -3,6 +3,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { CartContext } from '../../../context/CartContext';
 import "./CartDropdown.css";
+import cartService from '../../../services/cartService'; // Import the cartService
 
 const CartDropdown = () => {
   const navigate = useNavigate();
@@ -10,35 +11,30 @@ const CartDropdown = () => {
   const [products, setProducts] = useState([]);
   const [totalItems, setTotalItems] = useState(0);
 
-  useEffect(() => {
-    const loadCartData = () => {
-      const cartData = JSON.parse(localStorage.getItem('cartData'));
-      if (cartData && cartData.items) {
-        const allProducts = cartData.items.flatMap(shop => shop.items);
-        setProducts(allProducts);
+  const loadCartData = async () => {
+    try {
+      const user = JSON.parse(localStorage.getItem('user'));
+      if (user && user.user_id) {
+        const cartData = await cartService.getCart(user.user_id);
+        if (cartData && cartData.items) {
+          const allProducts = cartData.items.flatMap(shop => shop.items);
+          setProducts(allProducts);
 
-        const total = allProducts.reduce((sum, product) => {
-          const quantity = product.quantity !== null ? product.quantity : 1;
-          return sum + quantity;
-        }, 0);
-        
-        setTotalItems(total);
+          const total = allProducts.reduce((sum, product) => {
+            const quantity = product.quantity !== null ? product.quantity : 1;
+            return sum + quantity;
+          }, 0);
+
+          setTotalItems(total);
+        }
       }
-    };
+    } catch (error) {
+      console.error('Error loading cart data:', error);
+    }
+  };
 
-    // Initial load
+  useEffect(() => {
     loadCartData();
-
-    // Watch for localStorage changes
-    window.addEventListener('storage', loadCartData);
-    
-    // Custom event listener for cart updates
-    window.addEventListener('cartUpdated', loadCartData);
-
-    return () => {
-      window.removeEventListener('storage', loadCartData);
-      window.removeEventListener('cartUpdated', loadCartData);
-    };
   }, []);
 
   const handleCartClick = () => {

@@ -181,7 +181,11 @@ const ProductDetail = () => {
                 </div>
 
                 <div className="action-buttons">
-                  <button onClick={handleAddToCart} className="add-to-cart">
+                  <button
+                    onClick={handleAddToCart}
+                    className="add-to-cart"
+                    disabled={product.quantity <= 1}
+                  >
                     <i className="fas fa-cart-plus"></i>
                     Thêm Vào Giỏ Hàng
                   </button>
@@ -246,10 +250,10 @@ const ProductDetail = () => {
             {product.comments.map((comment) => (
               <div key={comment.id} className="review-item">
                 <div className="review-header">
-                  <img 
-                    src={comment.avatar || 'default-avatar-url'} 
-                    alt="avatar" 
-                    className="avatar" 
+                  <img
+                    src={comment.avatar}
+                    alt="avatar"
+                    className="avatar"
                   />
                   <span className="username">{comment.full_name}</span>
                   <span className="rating">{"★".repeat(comment.rating)}</span>

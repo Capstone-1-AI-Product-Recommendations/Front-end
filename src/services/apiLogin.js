@@ -4,8 +4,8 @@ import axios from 'axios';
 // import {handleLoginSuccess} from "../Router";
 import cartService from './cartService'; // Change import to default
 const API = axios.create({
-  baseURL: 'http://127.0.0.1:8000/api',
   withCredentials: true, // Allow sending cookies
+  baseURL: 'http://127.0.0.1:8000/api',
   headers: {
     'Content-Type': 'application/json',
   }
@@ -35,8 +35,7 @@ export const loginUser = async (userData) => {
     // Save token and user data
     localStorage.setItem('token', response.data.token);
     localStorage.setItem('user', JSON.stringify(response.data.user));
-
-    // Initialize cart after successful login using user.user_id
+    console.log('Login response:', response.headers.cookie);
     const userId = response.data.user.user_id;
 
     if (userId) {
@@ -46,6 +45,21 @@ export const loginUser = async (userData) => {
     return response.data;
   } catch (error) {
     console.error('Login error:', error);
+    throw error;
+  }
+};
+
+export const logoutUser = async (userId) => {
+  try {
+    const response = await API.post(`/logout/${userId}/`);
+    console.log('Logout response:', response);
+    // Clear token and user data from local storage
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    // localStorage.removeItem('cartData');
+    return response.data;
+  } catch (error) {
+    console.error('Logout error:', error);
     throw error;
   }
 };

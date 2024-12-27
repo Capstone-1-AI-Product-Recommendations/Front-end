@@ -1,111 +1,30 @@
-import React, { useState, useEffect, useMemo, useContext } from "react";
-import "bootstrap/dist/css/bootstrap.min.css";
-import "./FeaturedProduct.css";
-import { FaHeart } from "react-icons/fa";
-import { useNavigate } from "react-router-dom"; // Add this import
-import cartService from '../../../services/cartService';
+import React, { useState, useEffect, useContext, useMemo } from "react";
+import { useNavigate } from "react-router-dom";
 import { CartContext } from '../../../context/CartContext';
-import productService from '../../../services/productService';
+import cartService from '../../../services/cartService';
+import Toast from '../Toast/Toast';
+import "./FeaturedProduct.css";
 
-const PRODUCTS_PER_PAGE = 36;
+const PRODUCTS_PER_PAGE = 18;
 
-const FeaturedProduct = ({ products }) => {
+const formatCurrency = (amount) => {
+  return new Intl.NumberFormat('vi-VN', {
+    style: 'currency',
+    currency: 'VND',
+  }).format(amount);
+};
+
+const FeaturedProduct = ({ products = [], showNotification }) => {
   const [hoveredProduct, setHoveredProduct] = useState(null);
-  const [currentImageIndex, setCurrentImageIndex] = useState({});
   const [currentPage, setCurrentPage] = useState(1);
-  const navigate = useNavigate(); // Add this line
-  const { updateCartCount, showNotification } = useContext(CartContext); // Destructure showNotification from context
-  const [loading, setLoading] = useState(false);
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState('');
 
-  const totalPages = Math.ceil(products.length / PRODUCTS_PER_PAGE);
+  const navigate = useNavigate();
+  const { addToCart, updateCartCount } = useContext(CartContext);
 
-  // Get the current month name
-  const currentMonth = new Date().toLocaleString("default", { month: "long" });
-
-  useEffect(() => {
-    let interval;
-    if (hoveredProduct !== null && products[hoveredProduct]?.altImages) {
-      interval = setInterval(() => {
-        setCurrentImageIndex((prev) => ({
-          ...prev,
-          [hoveredProduct]:
-            (prev[hoveredProduct] || 0) + 1 >= products[hoveredProduct].altImages.length
-              ? 0
-              : (prev[hoveredProduct] || 0) + 1,
-        }));
-      }, 1000);
-    }
-    return () => {
-      if (interval) clearInterval(interval);
-    };
-  }, [hoveredProduct, products]);
-
-  const handleMouseEnter = (index) => {
-    setHoveredProduct(index);
-    setCurrentImageIndex((prev) => ({ ...prev, [index]: 0 }));
-  };
-
-  const handleMouseLeave = () => {
-    setHoveredProduct(null);
-  };
-
-  const changePage = (pageNumber) => {
-    setCurrentPage(pageNumber);
-  };
-
-  const goToFirstPage = () => {
-    setCurrentPage(1);
-  };
-
-  const goToLastPage = () => {
-    setCurrentPage(totalPages);
-  };
-
-  const previousPage = () => {
-    if (currentPage > 1) setCurrentPage(currentPage - 1);
-  };
-
-  const nextPage = () => {
-    if (currentPage < totalPages) setCurrentPage(currentPage + 1);
-  };
-
-  const getPageNumbers = () => {
-    const pageNumbers = [];
-    const range = 2;
-
-    pageNumbers.push(1);
-
-    if (currentPage <= range + 3) {
-      for (let i = 2; i <= Math.min(5, totalPages); i++) {
-        pageNumbers.push(i);
-      }
-      if (totalPages > 5) pageNumbers.push("...");
-    } else if (currentPage > range + 3 && currentPage < totalPages - range - 2) {
-      pageNumbers.push("...");
-      for (let i = currentPage - range; i <= currentPage + range; i++) {
-        pageNumbers.push(i);
-      }
-      pageNumbers.push("...");
-    } else {
-      pageNumbers.push("...");
-      for (let i = totalPages - 4; i < totalPages; i++) {
-        pageNumbers.push(i);
-      }
-    }
-
-    if (totalPages > 1) {
-      pageNumbers.push(totalPages);
-    }
-
-    return pageNumbers;
-  };
-
-  const currentProducts = useMemo(() => {
-    return products.slice(
-      (currentPage - 1) * PRODUCTS_PER_PAGE,
-      currentPage * PRODUCTS_PER_PAGE
-    );
-  }, [products, currentPage]);
+  const productList = Array.isArray(products) ? products : [];
+  const totalPages = useMemo(() => Math.ceil(productList.length / PRODUCTS_PER_PAGE), [productList]);
 
   const handleProductClick = (productId) => {
     navigate(`/product-detail/${productId}`);
@@ -114,8 +33,7 @@ const FeaturedProduct = ({ products }) => {
   const handleAddToCart = async (e, product) => {
     e.stopPropagation();
     try {
-      setLoading(true);
-      const user = JSON.parse(localStorage.getItem('user')); // Assuming user object is stored in localStorage
+      const user = JSON.parse(localStorage.getItem('user'));
       const userId = user ? user.user_id : null;
       if (!userId) {
         alert('User not logged in.');
@@ -123,153 +41,94 @@ const FeaturedProduct = ({ products }) => {
       }
       const productData = { product_id: product.product_id, quantity: 1 };
       const newCartData = await cartService.addToCart(userId, productData);
-      console.log('newCartData:', newCartData); // Log newCartData for debugging
-      updateCartCount(newCartData); // Update cart count
-      showNotification('Product added to cart successfully!'); // Show notification
+      updateCartCount(newCartData);
+
+      // Show toast notification
+      setToastMessage('Thêm vào giỏ hàng thành công!');
+      setShowToast(true);
     } catch (error) {
       console.error('Error adding product to cart:', error);
-      showNotification('Failed to add product to cart.'); // Show notification
-    } finally {
-      setLoading(false);
+      setToastMessage('Không thể thêm vào giỏ hàng.');
+      setShowToast(true);
     }
   };
 
+  const changePage = (pageNumber) => setCurrentPage(pageNumber);
+
+  const currentProducts = useMemo(() => {
+    return productList.slice(
+      (currentPage - 1) * PRODUCTS_PER_PAGE,
+      currentPage * PRODUCTS_PER_PAGE
+    );
+  }, [productList, currentPage]);
+
   return (
-    <div className="featured-product-container">
-      <div className="d-flex justify-content-between align-items-center mb-1">
-        <h4 className="mb-0">
+    <div className='featured-product-container'>
+      <div className='d-flex justify-content-between align-items-center mb-1'>
+        <h4 className='mb-0'>
           Sản phẩm nổi bật
-          <span className="text-muted">
-            {" "} - Đừng bỏ lỡ các ưu đãi hiện tại cho đến khi kết thúc {currentMonth}.
+          <span className='text-muted'>
+            {" "} - Đừng bỏ lỡ cơ hội giảm giá đặc biệt chỉ có trong tuần này.
           </span>
         </h4>
-        <a href="#" className="view-all-btn">
+        <a href='#' className='view-all-btn'>
           Tất cả →
         </a>
       </div>
 
-      <div className="row">
+      <div className='product-grid-feature'>
         {currentProducts.map((product, index) => (
-          <div key={product.id} className="col-lg-3 col-md-6 col-sm-12 mb-3">
-            <div
-              className="card product-card h-100 border-0"
-              onMouseEnter={() => handleMouseEnter(index)}
-              onMouseLeave={handleMouseLeave}
-              onClick={() => handleProductClick(product.product_id)} // Add this line
-              style={{ cursor: 'pointer' }} // Add this line
-            >
-              <div className="row g-0">
-                <div className="col-6 position-relative">
-                  <div className="header-icons-container">
-                    <div className="discount-badge">{product.discount_percentage}% </div>
-                    {/* <div className="heart-icon">
-                      <FaHeart />
-                    </div> */}
-                  </div>
-                  <div className="image-container mb-2">
-                    <img
-                      src={
-                        product.altImages && product.altImages[currentImageIndex[index] || 0]
-                          ? product.altImages[currentImageIndex[index] || 0]
-                          : product.imageUrl
-                      }
-                      alt={product.title}
-                      className="img-fluid product-image rounded"
-                      loading="lazy"
-                    />
-                  </div>
-                  <div className="image-indicator">
-                    {product.altImages &&
-                      product.altImages.map((_, i) => (
-                        <div
-                          key={i}
-                          className={`indicator-dot ${i === (currentImageIndex[index] || 0) ? "active" : ""}`}
-                        />
-                      ))}
-                  </div>
-                </div>
-                <div className="col-6 d-flex flex-column justify-content-center">
-                  <h6 className="product-title mb-2">{product.name}</h6>
-                  <p className="price mb-0">
-                    <strong className="price-new text-danger">{product.price}</strong>
-                    <small className="text-muted ms-2">
-                      <del>{product.originalPrice}</del>
-                    </small>
-                  </p>
-                  <div className="rating mb-2 mt-2">
-                    {[1, 2, 3, 4, 5].map((star) => {
-                      const isFilled = star <= Math.floor(product.rating);
-                      const isHalf = star === Math.ceil(product.rating) && !Number.isInteger(product.rating);
-                      const isEmpty = star > Math.ceil(product.rating);
-
-                      return (
-                        <span key={star} className={`star ${isFilled ? 'filled' : isHalf ? 'half' : 'empty'}`}>
-                          {isFilled ? '★' : isHalf ? '★' : '☆'}
-                        </span>
-                      );
-                    })}
-                    <span className="reviews"> ({product.rating})</span>
-                  </div>
-                  <button
-                    className="add-to-cart-product w-100 mt-5"
-                    onClick={(e) => handleAddToCart(e, product)}
-                  >
-                    Thêm vào giỏ hàng
-                    <span className="ms-2">+</span>
-                  </button>
-                </div>
+          <div
+            key={product.product_id}
+            className='product-card-container'
+            onClick={() => handleProductClick(product.product_id)}
+            style={{ cursor: 'pointer' }}
+          >
+            <div className='product-card-feature'>
+              <span className='discount-badge'>{product.discount} %</span>
+              <div className='image-container-feature'>
+                <img
+                  src={product.images[0]}
+                  alt={product.name}
+                  className='product-image-feature'
+                  loading="lazy"
+                />
               </div>
+              <h6 className='product-title'>{product.name}</h6>
+              <div className='rating'>
+                {Array.from({ length: 5 }, (_, i) => {
+                  const starValue = i + 1;
+                  const ratingValue = product.rating;
+
+                  if (starValue <= Math.floor(ratingValue)) {
+                    return <span key={i} className="star filled">★</span>;
+                  } else if (starValue === Math.ceil(ratingValue) && !Number.isInteger(ratingValue)) {
+                    return <span key={i} className="star half-filled">★</span>;
+                  }
+                  return <span key={i} className="star">★</span>;
+                })}
+              </div>
+              <p className='price'>
+                <strong className='price-new'>{formatCurrency(product.price)}</strong>
+              </p>
+              <button
+                className='btn-custom-cart'
+                onClick={(e) => handleAddToCart(e, product)}
+              >
+                Thêm vào giỏ hàng <span className='ms-4'>+</span>
+              </button>
             </div>
           </div>
         ))}
       </div>
 
-      {/* Pagination */}
-      {/* <div className="pagination">
-        <button
-          className="pagination-btn"
-          onClick={goToFirstPage}
-          disabled={currentPage === 1}
-        >
-          &laquo;
-        </button>
-        <button
-          className="pagination-btn"
-          onClick={previousPage}
-          disabled={currentPage === 1}
-        >
-          &lt;
-        </button>
-        {getPageNumbers().map((page, index) =>
-          page === "..." ? (
-            <span key={index} className="pagination-ellipsis">...</span>
-          ) : (
-            <button
-              key={page}
-              className={`pagination-btn ${
-                currentPage === page ? "active" : ""
-              }`}
-              onClick={() => changePage(page)}
-            >
-              {page}
-            </button>
-          )
-        )}
-        <button
-          className="pagination-btn"
-          onClick={nextPage}
-          disabled={currentPage === totalPages}
-        >
-          &gt;
-        </button>
-        <button
-          className="pagination-btn"
-          onClick={goToLastPage}
-          disabled={currentPage === totalPages}
-        >
-          &raquo;
-        </button>
-      </div> */}
+      {/* Toast Component */}
+      {showToast && (
+        <Toast
+          message={toastMessage}
+          onClose={() => setShowToast(false)}
+        />
+      )}
     </div>
   );
 };

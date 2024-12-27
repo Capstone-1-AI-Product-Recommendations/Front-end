@@ -1,6 +1,6 @@
 /** @format */
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { CheckoutData, formatPrice } from "../../../data/CheckoutData";
 import AddressModal from "./AddressModal";
@@ -9,6 +9,9 @@ import { ShippingData } from '../../../data/ShippingData';
 import addressService from '../../../services/addressService';
 import orderService from '../../../services/orderService';
 import Swal from 'sweetalert2';
+import { CartContext } from '../../../context/CartContext'; // Import CartContext
+import cartService from '../../../services/cartService';
+
 import "./Checkout.css";
 
 const Checkout = () => {
@@ -22,6 +25,7 @@ const Checkout = () => {
   const [addresses, setAddresses] = useState([]);
   const [loading, setLoading] = useState(true);
   const userId = JSON.parse(localStorage.getItem('user'))?.user_id;
+  const { updateCartCount } = useContext(CartContext); // Destructure updateCartCount from context
 
   useEffect(() => {
     const fetchAddresses = async () => {
@@ -72,65 +76,81 @@ const Checkout = () => {
 
   const handleOrder = async () => {
     try {
-        const cartItemIds = checkoutProducts.reduce((ids, shop) => {
-            const shopItemIds = shop.products.map(product => product.cart_item_id);
-            return [...ids, ...shopItemIds];
-        }, []);
+      const cartItemIds = checkoutProducts.reduce((ids, shop) => {
+        const shopItemIds = shop.products.map(product => product.cart_item_id);
+        return [...ids, ...shopItemIds];
+      }, []);
 
-        const orderResponse = await orderService.createOrder(userId, cartItemIds);
-        const orderId = orderResponse.order_id;
+      const orderResponse = await orderService.createOrder(userId, cartItemIds);
+      const orderId = orderResponse.order_id;
 
-        if (selectedPayment === 'cod') {
-            await orderService.processCODPayment(
-                userId,
-                orderId,
-                selectedAddress.id,
-                calculateTotal()
-            );
-            
-            // Show success popup
-            await Swal.fire({
-              title: 'Đặt hàng thành công!',
-              text: 'Cảm ơn bạn đã mua hàng.',
-              icon: 'success',
-              confirmButtonText: 'OK'
-            });
+      if (selectedPayment === 'cod') {
+        await orderService.processCODPayment(
+          userId,
+          orderId,
+          selectedAddress.id,
+          calculateTotal()
+        );
 
-            // Clear checkout data and navigate home
-            localStorage.removeItem('checkoutProducts');
-            navigate('/');
-        } else if (selectedPayment === 'qrcode') {
-            const paymentResponse = await orderService.processPayOSPayment(
-              userId, 
-              orderId,
-              selectedAddress.id,
-              calculateTotal()
-            );
-            
-            console.log('Payment URL:', paymentResponse.payment_url);
-            
-            // Navigate with payment URL in state
-            navigate('/payment', {
-              state: {
-                paymentUrl: paymentResponse.payment_url,
-                orderId: orderId
-              },
-              replace: true  // Use replace to avoid navigation issues
-            });
-          }
-      
-          // Clear checkout data
-          localStorage.removeItem('checkoutProducts');
-    } catch (error) {
-        console.error('Error processing order:', error);
-        Swal.fire({
-          title: 'Lỗi',
-          text: 'Có lỗi xảy ra khi xử lý đơn hàng',
-          icon: 'error',
+        // Clear checkout data
+        localStorage.removeItem('checkoutProducts');
+
+        // Update cart count
+        const updatedCartData = await cartService.getCart(userId);
+        updateCartCount(updatedCartData);
+
+        // Dispatch cartUpdated event
+        window.dispatchEvent(new Event('cartUpdated'));
+
+        // Show success popup
+        await Swal.fire({
+          title: 'Đặt hàng thành công!',
+          text: 'Cảm ơn bạn đã mua hàng.',
+          icon: 'success',
           confirmButtonText: 'OK'
         });
+
+        // Navigate home and reload
+        window.location.href = '/';
+      } else if (selectedPayment === 'qrcode') {
+        const paymentResponse = await orderService.processPayOSPayment(
+          userId, 
+          orderId,
+          selectedAddress.id,
+          calculateTotal()
+        );
+
+        console.log('Payment URL:', paymentResponse.payment_url);
+
+        // Clear checkout data
+        localStorage.removeItem('checkoutProducts');
+
+        // Update cart count
+        const updatedCartData = await cartService.getCart(userId);
+        updateCartCount(updatedCartData);
+
+        // Dispatch cartUpdated event
+        window.dispatchEvent(new Event('cartUpdated'));
+
+        // Navigate with payment URL in state
+        navigate('/payment', {
+          state: {
+            paymentUrl: paymentResponse.payment_url,
+            orderId: orderId
+          },
+          replace: true  // Use replace to avoid navigation issues
+        });
+      }
+    } catch (error) {
+      console.error('Error processing order:', error);
+      Swal.fire({
+        title: 'Lỗi',
+        text: 'Có lỗi xảy ra khi xử lý đơn hàng',
+        icon: 'error',
+        confirmButtonText: 'OK'
+      });
     }
-};
+  };
 
   const calculateSubTotal = () => {
     return checkoutProducts.reduce((total, shop) => {

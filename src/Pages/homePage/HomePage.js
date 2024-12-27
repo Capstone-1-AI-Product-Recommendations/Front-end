@@ -4,7 +4,6 @@ import FeaturesSection from "../../Components/client/FeaturesSection/FeaturesSec
 import MiniAdBanner from "../../Components/client/MiniAdBanner/MiniAdBanner";
 import NewProduct from "../../Components/client/NewProduct/NewProduct";
 import FeaturedProduct from "../../Components/client/FeaturedProduct/FeaturedProduct";
-// import Sidebar from "../../Components/client/Sidebar/Sidebar";
 import BestSellingProduct from "../../Components/client/BestSellingProduct/BestSellingProduct";
 import Chatbot from "../../Components/client/Chatbot/Chatbot";
 import "../../styles/MainLayout.css";
@@ -16,7 +15,6 @@ const HomePage = ({ userRole }) => {
   const navigate = useNavigate();
   const [newProducts, setNewProducts] = useState([]);
   const [featuredProducts, setFeaturedProducts] = useState([]);
-  // const [bestSellingProducts, setBestSellingProducts] = useState([]);
   const [taskId, setTaskId] = useState(null);
   const [taskStatus, setTaskStatus] = useState(null);
   const [recommendations, setRecommendations] = useState([]);
@@ -43,6 +41,7 @@ const HomePage = ({ userRole }) => {
   const getFeaturedProducts = useCallback(async () => {
     try {
       const response = await fetchFeaturedProducts();
+      console.log("Data from fetchFeaturedProducts:", response.data);
       setFeaturedProducts(response.data);
     } catch (error) {
       console.error("Lỗi khi lấy sản phẩm nổi bật:", error);
@@ -66,25 +65,20 @@ const HomePage = ({ userRole }) => {
           // Sau khi tạo task, kiểm tra trạng thái ngay lập tức
           return checkTaskStatus(task_id);
         })
-        .then((data) => {
-          setTaskStatus(data.status);
-
-          if (data.status === "SUCCESS") {
-            console.log("Recommendations:", data.result);
-            setRecommendations(data.result); // Lưu kết quả nếu task thành công
-          }
+        .then((recommendations) => {
+          setRecommendations(recommendations); // Lưu kết quả trực tiếp
         })
         .catch((error) => {
           console.error("Error creating or checking task status:", error);
         });
     }
   }, []);
-  
+
+  console.log("Featured Products:", recommendations);
   return (
     <div className="container-all">
       {notification && <div className="notification">{notification}</div>}
       <div className="main-layout">
-        {/* <Sidebar /> */}
         <ProductAdBanner />
       </div>
       <FeaturesSection />

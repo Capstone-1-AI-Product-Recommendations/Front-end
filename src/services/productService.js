@@ -4,6 +4,7 @@ const API_URL = 'http://127.0.0.1:8000/';
 
 // Create axios instance with default config
 const api = axios.create({
+  withCredentials: true,
   baseURL: API_URL,
   headers: {
     'Content-Type': 'application/json',
@@ -77,7 +78,6 @@ const productService = {
   filterProducts: async (filters) => {
     try {
       const queryParams = new URLSearchParams();
-
       // Add search term
       if (filters.searchTerm) {
         queryParams.append('search_term', filters.searchTerm);

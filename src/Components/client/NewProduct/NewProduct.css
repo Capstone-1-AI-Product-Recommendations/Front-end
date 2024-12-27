@@ -41,7 +41,7 @@
   color: white;
 }
 
-.product-grid {
+.product-grid-new {
   display: grid;
   grid-template-columns: repeat(6, 1fr); /* Bố cục để có 6 sản phẩm mỗi hàng */
   gap: 1rem;
@@ -52,7 +52,7 @@
   cursor: pointer;
 }
 
-.product-card {
+.product-card-new {
   display: flex;
   flex-direction: column;
   justify-content: flex-start; /* Align items at the start */
@@ -77,15 +77,17 @@
   font-weight: bold;
 }
 
-.image-container {
+.image-container-new {
   flex: none;
-  width: 200px; /* Đảm bảo chiều rộng cụ thể */
-  height: 200px; /* Đảm bảo chiều cao cụ thể */
+  width: 160px; /* Đảm bảo chiều rộng cụ thể */
+  height: 160px; /* Đảm bảo chiều cao cụ thể */
   overflow: hidden;
   position: relative;
+  margin-top: 30px;
+  margin-left: 45px;
 }
 
-.product-image {
+.product-image-new {
   width: 100%;
   height: 100%;
   object-fit: cover; /* Ensure the image covers the container */

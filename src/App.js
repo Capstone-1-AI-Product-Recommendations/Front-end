@@ -45,7 +45,7 @@ function App() {
     localStorage.removeItem("userRole");
     localStorage.removeItem("token");
     localStorage.removeItem("user");
-    localStorage.removeItem("cartData");
+    // localStorage.removeItem("cartData");
     navigate("/");
   };
 

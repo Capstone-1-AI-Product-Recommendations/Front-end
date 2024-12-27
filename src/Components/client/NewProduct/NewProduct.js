@@ -3,12 +3,22 @@ import { useNavigate } from "react-router-dom";
 import { CartContext } from '../../../context/CartContext';
 import "./NewProduct.css";
 import cartService from '../../../services/cartService';
+import Toast from "../Toast/Toast";
 
 const PRODUCTS_PER_PAGE = 36;
+
+const formatCurrency = (amount) => {
+  return new Intl.NumberFormat('vi-VN', {
+    style: 'currency',
+    currency: 'VND',
+  }).format(amount);
+};
 
 const NewProduct = ({ products, showNotification }) => {
   const [hoveredProduct, setHoveredProduct] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState("");
 
   const navigate = useNavigate();
   const { updateCartCount } = useContext(CartContext); // Get updateCartCount from context
@@ -22,7 +32,7 @@ const NewProduct = ({ products, showNotification }) => {
   const handleAddToCart = async (e, product) => {
     e.stopPropagation();
     try {
-      const user = JSON.parse(localStorage.getItem('user')); // Assuming user object is stored in localStorage
+      const user = JSON.parse(localStorage.getItem('user'));
       const userId = user ? user.user_id : null;
       if (!userId) {
         alert('User not logged in.');
@@ -30,12 +40,15 @@ const NewProduct = ({ products, showNotification }) => {
       }
       const productData = { product_id: product.product_id, quantity: 1 };
       const newCartData = await cartService.addToCart(userId, productData);
-      console.log('newCartData:', newCartData); // Log newCartData for debugging
-      updateCartCount(newCartData); // Update cart count
-      showNotification('Product added to cart successfully!'); // Show notification
+      updateCartCount(newCartData);
+
+      // Show toast notification
+      setToastMessage("Thêm vào giỏ hàng thành công!");
+      setShowToast(true);
     } catch (error) {
       console.error('Error adding product to cart:', error);
-      showNotification('Failed to add product to cart.'); // Show notification
+      setToastMessage("Không thể thêm vào giỏ hàng.");
+      setShowToast(true);
     }
   };
 
@@ -49,22 +62,6 @@ const NewProduct = ({ products, showNotification }) => {
 
   const changePage = (pageNumber) => {
     setCurrentPage(pageNumber);
-  };
-
-  const goToFirstPage = () => {
-    setCurrentPage(1);
-  };
-
-  const goToLastPage = () => {
-    setCurrentPage(totalPages);
-  };
-
-  const previousPage = () => {
-    if (currentPage > 1) setCurrentPage(currentPage - 1);
-  };
-
-  const nextPage = () => {
-    if (currentPage < totalPages) setCurrentPage(currentPage + 1);
   };
 
   const getPageNumbers = () => {
@@ -120,36 +117,34 @@ const NewProduct = ({ products, showNotification }) => {
           Tất cả →
         </a>
       </div>
-
-      <div className="product-grid">
+      <div className="product-grid-new">
         {currentProducts.map((product, index) => (
           <div
-            key={product.product_id} // Sử dụng ID sản phẩm làm key
+            key={product.product_id}
             className="product-card-container"
             onClick={() => handleProductClick(product.product_id)}
             onMouseEnter={() => handleMouseEnter(index)}
             onMouseLeave={handleMouseLeave}
             style={{ cursor: 'pointer' }}
           >
-            <div className="product-card">
+            <div className="product-card-new">
               <span className="discount-badge">{product.discount_percentage}%</span>
-              <div className="image-container">
+              <div className="image-container-new">
                 <img
-                  className="product-image"
+                  className="product-image-new"
                   src={
                     product.altImages && product.altImages.length > 0
-                      ? product.altImages[0]  // Display the first alternate image if available
-                      : "/default-image.png"  // Default image if no alternate images
+                      ? product.altImages[0]
+                      : "/default-image.png"
                   }
                   alt={product.name}
                   loading="lazy"
                   onError={(e) => {
                     e.target.onerror = null;
-                    e.target.src = "/default-image.png";  // Default image on error
+                    e.target.src = "/default-image.png";
                   }}
                 />
               </div>
-              {/* <span className="product-badge">{product.badge}</span> */}
               <h6 className="product-title">{product.name}</h6>
               <div className="rating">
                 {Array.from({ length: 5 }, (_, i) => (
@@ -162,10 +157,10 @@ const NewProduct = ({ products, showNotification }) => {
                 ))}
               </div>
               <p className="price">
-                <strong className="price-new">{product.price}VND</strong>
+                <strong className="price-new">{formatCurrency(product.price)}</strong>
                 {product.originalPrice && (
                   <span className="price-old">
-                    <del>{product.originalPrice} VND</del>
+                    <del>{formatCurrency(product.originalPrice)}</del>
                   </span>
                 )}
               </p>
@@ -173,12 +168,20 @@ const NewProduct = ({ products, showNotification }) => {
                 className="btn-custom-cart"
                 onClick={(e) => handleAddToCart(e, product)}
               >
-                 Thêm vào giỏ hàng <span className="ms-4">+</span>
+                Thêm vào giỏ hàng <span className="ms-4">+</span>
               </button>
             </div>
           </div>
         ))}
       </div>
+
+      {/* Toast component */}
+      {showToast && (
+        <Toast
+          message={toastMessage}
+          onClose={() => setShowToast(false)}
+        />
+      )}
     </div>
   );
 };
