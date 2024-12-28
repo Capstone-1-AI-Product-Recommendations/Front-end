@@ -161,7 +161,7 @@ const RouterCustom = () => {
           {/* Seller routes */}
           {userRole === "seller" && (
             <Route path="/seller-dashboard/*" element={<SellerLayout />}>
-              <Route index element={<SellerProducts />} />
+              <Route index element={<Order />} />
               <Route path="products" element={<SellerProducts />} />
               <Route path="inventory" element={<Inventory />} />
               <Route path="chatbox" element={<Chatbox />} />

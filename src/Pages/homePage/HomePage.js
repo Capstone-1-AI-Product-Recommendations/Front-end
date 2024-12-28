@@ -8,7 +8,7 @@ import BestSellingProduct from "../../Components/client/BestSellingProduct/BestS
 import Chatbot from "../../Components/client/Chatbot/Chatbot";
 import "../../styles/MainLayout.css";
 import { fetchNewProducts, fetchFeaturedProducts } from "../../services/apiHomePage";
-import { createTask, checkTaskStatus } from "../../services/recommendService";
+import { createTask, fetchCombinedResults } from "../../services/recommendService";
 import { useNavigate } from "react-router-dom"; // Use Navigate hook
 
 const HomePage = ({ userRole }) => {
@@ -63,13 +63,22 @@ const HomePage = ({ userRole }) => {
         .then((task_id) => {
           setTaskId(task_id);
           // Sau khi tạo task, kiểm tra trạng thái ngay lập tức
-          return checkTaskStatus(task_id);
+          return fetchCombinedResults(task_id);
         })
         .then((recommendations) => {
           setRecommendations(recommendations); // Lưu kết quả trực tiếp
         })
         .catch((error) => {
           console.error("Error creating or checking task status:", error);
+        });
+    } else {
+      // Nếu không có userId, chỉ lấy behavior status
+      fetchCombinedResults(null)
+        .then((recommendations) => {
+          setRecommendations(recommendations); // Lưu kết quả trực tiếp
+        })
+        .catch((error) => {
+          console.error("Error fetching behavior status:", error);
         });
     }
   }, []);

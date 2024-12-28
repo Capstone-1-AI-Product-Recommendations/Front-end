@@ -9,13 +9,13 @@ import {
   } from "react-icons/fa";
   
   const menuSellerItems = [
-    {
-      id: "dashboard",
-      icon: FaUser,
-      label: "Dashboard",
-      path: "/seller-dashboard",
-      subItems: []
-    },
+    // {
+    //   id: "dashboard",
+    //   icon: FaUser,
+    //   label: "Dashboard",
+    //   path: "/seller-dashboard",
+    //   subItems: []
+    // },
     {
       id: "orders",
       icon: FaTruck,

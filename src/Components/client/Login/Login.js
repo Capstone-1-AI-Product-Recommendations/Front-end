@@ -33,6 +33,13 @@ const Login = ({ onClose, onLoginSuccess, onRegisterClick }) => {
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    // Check for empty fields
+    if (!formData.username || !formData.password) {
+      setErrorMessage('Tên đăng nhập và mật khẩu không được để trống.');
+      return;
+    }
+
     try {
       const data = await loginUser(formData);
       console.log('Login response:', data); // Log the response to inspect it
@@ -58,7 +65,11 @@ const Login = ({ onClose, onLoginSuccess, onRegisterClick }) => {
       }
     } catch (error) {
       console.error('Login error:', error); // Log the error for debugging
-      setErrorMessage(error.message || 'Tên đăng nhập hoặc mật khẩu không chính xác.');
+      if (error.message === 'Invalid password') {
+        setErrorMessage('Mật khẩu không chính xác.');
+      } else {
+        setErrorMessage('Tài khoản không tồn tại.');
+      }
     }
   };
 

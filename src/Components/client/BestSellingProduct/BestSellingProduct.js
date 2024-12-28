@@ -137,9 +137,9 @@ const BestSellingProduct = ({ products = [], showNotification }) => {
               </div>
               <p className='price'>
                 <strong className='price-new '>{formatCurrency(product.price)}</strong>
-                <span className='price-old'>
+                {/* <span className='price-old'>
                   <del>{formatCurrency(product.originalPrice)}</del>
-                </span>
+                </span> */}
               </p>
               <button
                 className='btn-custom-cart'

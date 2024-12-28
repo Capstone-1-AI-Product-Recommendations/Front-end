@@ -85,7 +85,7 @@ const FeaturedProduct = ({ products = [], showNotification }) => {
             style={{ cursor: 'pointer' }}
           >
             <div className='product-card-feature'>
-              <span className='discount-badge'>{product.discount} %</span>
+              <span className='discount-badge'>{product.discount_percentage} %</span>
               <div className='image-container-feature'>
                 <img
                   src={product.images[0]}

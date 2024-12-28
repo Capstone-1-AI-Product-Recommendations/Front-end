@@ -32,43 +32,63 @@ export const createTask = async (userId) => {
   }
 };
 
-export const checkTaskStatus = async (taskId) => {
+export const getRecommendationStatus = async (taskId) => {
   try {
-    console.log("Checking task status", taskId);
-    const [recommendationResponse, behaviorResponse] = await Promise.all([
-      api.get(`/recommendations/recommendations/batch-status/${taskId}/`),
-      api.get(`/recommendations/recommend_behavior/`),
-    ]);
+    console.log("Checking recommendation status", taskId);
+    const response = await api.get(`/recommendations/recommendations/batch-status/${taskId}/`);
+    return response.data.result || [];
+  } catch (error) {
+    console.error("Error checking recommendation status:", error);
+    throw error;
+  }
+};
 
-    const recommendations = recommendationResponse.data.result || [];
-    const behaviorResults = behaviorResponse.data.result || [];
+export const getBehaviorStatus = async () => {
+  try {
+    console.log("Checking behavior status");
+    const response = await api.get(`/recommendations/recommend_behavior/`);
+    return response.data.result || [];
+  } catch (error) {
+    console.error("Error checking behavior status:", error);
+    throw error;
+  }
+};
+
+export const combineResults = (recommendations, behaviorResults) => {
+  const combinedResults = [
+    ...behaviorResults,
+    ...recommendations.filter(
+      (rec) =>
+        !behaviorResults.some((behavior) => behavior.product_id === rec.product_id)
+    ),
+  ];
+
+  return combinedResults.map((item) => ({
+    product_id: item.product_id,
+    name: item.name,
+    price: item.price,
+    imageUrl: item.image_url,
+    rating: item.rating,
+  }));
+};
+
+export const fetchCombinedResults = async (taskId) => {
+  try {
+    const recommendations = taskId ? await getRecommendationStatus(taskId) : [];
+    const behaviorResults = await getBehaviorStatus();
 
     if (!recommendations.length && !behaviorResults.length) {
       console.log("No data found from both APIs.");
       return [];
     }
 
-    const combinedResults = [
-      ...behaviorResults,
-      ...recommendations.filter(
-        (rec) =>
-          !behaviorResults.some((behavior) => behavior.product_id === rec.product_id)
-      ),
-    ];
-
-    const formattedResults = combinedResults.map((item) => ({
-      product_id: item.product_id,
-      name: item.name,
-      price: item.price,
-      imageUrl: item.image_url,
-      rating: item.rating,
-    }));
+    const formattedResults = combineResults(recommendations, behaviorResults);
 
     console.log("Combined Results:", formattedResults);
 
     return formattedResults;
   } catch (error) {
-    console.error("Error checking task status:", error);
+    console.error("Error fetching combined results:", error);
     throw error;
   }
 };

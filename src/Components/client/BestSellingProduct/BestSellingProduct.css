@@ -43,7 +43,7 @@
 
 .product-grid-best {
   display: grid;
-  grid-template-columns: repeat(6, 1fr); /* Bố cục để có 6 sản phẩm mỗi hàng */
+  grid-template-columns: repeat(5, 1fr); /* Bố cục để có 6 sản phẩm mỗi hàng */
   gap: 1rem;
   margin-top: 1.5rem;
 }

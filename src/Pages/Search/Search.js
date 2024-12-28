@@ -73,7 +73,7 @@ const Search = () => {
 
           <div className="search-results-header">
             <div className="search-keyword">
-              Kết quả tìm kiếm cho từ khóa "{keyword}"
+              {/* Kết quả tìm kiếm cho từ khóa "{keyword}" */}
             </div>
             {/* Add sort options here */}
           </div>

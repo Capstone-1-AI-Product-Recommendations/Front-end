@@ -15,6 +15,8 @@ const AccountManagement = () => {
   const [uploadedImage, setUploadedImage] = useState(logoUser); // State lưu ảnh đã tải lên
   const [userInfo, setUserInfo] = useState(null); // State to store user info
   const [orders, setOrders] = useState([]); // State to store user orders
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
 
   useEffect(() => {
     const fetchData = async () => {
@@ -72,6 +74,64 @@ const AccountManagement = () => {
   // Hàm xử lý khi người dùng xóa ảnh
   const handleImageReset = () => {
     setUploadedImage(logoUser); // Reset ảnh về mặc định
+  };
+
+  const totalPages = Math.ceil(orders.length / itemsPerPage);
+
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
+  const handleFirstPage = () => {
+    setCurrentPage(1);
+  };
+
+  const handleLastPage = () => {
+    setCurrentPage(totalPages);
+  };
+
+  const handlePrevPage = () => {
+    setCurrentPage((prev) => Math.max(prev - 1, 1));
+  };
+
+  const handleNextPage = () => {
+    setCurrentPage((prev) => Math.min(prev + 1, totalPages));
+  };
+
+  const currentOrders = orders.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
+  const getPageNumbers = () => {
+    const pageNumbers = [];
+    const range = 2;
+
+    pageNumbers.push(1);
+
+    if (currentPage <= range + 3) {
+      for (let i = 2; i <= Math.min(5, totalPages); i++) {
+        pageNumbers.push(i);
+      }
+      if (totalPages > 5) pageNumbers.push("...");
+    } else if (currentPage > range + 3 && currentPage < totalPages - range - 2) {
+      pageNumbers.push("...");
+      for (let i = currentPage - range; i <= currentPage + range; i++) {
+        pageNumbers.push(i);
+      }
+      pageNumbers.push("...");
+    } else {
+      pageNumbers.push("...");
+      for (let i = totalPages - 4; i < totalPages; i++) {
+        pageNumbers.push(i);
+      }
+    }
+
+    if (totalPages > 1) {
+      pageNumbers.push(totalPages);
+    }
+
+    return pageNumbers;
   };
 
   return (
@@ -215,8 +275,8 @@ const AccountManagement = () => {
         {activeTab === "Đơn Mua" && (
           <div className="orders-container">
             <h1 className="profile-title">Đơn Mua</h1>
-            {orders && orders.length > 0 ? (
-              orders.map((order, index) => (
+            {currentOrders.length > 0 ? (
+              currentOrders.map((order, index) => (
                 <div className="order-card" key={index}>
                   <div className="order-header">
                     <span className="shop-name">{order.shop_name}</span>
@@ -233,18 +293,52 @@ const AccountManagement = () => {
                       className="order-image"
                     />
                     <div className="order-details">
-                      <p>{order.product_name}</p>
-                      <p>x{order.quantity}</p>
+                      <div>
+                        <p>{order.product_name}</p>
+                        <p>x{order.quantity}</p>
+                      </div>
+                      <div className="order-buttons">
+                        <button className="order-action-button">Mua Lại</button>
+                        <button className="order-action-button">Xem Chi Tiết Đơn Hàng</button>
+                        <button className="order-action-button">Liên Hệ Người Bán</button>
+                      </div>
                     </div>
                   </div>
                   <div className="order-footer">
                     <span className="order-id">Mã đơn hàng: {order.order_id}</span>
+                    <div className="order-">
+                      
+                    </div>
                   </div>
                 </div>
               ))
             ) : (
               <p>Hiện chưa có đơn mua nào!</p>
             )}
+            <div className="pagination">
+              <button onClick={handleFirstPage} disabled={currentPage === 1}>
+                First
+              </button>
+              <button onClick={handlePrevPage} disabled={currentPage === 1}>
+                Prev
+              </button>
+              {getPageNumbers().map((number, index) => (
+                <button
+                  key={index}
+                  onClick={() => handlePageChange(number)}
+                  className={currentPage === number ? 'active' : ''}
+                  disabled={number === "..."}
+                >
+                  {number}
+                </button>
+              ))}
+              <button onClick={handleNextPage} disabled={currentPage === totalPages}>
+                Next
+              </button>
+              <button onClick={handleLastPage} disabled={currentPage === totalPages}>
+                Last
+              </button>
+            </div>
           </div>
         )}
       </div>
